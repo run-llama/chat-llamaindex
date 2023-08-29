@@ -1,0 +1,89 @@
+.markdown-body pre {
+  padding: 0;
+}
+.markdown-body pre,
+.markdown-body code {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+}
+.markdown-body pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+.markdown-body code {
+  padding: 3px 5px;
+}
+.markdown-body .hljs,
+.markdown-body pre {
+  background: #1a1b26;
+  color: #cbd2ea;
+}
+.markdown-body .hljs-comment,
+.markdown-body .hljs-meta {
+  color: #565f89;
+}
+.markdown-body .hljs-deletion,
+.markdown-body .hljs-doctag,
+.markdown-body .hljs-regexp,
+.markdown-body .hljs-selector-attr,
+.markdown-body .hljs-selector-class,
+.markdown-body .hljs-selector-id,
+.markdown-body .hljs-selector-pseudo,
+.markdown-body .hljs-tag,
+.markdown-body .hljs-template-tag,
+.markdown-body .hljs-variable.language_ {
+  color: #f7768e;
+}
+.markdown-body .hljs-link,
+.markdown-body .hljs-literal,
+.markdown-body .hljs-number,
+.markdown-body .hljs-params,
+.markdown-body .hljs-template-variable,
+.markdown-body .hljs-type,
+.markdown-body .hljs-variable {
+  color: #ff9e64;
+}
+.markdown-body .hljs-attribute,
+.markdown-body .hljs-built_in {
+  color: #e0af68;
+}
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-property,
+.markdown-body .hljs-subst,
+.markdown-body .hljs-title,
+.markdown-body .hljs-title.class_,
+.markdown-body .hljs-title.class_.inherited__,
+.markdown-body .hljs-title.function_ {
+  color: #7dcfff;
+}
+.markdown-body .hljs-selector-tag {
+  color: #73daca;
+}
+.markdown-body .hljs-addition,
+.markdown-body .hljs-bullet,
+.markdown-body .hljs-quote,
+.markdown-body .hljs-string,
+.markdown-body .hljs-symbol {
+  color: #9ece6a;
+}
+.markdown-body .hljs-code,
+.markdown-body .hljs-formula,
+.markdown-body .hljs-section {
+  color: #7aa2f7;
+}
+.markdown-body .hljs-attr,
+.markdown-body .hljs-char.escape_,
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-name,
+.markdown-body .hljs-operator {
+  color: #bb9af7;
+}
+.markdown-body .hljs-punctuation {
+  color: #c0caf5;
+}
+.markdown-body .hljs-emphasis {
+  font-style: italic;
+}
+.markdown-body .hljs-strong {
+  font-weight: 700;
+}
