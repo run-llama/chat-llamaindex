@@ -40,18 +40,11 @@ export function createMessage(override: Partial<ChatMessage>): ChatMessage {
   };
 }
 
-export interface ChatStat {
-  tokenCount: number;
-  wordCount: number;
-  charCount: number;
-}
-
 export interface ChatSession {
   id: string;
 
   memoryPrompt: string;
   messages: ChatMessage[];
-  stat: ChatStat;
   lastUpdate: number;
   lastSummarizeIndex: number;
   clearContextIndex?: number;
@@ -64,11 +57,6 @@ export function createEmptySession(bot?: Bot): ChatSession {
     id: nanoid(),
     memoryPrompt: "",
     messages: [],
-    stat: {
-      tokenCount: 0,
-      wordCount: 0,
-      charCount: 0,
-    },
     lastUpdate: Date.now(),
     lastSummarizeIndex: 0,
 

@@ -72,7 +72,8 @@ export class OpenAIApi implements LLMApi {
 
     console.log("[Request] openai payload: ", requestPayload);
 
-    const shouldStream = !!options.config.stream;
+    // TODO: implement support for streaming
+    const shouldStream = false;
     const controller = new AbortController();
     options.onController?.(controller);
 
@@ -172,7 +173,7 @@ export class OpenAIApi implements LLMApi {
           openWhenHidden: true,
         });
       } else {
-        const res = await fetch(chatPath, chatPayload);
+        const res = await fetch("/api/llama", chatPayload);
         clearTimeout(requestTimeoutId);
 
         const resJson = await res.json();
