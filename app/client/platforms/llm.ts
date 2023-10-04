@@ -1,9 +1,33 @@
 import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 
-import { ChatOptions } from "./llm/interfaces";
-
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
+
+export const ROLES = ["system", "user", "assistant", "URL"] as const;
+export type MessageRole = (typeof ROLES)[number];
+
+export interface RequestMessage {
+  role: MessageRole;
+  content: string;
+}
+
+export interface LLMConfig {
+  model: string;
+  temperature?: number;
+  topP?: number;
+  stream?: boolean;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+}
+
+export interface ChatOptions {
+  messages: RequestMessage[];
+  config: LLMConfig;
+  onUpdate?: (message: string, chunk: string) => void;
+  onFinish: (message: string) => void;
+  onError?: (err: Error) => void;
+  onController?: (controller: AbortController) => void;
+}
 
 export class LLMApi {
   async chat(options: ChatOptions) {

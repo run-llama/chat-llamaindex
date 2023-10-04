@@ -6,12 +6,18 @@ const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
   const { messages, config } = req.body;
-  if (!messages) {
+  if (!messages || !config) {
     return res
       .status(400)
-      .json({ error: "messages are required in the request body" });
+      .json({ error: "messages and config are required in the request body" });
   }
-  const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
+
+  const llm = new OpenAI({
+    model: config.model,
+    temperature: config.temperature,
+    topP: config.topP,
+    maxTokens: config.maxTokens,
+  });
 
   if (config.stream) {
     res.setHeader("Content-Type", "text/event-stream");

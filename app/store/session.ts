@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import { RequestMessage } from "../client/platforms/llm/interfaces";
 import { ChatControllerPool } from "../client/controller";
+import { LLMApi, RequestMessage } from "../client/platforms/llm";
 import { DEFAULT_INPUT_TEMPLATE, DEFAULT_SYSTEM_TEMPLATE } from "../constant";
 import Locale, { getLang } from "../locales";
 import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
@@ -9,7 +9,6 @@ import { estimateTokenLength } from "../utils/token";
 import { fetchSiteContent, isURL } from "../utils/url";
 import { Bot, createEmptyBot } from "./bot";
 import { ModelConfig, ModelType } from "./config";
-import { LLMApi } from "../client/platforms/llm";
 
 export type URLDetail = {
   url: string;
@@ -240,7 +239,7 @@ function getMessagesWithMemory(session: ChatSession) {
     : shortTermMemoryStartIndex;
   // and if user has cleared history messages, we should exclude the memory too.
   const contextStartIndex = Math.max(clearContextIndex, memoryStartIndex);
-  const maxTokenThreshold = modelConfig.max_tokens;
+  const maxTokenThreshold = modelConfig.maxTokens;
 
   // get recent messages as much as possible
   const reversedRecentMessages = [];
@@ -285,7 +284,7 @@ function summarizeSession(session: ChatSession, accessToken: string) {
 
   const historyMsgLength = countMessages(toBeSummarizedMsgs);
 
-  if (historyMsgLength > modelConfig?.max_tokens ?? 4000) {
+  if (historyMsgLength > modelConfig?.maxTokens ?? 4000) {
     const n = toBeSummarizedMsgs.length;
     toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
       Math.max(0, n - modelConfig.historyMessageCount),
