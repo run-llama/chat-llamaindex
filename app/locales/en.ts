@@ -1,11 +1,6 @@
 import { SubmitKey } from "../store/config";
 
 const en = {
-  Error: {
-    Unauthorized:
-      "You haven't configured your OpenAI key. Please get one from the [OpenAI Account page](https://platform.openai.com/account/api-keys), and enter it in the [settings](/#/settings) page.",
-  },
-
   Chat: {
     SubTitle: (count: number) => `${count} messages`,
     Actions: {

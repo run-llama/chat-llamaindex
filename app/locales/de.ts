@@ -2,10 +2,6 @@ import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
 const de: LocaleType = {
-  Error: {
-    Unauthorized:
-      "Sie haben Ihren OpenAI-Key noch nicht konfiguriert. Bitte einen auf der [OpenAI-Zugangsseite](https://platform.openai.com/account/api-keys) erstellen, und bei Ihren [Einstellungen](/#/settings) eintragen.",
-  },
   Chat: {
     SubTitle: (count: number) => `${count} Nachrichten`,
     Actions: {

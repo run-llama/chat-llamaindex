@@ -1,37 +1,36 @@
 import { createRouter } from "next-connect";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Event, EventType } from "llamaindex";
 import { OpenAI } from "llamaindex";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  const { messages } = req.body;
+  const { messages, config } = req.body;
   if (!messages) {
     return res
       .status(400)
       .json({ error: "messages are required in the request body" });
   }
-
   const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
 
-  //Create a dummy event to trigger our Stream Callback
-  const dummy_event: Event = {
-    id: "something",
-    type: "intermediate" as EventType,
-  };
-
-  try {
-    const response = await llm.chat(messages, dummy_event);
-    res.status(200).json({ choices: [response] });
-  } catch (e: any) {
-    console.error("[Llama]", e);
-    res.status(500).send({ error: e.error });
+  if (config.stream) {
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    const stream = llm.stream_chat(messages);
+    for await (const token of stream) {
+      res.write(`data: ${token}\n\n`);
+    }
+    res.end("data: [DONE]\n\n");
+  } else {
+    res.setHeader("Content-Type", "text/plain");
+    const response = await llm.chat(messages);
+    res.status(200).send(response.message.content);
   }
 });
 
 export default router.handler({
   onError: (error: any, req, res) => {
-    res.status(400).json({ error: error.message });
+    console.error("[Llama]", error);
+    res.status(500).json({ error: error.message });
   },
 });
