@@ -1,11 +1,11 @@
 import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 
-import { ChatOptions, LLMApi } from "./interfaces";
+import { ChatOptions } from "./llm/interfaces";
 
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
 
-export class OpenAIApi implements LLMApi {
+export class LLMApi {
   async chat(options: ChatOptions) {
     const messages = options.messages.map((v) => ({
       role: v.role,

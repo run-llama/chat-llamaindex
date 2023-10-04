@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { RequestMessage, api } from "../client/api";
+import { RequestMessage } from "../client/platforms/llm/interfaces";
 import { ChatControllerPool } from "../client/controller";
 import { DEFAULT_INPUT_TEMPLATE, DEFAULT_SYSTEM_TEMPLATE } from "../constant";
 import Locale, { getLang } from "../locales";
@@ -9,6 +9,7 @@ import { estimateTokenLength } from "../utils/token";
 import { fetchSiteContent, isURL } from "../utils/url";
 import { Bot, createEmptyBot } from "./bot";
 import { ModelConfig, ModelType } from "./config";
+import { LLMApi } from "../client/platforms/llm";
 
 export type URLDetail = {
   url: string;
@@ -307,7 +308,8 @@ function summarizeSession(session: ChatSession, accessToken: string) {
     historyMsgLength > modelConfig.compressMessageLengthThreshold &&
     modelConfig.sendMemory
   ) {
-    api.llm.chat({
+    const api = new LLMApi();
+    api.chat({
       messages: toBeSummarizedMsgs.concat(
         createMessage({
           role: "system",
@@ -315,9 +317,7 @@ function summarizeSession(session: ChatSession, accessToken: string) {
           date: "",
         }),
       ),
-      share: session.bot.share,
       config: { ...modelConfig, stream: true, model: "gpt-3.5-turbo" },
-      token: accessToken,
       onUpdate(message) {
         session.memoryPrompt = message;
       },
@@ -405,11 +405,10 @@ export async function callSession(
 
   // make request
   let result;
-  await api.llm.chat({
+  const api = new LLMApi();
+  await api.chat({
     messages: sendMessages,
     config: { ...modelConfig, stream: true },
-    share: session.bot.share,
-    token: accessToken,
     onUpdate(message) {
       botMessage.streaming = true;
       if (message) {
@@ -422,8 +421,6 @@ export async function callSession(
       if (message) {
         botMessage.content = message;
         session.lastUpdate = Date.now();
-        // TODO: render update of chat count and word count
-        session.stat.charCount += message.length;
         callbacks.onUpdateMessages(session.messages.concat());
         summarizeSession(session, accessToken);
       }

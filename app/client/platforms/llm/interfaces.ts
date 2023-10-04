@@ -1,5 +1,3 @@
-import { Share } from "@/app/store/bot";
-
 export const ROLES = ["system", "user", "assistant", "URL"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
@@ -22,15 +20,8 @@ export interface LLMConfig {
 export interface ChatOptions {
   messages: RequestMessage[];
   config: LLMConfig;
-  token?: string;
-  share: Share | null;
-
   onUpdate?: (message: string, chunk: string) => void;
   onFinish: (message: string) => void;
   onError?: (err: Error) => void;
   onController?: (controller: AbortController) => void;
-}
-
-export abstract class LLMApi {
-  abstract chat(options: ChatOptions): Promise<void>;
 }
