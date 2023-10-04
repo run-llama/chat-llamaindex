@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import { RequestMessage, api } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
+import { LLMApi, RequestMessage } from "../client/platforms/llm";
 import { DEFAULT_INPUT_TEMPLATE, DEFAULT_SYSTEM_TEMPLATE } from "../constant";
 import Locale, { getLang } from "../locales";
 import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
@@ -40,18 +40,11 @@ export function createMessage(override: Partial<ChatMessage>): ChatMessage {
   };
 }
 
-export interface ChatStat {
-  tokenCount: number;
-  wordCount: number;
-  charCount: number;
-}
-
 export interface ChatSession {
   id: string;
 
   memoryPrompt: string;
   messages: ChatMessage[];
-  stat: ChatStat;
   lastUpdate: number;
   lastSummarizeIndex: number;
   clearContextIndex?: number;
@@ -64,11 +57,6 @@ export function createEmptySession(bot?: Bot): ChatSession {
     id: nanoid(),
     memoryPrompt: "",
     messages: [],
-    stat: {
-      tokenCount: 0,
-      wordCount: 0,
-      charCount: 0,
-    },
     lastUpdate: Date.now(),
     lastSummarizeIndex: 0,
 
@@ -251,7 +239,7 @@ function getMessagesWithMemory(session: ChatSession) {
     : shortTermMemoryStartIndex;
   // and if user has cleared history messages, we should exclude the memory too.
   const contextStartIndex = Math.max(clearContextIndex, memoryStartIndex);
-  const maxTokenThreshold = modelConfig.max_tokens;
+  const maxTokenThreshold = modelConfig.maxTokens;
 
   // get recent messages as much as possible
   const reversedRecentMessages = [];
@@ -296,7 +284,7 @@ function summarizeSession(session: ChatSession, accessToken: string) {
 
   const historyMsgLength = countMessages(toBeSummarizedMsgs);
 
-  if (historyMsgLength > modelConfig?.max_tokens ?? 4000) {
+  if (historyMsgLength > modelConfig?.maxTokens ?? 4000) {
     const n = toBeSummarizedMsgs.length;
     toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
       Math.max(0, n - modelConfig.historyMessageCount),
@@ -319,7 +307,8 @@ function summarizeSession(session: ChatSession, accessToken: string) {
     historyMsgLength > modelConfig.compressMessageLengthThreshold &&
     modelConfig.sendMemory
   ) {
-    api.llm.chat({
+    const api = new LLMApi();
+    api.chat({
       messages: toBeSummarizedMsgs.concat(
         createMessage({
           role: "system",
@@ -327,9 +316,7 @@ function summarizeSession(session: ChatSession, accessToken: string) {
           date: "",
         }),
       ),
-      share: session.bot.share,
       config: { ...modelConfig, stream: true, model: "gpt-3.5-turbo" },
-      token: accessToken,
       onUpdate(message) {
         session.memoryPrompt = message;
       },
@@ -417,11 +404,10 @@ export async function callSession(
 
   // make request
   let result;
-  await api.llm.chat({
+  const api = new LLMApi();
+  await api.chat({
     messages: sendMessages,
     config: { ...modelConfig, stream: true },
-    share: session.bot.share,
-    token: accessToken,
     onUpdate(message) {
       botMessage.streaming = true;
       if (message) {
@@ -434,8 +420,6 @@ export async function callSession(
       if (message) {
         botMessage.content = message;
         session.lastUpdate = Date.now();
-        // TODO: render update of chat count and word count
-        session.stat.charCount += message.length;
         callbacks.onUpdateMessages(session.messages.concat());
         summarizeSession(session, accessToken);
       }

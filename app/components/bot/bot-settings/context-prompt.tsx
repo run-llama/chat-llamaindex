@@ -9,7 +9,7 @@ import {
 import { Textarea } from "@/app/components/ui/textarea";
 import { ArrowDownLeftSquare, PlusCircle, XCircle } from "lucide-react";
 import { useQuery } from "react-query";
-import { ROLES } from "../../../client/api";
+import { ROLES } from "../../../client/platforms/llm";
 import Locale from "../../../locales";
 import { ChatMessage, createMessage } from "../../../store";
 import { fetchSiteContent, isURL } from "../../../utils/url";

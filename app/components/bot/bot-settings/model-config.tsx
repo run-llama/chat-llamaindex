@@ -65,14 +65,14 @@ export function ModelConfigList(props: {
           subTitle={Locale.Settings.TopP.SubTitle}
         >
           <InputRange
-            value={(props.modelConfig.top_p ?? 1).toFixed(1)}
+            value={(props.modelConfig.topP ?? 1).toFixed(1)}
             min="0"
             max="1"
             step="0.1"
             onChange={(e) => {
               props.updateConfig(
                 (config) =>
-                  (config.top_p = ModalConfigValidator.top_p(
+                  (config.topP = ModalConfigValidator.topP(
                     e.currentTarget.valueAsNumber,
                   )),
               );
@@ -87,11 +87,11 @@ export function ModelConfigList(props: {
             type="number"
             min={100}
             max={100000}
-            value={props.modelConfig.max_tokens}
+            value={props.modelConfig.maxTokens}
             onChange={(e) =>
               props.updateConfig(
                 (config) =>
-                  (config.max_tokens = ModalConfigValidator.max_tokens(
+                  (config.maxTokens = ModalConfigValidator.maxTokens(
                     e.currentTarget.valueAsNumber,
                   )),
               )
