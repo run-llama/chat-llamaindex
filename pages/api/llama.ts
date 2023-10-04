@@ -23,14 +23,13 @@ router.post(async (req, res) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
     const stream = llm.stream_chat(messages);
-    for await (const token of stream) {
-      res.write(`data: ${token}\n\n`);
+    for await (const content of stream) {
+      res.write(`data: ${JSON.stringify({ content })}\n\n`);
     }
     res.end("data: [DONE]\n\n");
   } else {
-    res.setHeader("Content-Type", "text/plain");
     const response = await llm.chat(messages);
-    res.status(200).send(response.message.content);
+    res.status(200).json({ content: response.message.content });
   }
 });
 

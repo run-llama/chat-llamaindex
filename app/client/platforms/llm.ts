@@ -83,9 +83,9 @@ export class LLMApi {
           const contentType = res.headers.get("content-type");
           console.log("[OpenAI] request response content type: ", contentType);
 
-          if (res.ok && contentType?.startsWith("text/plain")) {
-            // if the response is text/plain, then it's a normal chat response - no streaming
-            responseText = await res.clone().text();
+          if (res.ok && contentType?.startsWith("application/json")) {
+            // if the response is application/json, then it's a normal chat response - no streaming
+            responseText = (await res.clone().json()).content;
             return finish();
           }
 
@@ -102,10 +102,16 @@ export class LLMApi {
           if (msg.data === "[DONE]" || finished) {
             return finish();
           }
-          const delta = msg.data;
-          if (delta) {
-            responseText += delta;
-            options.onUpdate?.(responseText, delta);
+          const text = msg.data;
+          try {
+            const json = JSON.parse(text);
+            const delta = json.content;
+            if (delta) {
+              responseText += delta;
+              options.onUpdate?.(responseText, delta);
+            }
+          } catch (e) {
+            console.error("[Request] error parsing streaming delta", msg);
           }
         },
         onclose() {
