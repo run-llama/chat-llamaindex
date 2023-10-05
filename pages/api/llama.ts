@@ -1,11 +1,12 @@
 import { createRouter } from "next-connect";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { OpenAI } from "llamaindex";
+import { OpenAI, SimpleChatEngine, ChatMessage } from "llamaindex";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  const { messages, config } = req.body;
+  const { messages, config }: { messages: ChatMessage[]; config: any } =
+    req.body;
   if (!messages || !config) {
     return res
       .status(400)
@@ -19,17 +20,29 @@ router.post(async (req, res) => {
     maxTokens: config.maxTokens,
   });
 
+  const chatEngine = new SimpleChatEngine({ llm: llm });
+  const lastMessage = messages[messages.length - 1];
+  const messagesWithoutLast = messages.slice(0, -1);
+
   if (config.stream) {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
-    const stream = llm.stream_chat(messages);
+
+    const stream = await chatEngine.chat(
+      lastMessage.content,
+      messagesWithoutLast,
+      true
+    );
     for await (const content of stream) {
       res.write(`data: ${JSON.stringify({ content })}\n\n`);
     }
     res.end("data: [DONE]\n\n");
   } else {
-    const response = await llm.chat(messages);
-    res.status(200).json({ content: response.message.content });
+    const response = await chatEngine.chat(
+      lastMessage.content,
+      messagesWithoutLast,
+    );
+    res.status(200).json({ content: response.response });
   }
 });
 
