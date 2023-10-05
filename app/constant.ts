@@ -55,7 +55,7 @@ Knowledge cutoff: 2021-09
 Current model: {{model}}
 Current time: {{time}}`;
 
-export const PDF_TO_TEXT_API_ROUTE = "/api/pdf2text";
+export const PDF_TO_TEXT_API_ROUTE = "/api/fetch";
 export const FETCH_SITE_CONTENT_URL = "/api/fetch";
 
 export const DEFAULT_MODELS = [

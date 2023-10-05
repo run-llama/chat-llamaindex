@@ -170,6 +170,9 @@ dependencies:
   telegramify-markdown:
     specifier: ^1.1.0
     version: 1.1.0
+  tiktoken:
+    specifier: 1.0.10
+    version: 1.0.10
   unified:
     specifier: ^10.1.2
     version: 10.1.2
@@ -253,7 +256,7 @@ packages:
   /@anthropic-ai/sdk@0.6.2(encoding@0.1.13):
     resolution: {integrity: sha512-fB9PUj9RFT+XjkL+E9Ol864ZIJi+1P8WnbHspN3N3/GK2uSzjd0cbVIKTGgf4v3N8MwaQu+UWnU7C4BG/fap/g==}
     dependencies:
-      '@types/node': 18.18.3
+      '@types/node': 18.18.4
       '@types/node-fetch': 2.6.6
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -2971,8 +2974,8 @@ packages:
       form-data: 4.0.0
     dev: false
 
-  /@types/node@18.18.3:
-    resolution: {integrity: sha512-0OVfGupTl3NBFr8+iXpfZ8NR7jfFO+P1Q+IO/q0wbo02wYkP5gy36phojeYWpLQ6WAMjl+VfmqUk2YbUfp0irA==}
+  /@types/node@18.18.4:
+    resolution: {integrity: sha512-t3rNFBgJRugIhackit2mVcLfF6IRc0JE4oeizPQL8Zrm8n2WY/0wOdpOPhdtG0V9Q2TlW/axbF1MJ6z+Yj/kKQ==}
     dev: false
 
   /@types/node@20.5.9:
@@ -7227,7 +7230,7 @@ packages:
     resolution: {integrity: sha512-GU0HQWbejXuVAQlDjxIE8pohqnjptFDIm32aPlNT1H9ucMz1VJJD0DaTJRQsagNaJ97awWjjVLEG7zCM6sm4SA==}
     hasBin: true
     dependencies:
-      '@types/node': 18.18.3
+      '@types/node': 18.18.4
       '@types/node-fetch': 2.6.6
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0

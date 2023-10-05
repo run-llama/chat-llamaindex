@@ -2,9 +2,10 @@ import { unified } from "unified";
 import parse from "rehype-parse";
 import rehype2remark from "rehype-remark";
 import stringify from "remark-stringify";
+import axios from "axios";
+import pdf from "pdf-parse";
 import { remove } from "unist-util-remove";
 import { URLDetailContent } from "../store";
-import { PDF_TO_TEXT_API_ROUTE } from "../constant";
 
 function removeCommentsAndTables() {
   return (tree: any) => {
@@ -26,7 +27,6 @@ export async function htmlToMarkdown(html: string): Promise<string> {
 
 export async function fetchContentFromURL(
   url: string,
-  host: string,
 ): Promise<URLDetailContent> {
   const response = await fetch(url);
 
@@ -48,13 +48,31 @@ export async function fetchContentFromURL(
   }
 
   if (contentType.includes("application/pdf")) {
-    // FIXME: Do conversion in this API instead of calling another API
-    const res = await fetch(
-      `${host}${PDF_TO_TEXT_API_ROUTE}?url=${encodeURIComponent(url)}`,
-    );
-    const data = await res.json();
-    return data;
+    const response = await axios.get(url, {
+      responseType: "arraybuffer",
+    });
+    const pdfBuffer = response.data;
+    const pdfData = await pdf(pdfBuffer);
+    const result = {
+      url,
+      content: pdfData.text,
+      size: pdfData.text.length,
+      type: "application/pdf",
+    } as URLDetailContent;
+    return result;
   }
 
   throw new Error("URL provided is not a PDF or HTML document");
 }
+
+export const getPDFContentFromBuffer = async (pdfBuffer: Buffer) => {
+  const data = await pdf(pdfBuffer);
+  const content = data.text;
+  const size = data.text.length;
+
+  return {
+    content,
+    size,
+    type: "application/pdf",
+  };
+};
