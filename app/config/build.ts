@@ -6,7 +6,6 @@ export const getBuildConfig = () => {
   }
 
   const buildMode = process.env.BUILD_MODE ?? "standalone";
-  const isApp = !!process.env.BUILD_APP;
 
   const commitInfo = (() => {
     try {
@@ -33,7 +32,6 @@ export const getBuildConfig = () => {
   return {
     ...commitInfo,
     buildMode,
-    isApp,
   };
 };
 

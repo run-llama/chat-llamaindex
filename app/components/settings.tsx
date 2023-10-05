@@ -11,7 +11,7 @@ import {
 } from "@/app/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/app/components/ui/button";
 import { Card, CardContent } from "@/app/components/ui/card";
-import { Input, InputRange } from "@/app/components/ui/input";
+import { InputRange } from "@/app/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -30,16 +30,9 @@ import { useToast } from "@/app/components/ui/use-toast";
 import { ArchiveRestore, HardDriveDownload, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getClientConfig } from "../config/client";
 import { FileName, Path } from "../constant";
 import Locale from "../locales";
-import {
-  SubmitKey,
-  Theme,
-  useAccessStore,
-  useAppConfig,
-  useChatStore,
-} from "../store";
+import { SubmitKey, Theme, useAppConfig, useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
 import { downloadAs, readFromFile } from "../utils";
 import { ErrorBoundary } from "./layout/error";
@@ -67,8 +60,6 @@ function CommonSettings() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const config = useAppConfig();
   const updateConfig = config.update;
-  const clientConfig = getClientConfig();
-  const accessStore = useAccessStore();
   return (
     <>
       <Card>
@@ -151,26 +142,6 @@ function CommonSettings() {
           </ConfigItem>
         </CardContent>
       </Card>
-
-      {!clientConfig.hasServerApiKey && (
-        <Card>
-          <CardContent className="divide-y p-5">
-            <ConfigItem
-              title={Locale.Settings.Token.Title}
-              subTitle={Locale.Settings.Token.SubTitle}
-            >
-              <Input
-                value={accessStore.token}
-                type="password"
-                placeholder={Locale.Settings.Token.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateToken(e.currentTarget.value);
-                }}
-              />
-            </ConfigItem>
-          </CardContent>
-        </Card>
-      )}
     </>
   );
 }

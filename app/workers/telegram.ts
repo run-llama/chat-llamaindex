@@ -100,7 +100,7 @@ async function handleAI(
   text: string,
 ): Promise<ChatMessage | undefined> {
   const session = getChatSession(chatId);
-  return await callSession(session, text, ctx.startData.openaiToken, {
+  return await callSession(session, text, {
     onUpdateMessages: (newMessages) => {
       session.messages = newMessages;
     },

@@ -102,11 +102,6 @@ const de: LocaleType = {
       SubTitle:
         "Komprimierung, wenn die Länge der unkomprimierten Nachrichten den Wert überschreitet",
     },
-    Token: {
-      Title: "API-Schlüssel",
-      SubTitle: "Verwenden Sie hier Ihren OpenAI API-Schlüssel",
-      Placeholder: "OpenAI API-Schlüssel",
-    },
     Model: "Modell",
     Temperature: {
       Title: "Temperature", //Temperatur
@@ -178,18 +173,6 @@ const de: LocaleType = {
       Title: "URL",
       Hint: "Mit dieser URL können Sie Ihren Bot teilen. Die URL ist 30 Tage gültig.",
       Error: "Oops, something went wrong. Please try again later.",
-    },
-    ShowToken: {
-      Title: "API-Schlüssel",
-      SubTitle:
-        "API-Schüssel der für Ihren Bot verwendet wird. Bot-Benutzer benötigen dann keinen Schlüssel. Sie bezahlen für deren Benutzung.",
-    },
-    Token: {
-      Title: "API-Schlüssel",
-      SubTitle: "OpenAI API-Schlüssel für diesen Bot.",
-      Placeholder: "OpenAI API-Schlüssel",
-      Error:
-        "Oops, there was an error setting the API key. Please try again later.",
     },
   },
   Deploy: {

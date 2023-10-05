@@ -23,12 +23,6 @@ export default async function App({ params }: { params: { botId: string } }) {
     );
   }
 
-  if (bot.share?.token) {
-    // if the bot has a share token, hide it to the client, but tell the client that it has a token
-    bot.share.token = undefined;
-    bot.share.hasToken = true;
-  }
-
   console.debug("[Share] bot loaded", bot);
 
   return (
