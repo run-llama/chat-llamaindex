@@ -103,11 +103,6 @@ const en = {
       SubTitle:
         "Will compress if uncompressed messages length exceeds the value",
     },
-    Token: {
-      Title: "API Key",
-      SubTitle: "Enter your API key from OpenAI here",
-      Placeholder: "OpenAI API Key",
-    },
     Model: "Model",
     Temperature: {
       Title: "Temperature",
@@ -176,18 +171,6 @@ const en = {
       Title: "URL",
       Hint: "Use the URL to share your bot. The URL will be valid for 30 days.",
       Error: "Oops, something went wrong. Please try again later.",
-    },
-    ShowToken: {
-      Title: "Use API Key",
-      SubTitle:
-        "Provide an OpenAI API key for your shared bot. The users of the bot don't need a key. You'll pay for them.",
-    },
-    Token: {
-      Title: "API Key",
-      SubTitle: "OpenAI API key used by this shared bot.",
-      Placeholder: "OpenAI API Key",
-      Error:
-        "Oops, there was an error setting the API key. Please try again later.",
     },
   },
   Deploy: {

@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import { BUILTIN_BOT_STORE } from "../bots/index";
 import { StoreKey } from "../constant";
 import { FileWrap } from "../utils/file";
-import { useAccessStore } from "./access";
 import { Bot } from "./bot";
 import { useAppConfig } from "./config";
 import { ChatSession, callSession, createEmptySession } from "./session";
@@ -131,7 +130,6 @@ export const useChatStore = create<ChatStore>()(
         await callSession(
           session,
           inputContent,
-          useAccessStore.getState().token,
           {
             onUpdateMessages: (messages) => {
               get().updateCurrentSession((session) => {

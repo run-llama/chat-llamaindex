@@ -2,10 +2,12 @@ import { ShareResponse } from "@/app/api/share/route";
 import ConfigItem from "@/app/components/bot/bot-settings/config-item";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
-import { Bot, Share } from "@/app/store/bot";
+import { LoadingThreeDot } from "@/app/components/ui/loading";
+import { useToast } from "@/app/components/ui/use-toast";
+import { Bot } from "@/app/store/bot";
 import { copyToClipboard } from "@/app/utils";
 import { Copy } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation } from "react-query";
 import Locale from "../../../locales";
 import { Button } from "../../ui/button";
@@ -16,8 +18,6 @@ import {
   DialogTitle,
 } from "../../ui/dialog";
 import { useBot } from "../use-bot";
-import { useToast } from "@/app/components/ui/use-toast";
-import { LoadingThreeDot } from "@/app/components/ui/loading";
 
 async function share(bot: Bot): Promise<ShareResponse> {
   const res = await fetch("/api/share", {
@@ -32,25 +32,9 @@ async function share(bot: Bot): Promise<ShareResponse> {
   return json;
 }
 
-async function patch(share: Share): Promise<void> {
-  if (!share.id) {
-    throw new Error("Can't patch without share id being set.");
-  }
-  const res = await fetch(`/api/share/${share.id}`, {
-    method: "PATCH",
-    body: JSON.stringify({ shareToken: share.token }),
-  });
-  const json = await res.json();
-  if (!res.ok) {
-    throw new Error(json.msg);
-  }
-}
-
 export default function ShareBotDialogContent() {
   const { toast } = useToast();
   const { bot, updateBot } = useBot();
-  const [showToken, setShowToken] = useState(bot.share?.token ? true : false);
-  const [token, setToken] = useState(bot.share?.token || "");
 
   const shareMutation = useMutation(share, {
     onSuccess: (data) => {
@@ -59,38 +43,10 @@ export default function ShareBotDialogContent() {
       });
     },
   });
-  const patchMutation = useMutation(patch);
-
-  const onClose = () => {
-    const newToken = showToken ? token : undefined;
-    if (bot.share && newToken !== bot.share.token) {
-      // token got changed, update it locally
-      const newShare = { ...bot.share!, token: newToken };
-      updateBot((bot) => {
-        bot.share = newShare;
-      });
-      // and on the server side if a key was generated
-      if (shareMutation.data) {
-        setTimeout(() => {
-          patchMutation.mutate(newShare, {
-            onError: () => {
-              toast({
-                title: Locale.Share.Token.Error,
-                variant: "destructive",
-              });
-            },
-          });
-        }, 0);
-      }
-    }
-  };
 
   // FIXME: check dependency warning
   useEffect(() => {
     shareMutation.mutate(bot);
-    return () => {
-      onClose();
-    };
   }, []);
 
   return (
@@ -125,35 +81,6 @@ export default function ShareBotDialogContent() {
                   <LoadingThreeDot />
                 )}
               </ConfigItem>
-              {bot.share && (
-                <>
-                  <ConfigItem
-                    title={Locale.Share.ShowToken.Title}
-                    subTitle={Locale.Share.ShowToken.SubTitle}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={showToken}
-                      onChange={(e) => setShowToken(!showToken)}
-                    ></input>
-                  </ConfigItem>
-                  {showToken && (
-                    <ConfigItem
-                      title={Locale.Share.Token.Title}
-                      subTitle={Locale.Share.Token.SubTitle}
-                    >
-                      <Input
-                        value={token}
-                        type="password"
-                        placeholder={Locale.Settings.Token.Placeholder}
-                        onChange={(e) => {
-                          setToken(e.currentTarget.value);
-                        }}
-                      />
-                    </ConfigItem>
-                  )}
-                </>
-              )}
             </CardContent>
           </Card>
         )}

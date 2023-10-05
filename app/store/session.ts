@@ -269,7 +269,7 @@ function countMessages(msgs: ChatMessage[]) {
   return msgs.reduce((pre, cur) => pre + estimateTokenLength(cur.content), 0);
 }
 
-function summarizeSession(session: ChatSession, accessToken: string) {
+function summarizeSession(session: ChatSession) {
   // remove error messages if any
   const messages = session.messages;
 
@@ -348,7 +348,6 @@ async function createUserMessage(
 export async function callSession(
   session: ChatSession,
   content: string,
-  accessToken: string,
   callbacks: {
     onUpdateMessages: (messages: ChatMessage[]) => void;
   },
@@ -421,7 +420,7 @@ export async function callSession(
         botMessage.content = message;
         session.lastUpdate = Date.now();
         callbacks.onUpdateMessages(session.messages.concat());
-        summarizeSession(session, accessToken);
+        summarizeSession(session);
       }
       ChatControllerPool.remove(session.id, botMessage.id);
       result = botMessage;

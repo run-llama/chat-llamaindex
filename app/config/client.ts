@@ -2,7 +2,6 @@ import { BuildConfig, getBuildConfig } from "./build";
 import { getServerSideConfig } from "./server";
 
 export type ClientConfig = BuildConfig & {
-  hasServerApiKey: boolean;
   hasNextAuth: boolean;
 };
 
@@ -25,7 +24,6 @@ export function getClientConfig(): ClientConfig {
     // server side generation of the client config
     return {
       ...getBuildConfig(),
-      hasServerApiKey: !!getServerSideConfig().apiKey,
       hasNextAuth: !!getServerSideConfig().nextAuthUrl,
     };
   }

@@ -10,8 +10,6 @@ import { Deployment } from "./deployment";
 
 export type Share = {
   id: string;
-  token?: string; // optional OpenAI token that is used for sharing a bot with other users
-  hasToken?: boolean; // whether the bot has a token
 };
 
 export type Bot = {
