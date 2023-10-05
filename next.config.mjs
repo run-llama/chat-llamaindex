@@ -38,6 +38,7 @@ const nextConfig = {
   },
   experimental: {
     forceSwcTransforms: true,
+    serverComponentsExternalPackages: ["pdf-parse", "llamaindex"]
   },
 };
 

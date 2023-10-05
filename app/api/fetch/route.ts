@@ -1,4 +1,7 @@
-import { fetchContentFromURL } from "@/app/utils/content";
+import {
+  fetchContentFromURL,
+  getPDFContentFromBuffer,
+} from "@/app/utils/content";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -12,17 +15,41 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const host = request.headers.get("host");
-  const protocol = request.headers.get("x-forwarded-proto") || "http";
-  const serverURL = `${protocol}://${host}`;
-
   try {
-    const urlContent = await fetchContentFromURL(site, serverURL);
+    const urlContent = await fetchContentFromURL(site);
     return NextResponse.json(urlContent);
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 },
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    if (!body || !body.pdf) {
+      return NextResponse.json(
+        { error: "PDF file is required in the request body" },
+        { status: 400 },
+      );
+    }
+
+    const pdfBuffer = Buffer.from(body.pdf, "base64");
+    const pdfData = await getPDFContentFromBuffer(pdfBuffer);
+    return NextResponse.json({
+      ...pdfData,
+      url: body.fileName,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: (error as Error).message,
+      },
+      {
+        status: 500,
+      },
     );
   }
 }
