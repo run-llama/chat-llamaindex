@@ -88,8 +88,5 @@
     "prettier": "^3.0.3",
     "typescript": "5.1.6",
     "webpack": "^5.88.2"
-  },
-  "resolutions": {
-    "lint-staged/yaml": "^2.2.2"
   }
 }
