@@ -144,15 +144,6 @@ const de: LocaleType = {
     BotHello: "Hallo! Wie kann ich Ihnen heute helfen?",
     Error:
       "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal.",
-    Prompt: {
-      History: (content: string) =>
-        "Dies ist eine Zusammenfassung des Chatverlaufs zwischen der KI und dem Benutzer als Rückblick: " +
-        content,
-      Topic:
-        "Bitte erstellen Sie einen vier- bis fünfwörtigen Titel, der unser Gespräch zusammenfasst, ohne Einleitung, Zeichensetzung, Anführungszeichen, Punkte, Symbole oder zusätzlichen Text. Entfernen Sie Anführungszeichen.",
-      Summarize:
-        "Fassen Sie unsere Diskussion kurz in 200 Wörtern oder weniger zusammen, um sie als Pronpt für zukünftige Gespräche zu verwenden.",
-    },
   },
   Copy: {
     Success: "In die Zwischenablage kopiert",

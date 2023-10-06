@@ -326,7 +326,6 @@ export function Chat() {
         session.clearContextIndex = undefined;
       } else {
         session.clearContextIndex = session.messages.length;
-        session.memoryPrompt = ""; // will clear memory
       }
     });
   };

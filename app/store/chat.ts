@@ -145,7 +145,6 @@ export const useChatStore = create<ChatStore>()(
       resetSession() {
         get().updateCurrentSession((session) => {
           session.messages = [];
-          session.memoryPrompt = "";
         });
       },
 
