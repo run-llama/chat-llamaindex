@@ -347,6 +347,7 @@ export function Chat() {
         <div className="space-y-5">
           {messages.map((message, i) => {
             const isUser = message.role === "user";
+            const isMemory = message.role === "memory";
             const isContext = i < context.length;
             const showActions =
               i > 0 &&
@@ -386,6 +387,8 @@ export function Chat() {
                             "box-border max-w-full text-sm select-text relative break-words rounded-lg px-3 py-2",
                             isUser
                               ? "ml-auto bg-primary text-primary-foreground"
+                              : isMemory
+                              ? "italic text-secondary-foreground"
                               : "bg-muted",
                           )}
                         >

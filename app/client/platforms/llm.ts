@@ -3,7 +3,7 @@ import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
 
-export const ROLES = ["system", "user", "assistant", "URL"] as const;
+export const ROLES = ["system", "user", "assistant", "URL", "memory"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
 export interface RequestMessage {
@@ -21,27 +21,29 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  messages: RequestMessage[];
+  message: string;
+  chatHistory: RequestMessage[];
   config: LLMConfig;
-  onUpdate?: (message: string, chunk: string) => void;
-  onFinish: (message: string) => void;
+  onUpdate?: (message: string) => void;
+  onFinish: (newMessages: RequestMessage[]) => void;
   onError?: (err: Error) => void;
   onController?: (controller: AbortController) => void;
 }
 
 export class LLMApi {
   async chat(options: ChatOptions) {
-    const messages = options.messages.map((v) => ({
+    const chatHistory = options.chatHistory.map((v) => ({
       role: v.role,
       content: v.content,
     }));
 
     const requestPayload = {
-      messages,
+      message: options.message,
+      chatHistory: chatHistory,
       config: options.config,
     };
 
-    console.log("[Request] openai payload: ", requestPayload);
+    console.log("[Request] payload: ", requestPayload);
 
     const controller = new AbortController();
     options.onController?.(controller);
@@ -67,14 +69,18 @@ export class LLMApi {
       let responseText = "";
       let finished = false;
 
-      const finish = () => {
+      const finish = (newMessages?: RequestMessage[]) => {
         if (!finished) {
-          options.onFinish(responseText);
+          if (!newMessages) {
+            options.onFinish([{ role: "assistant", content: responseText }]);
+          } else {
+            options.onFinish(newMessages);
+          }
           finished = true;
         }
       };
 
-      controller.signal.onabort = finish;
+      controller.signal.onabort = () => finish();
 
       await fetchEventSource(chatPath, {
         ...chatPayload,
@@ -85,8 +91,8 @@ export class LLMApi {
 
           if (res.ok && contentType?.startsWith("application/json")) {
             // if the response is application/json, then it's a normal chat response - no streaming
-            responseText = (await res.clone().json()).content;
-            return finish();
+            const result = await res.clone().json();
+            return finish(result.newMessages);
           }
 
           if (!res.ok) {
@@ -99,16 +105,15 @@ export class LLMApi {
           }
         },
         onmessage(msg) {
-          if (msg.data === "[DONE]" || finished) {
-            return finish();
-          }
-          const text = msg.data;
           try {
-            const json = JSON.parse(text);
+            const json = JSON.parse(msg.data);
+            if (json.done || finished) {
+              return finish(json.newMessages);
+            }
             const delta = json.content;
             if (delta) {
               responseText += delta;
-              options.onUpdate?.(responseText, delta);
+              options.onUpdate?.(responseText);
             }
           } catch (e) {
             console.error("[Request] error parsing streaming delta", msg);

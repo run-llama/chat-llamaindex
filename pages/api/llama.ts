@@ -1,13 +1,21 @@
 import { createRouter } from "next-connect";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { OpenAI, SimpleChatEngine, ChatMessage } from "llamaindex";
+import {
+  OpenAI,
+  ChatMessage,
+  HistoryChatEngine,
+  SummaryChatHistory,
+} from "llamaindex";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  const { messages, config }: { messages: ChatMessage[]; config: any } =
-    req.body;
-  if (!messages || !config) {
+  const {
+    message,
+    chatHistory,
+    config,
+  }: { message: string; chatHistory: ChatMessage[]; config: any } = req.body;
+  if (!message || !chatHistory || !config) {
     return res
       .status(400)
       .json({ error: "messages and config are required in the request body" });
@@ -20,29 +28,34 @@ router.post(async (req, res) => {
     maxTokens: config.maxTokens,
   });
 
-  const chatEngine = new SimpleChatEngine({ llm: llm });
-  const lastMessage = messages[messages.length - 1];
-  const messagesWithoutLast = messages.slice(0, -1);
+  const chatEngine = new HistoryChatEngine({
+    llm: llm,
+    chatHistory: new SummaryChatHistory({ messages: chatHistory, llm: llm }),
+  });
+  const messagesBefore = chatHistory.length;
 
   if (config.stream) {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
 
-    const stream = await chatEngine.chat(
-      lastMessage.content,
-      messagesWithoutLast,
-      true
-    );
+    const stream = await chatEngine.chat(message, undefined, true);
     for await (const content of stream) {
       res.write(`data: ${JSON.stringify({ content })}\n\n`);
     }
-    res.end("data: [DONE]\n\n");
-  } else {
-    const response = await chatEngine.chat(
-      lastMessage.content,
-      messagesWithoutLast,
+    // get the new messages (might be more than one using the SummaryChatHistory)
+    const newMessages = chatEngine.chatHistory.messages.slice(messagesBefore);
+    res.end(
+      `data: ${JSON.stringify({
+        done: true,
+        newMessages: newMessages,
+      })}\n\n`,
     );
-    res.status(200).json({ content: response.response });
+  } else {
+    const response = await chatEngine.chat(message);
+    const newMessages = chatEngine.chatHistory.messages.slice(messagesBefore);
+    res
+      .status(200)
+      .json({ content: response.response, newMessages: newMessages });
   }
 });
 
