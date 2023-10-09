@@ -225,7 +225,6 @@ export async function callSession(
   const sendMessages = [
     ...contextPrompts,
     ...recentMessages.map(transformAssistantMessageForSending),
-    transformUserMessageForSending(userMessage),
   ];
   const messageIndex = session.messages.length + 1;
 
@@ -241,7 +240,8 @@ export async function callSession(
   let result;
   const api = new LLMApi();
   await api.chat({
-    messages: sendMessages,
+    message: transformUserMessageForSending(userMessage).content,
+    chatHistory: sendMessages,
     config: { ...modelConfig, stream: true },
     onUpdate(message) {
       botMessage.streaming = true;
@@ -250,14 +250,16 @@ export async function callSession(
       }
       callbacks.onUpdateMessages(session.messages.concat());
     },
-    onFinish(message: string) {
-      botMessage.streaming = false;
-      if (message) {
-        botMessage.content = message;
-        callbacks.onUpdateMessages(session.messages.concat());
-      }
+    onFinish(newMessages: RequestMessage[]) {
+      const newChatMessages = newMessages.map((message) => ({
+        ...createMessage(message),
+      }));
+      // remove user and bot message and add all the messages returned by the LLM (which includes user, bot and an
+      // optional memory message)
+      session.messages = session.messages.slice(0, -2).concat(newChatMessages);
+      callbacks.onUpdateMessages(session.messages);
       ChatControllerPool.remove(session.id, botMessage.id);
-      result = botMessage;
+      result = newChatMessages.slice(-1);
     },
     onError(error) {
       const isAborted = error.message.includes("aborted");
