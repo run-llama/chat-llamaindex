@@ -140,58 +140,6 @@ export function ModelConfigList(props: {
           ></InputRange>
         </ConfigItem>
 
-        <ConfigItem
-          title={Locale.Settings.InputTemplate.Title}
-          subTitle={Locale.Settings.InputTemplate.SubTitle}
-        >
-          <Input
-            type="text"
-            value={props.modelConfig.template}
-            onChange={(e) =>
-              props.updateConfig(
-                (config) => (config.template = e.currentTarget.value),
-              )
-            }
-          ></Input>
-        </ConfigItem>
-
-        <ConfigItem
-          title={Locale.Settings.HistoryCount.Title}
-          subTitle={Locale.Settings.HistoryCount.SubTitle}
-        >
-          <InputRange
-            title={props.modelConfig.historyMessageCount.toString()}
-            value={props.modelConfig.historyMessageCount}
-            min="0"
-            max="64"
-            step="1"
-            onChange={(e) =>
-              props.updateConfig(
-                (config) =>
-                  (config.historyMessageCount = e.target.valueAsNumber),
-              )
-            }
-          ></InputRange>
-        </ConfigItem>
-
-        <ConfigItem
-          title={Locale.Settings.CompressThreshold.Title}
-          subTitle={Locale.Settings.CompressThreshold.SubTitle}
-        >
-          <Input
-            type="number"
-            min={500}
-            max={4000}
-            value={props.modelConfig.compressMessageLengthThreshold}
-            onChange={(e) =>
-              props.updateConfig(
-                (config) =>
-                  (config.compressMessageLengthThreshold =
-                    e.currentTarget.valueAsNumber),
-              )
-            }
-          ></Input>
-        </ConfigItem>
         <ConfigItem title={Locale.Memory.Title} subTitle={Locale.Memory.Send}>
           <Checkbox
             checked={props.modelConfig.sendMemory}

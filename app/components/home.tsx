@@ -23,7 +23,7 @@ import {
 import { getClientConfig } from "../config/client";
 import { useChatStore } from "../store";
 import { Bot, useBotStore } from "../store/bot";
-import { useAppConfig } from "../store/config";
+import { Theme, useAppConfig } from "../store/config";
 import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
 import { LoadingModule } from "@/app/components/ui/loading";
@@ -46,9 +46,9 @@ export function useSwitchTheme() {
     document.body.classList.remove("light");
     document.body.classList.remove("dark");
 
-    if (config.theme === "dark") {
+    if (config.theme === Theme.Dark) {
       document.body.classList.add("dark");
-    } else if (config.theme === "light") {
+    } else if (config.theme === Theme.Light) {
       document.body.classList.add("light");
     }
 

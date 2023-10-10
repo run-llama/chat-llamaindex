@@ -86,23 +86,9 @@ const en = {
       SubTitle: "Adjust font size of chat content",
     },
 
-    InputTemplate: {
-      Title: "Input Template",
-      SubTitle: "Newest message will be filled to this template",
-    },
-
     SendKey: "Send Key",
     Theme: "Theme",
 
-    HistoryCount: {
-      Title: "Attached Messages Count",
-      SubTitle: "Number of sent messages attached per request",
-    },
-    CompressThreshold: {
-      Title: "History Compression Threshold",
-      SubTitle:
-        "Will compress if uncompressed messages length exceeds the value",
-    },
     Model: "Model",
     Temperature: {
       Title: "Temperature",

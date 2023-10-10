@@ -87,21 +87,8 @@ const de: LocaleType = {
       Title: "Schriftgröße",
       SubTitle: "Schriftgröße des Chat-Inhalts anpassen",
     },
-    InputTemplate: {
-      Title: "Input Template",
-      SubTitle: "Newest message will be filled to this template",
-    },
     SendKey: "Senden-Taste",
     Theme: "Theme",
-    HistoryCount: {
-      Title: "Anzahl der angehängten Nachrichten",
-      SubTitle: "Anzahl der pro Anfrage angehängten gesendeten Nachrichten",
-    },
-    CompressThreshold: {
-      Title: "Schwellenwert für Verlaufskomprimierung",
-      SubTitle:
-        "Komprimierung, wenn die Länge der unkomprimierten Nachrichten den Wert überschreitet",
-    },
     Model: "Modell",
     Temperature: {
       Title: "Temperature", //Temperatur

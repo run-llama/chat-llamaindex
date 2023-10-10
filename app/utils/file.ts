@@ -1,4 +1,4 @@
-import { PDF_TO_TEXT_API_ROUTE } from "../constant";
+import { FETCH_SITE_CONTENT_URL } from "../constant";
 import { URLDetailContent } from "../store";
 import Locale from "../locales";
 
@@ -63,7 +63,7 @@ export class PDFFile extends TextFile {
     const fileDataUrl = await this.file.dataURL;
     const pdfBase64 = fileDataUrl.split(",")[1];
 
-    const response = await fetch(PDF_TO_TEXT_API_ROUTE, {
+    const response = await fetch(FETCH_SITE_CONTENT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
