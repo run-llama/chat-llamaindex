@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { DEFAULT_INPUT_TEMPLATE, StoreKey } from "../constant";
+import { StoreKey } from "../constant";
 
 export enum SubmitKey {
   Enter = "Enter",
@@ -21,10 +21,6 @@ export const DEFAULT_CONFIG = {
   avatar: "1f603",
   fontSize: 14,
   theme: Theme.Light as Theme,
-  tightBorder: true,
-  sidebarWidth: 300,
-
-  disablePromptHint: true,
 
   modelConfig: {
     model: "gpt-3.5-turbo" as ModelType,
@@ -34,9 +30,6 @@ export const DEFAULT_CONFIG = {
     presence_penalty: 0,
     frequency_penalty: 0,
     sendMemory: true,
-    historyMessageCount: 4,
-    compressMessageLengthThreshold: 1000,
-    template: DEFAULT_INPUT_TEMPLATE,
   },
 };
 
@@ -127,11 +120,8 @@ export const useAppConfig = create<ChatConfigStore>()(
 
         const state = persistedState as ChatConfig;
         state.modelConfig.sendMemory = true;
-        state.modelConfig.historyMessageCount = 4;
-        state.modelConfig.compressMessageLengthThreshold = 1000;
         state.modelConfig.frequency_penalty = 0;
         state.modelConfig.topP = 1;
-        state.modelConfig.template = DEFAULT_INPUT_TEMPLATE;
 
         return state;
       },

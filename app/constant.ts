@@ -42,20 +42,6 @@ export const LAST_INPUT_KEY = "last-input";
 
 export const REQUEST_TIMEOUT_MS = 60000;
 
-export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
-
-export const OpenaiPath = {
-  ChatPath: "v1/chat/completions",
-};
-
-export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
-export const DEFAULT_SYSTEM_TEMPLATE = `
-You are ChatGPT, a large language model trained by OpenAI.
-Knowledge cutoff: 2021-09
-Current model: {{model}}
-Current time: {{time}}`;
-
-export const PDF_TO_TEXT_API_ROUTE = "/api/fetch";
 export const FETCH_SITE_CONTENT_URL = "/api/fetch";
 
 export const DEFAULT_MODELS = [

@@ -1,13 +1,12 @@
 import { nanoid } from "nanoid";
 import { ChatControllerPool } from "../client/controller";
 import { LLMApi, RequestMessage } from "../client/platforms/llm";
-import { DEFAULT_INPUT_TEMPLATE } from "../constant";
 import { getLang } from "../locales";
 import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
 import { prettyObject } from "../utils/format";
 import { fetchSiteContent, isURL } from "../utils/url";
 import { Bot, createEmptyBot } from "./bot";
-import { ModelConfig, ModelType } from "./config";
+import { ModelConfig } from "./config";
 
 export type URLDetail = {
   url: string;
@@ -23,9 +22,7 @@ export type ChatMessage = RequestMessage & {
   date: string;
   streaming?: boolean;
   isError?: boolean;
-  errorMsg?: string;
   id: string;
-  model?: ModelType;
   urlDetail?: URLDetail;
 };
 
@@ -57,33 +54,7 @@ export function createEmptySession(bot?: Bot): ChatSession {
   };
 }
 
-function fillTemplateWith(input: string, modelConfig: ModelConfig) {
-  const vars = {
-    model: modelConfig.model,
-    time: new Date().toLocaleString(),
-    lang: getLang(),
-    input: input,
-  };
-
-  let output = modelConfig.template ?? DEFAULT_INPUT_TEMPLATE;
-
-  // must contains {{input}}
-  const inputVar = "{{input}}";
-  if (!output.includes(inputVar)) {
-    output += "\n" + inputVar;
-  }
-
-  Object.entries(vars).forEach(([name, value]) => {
-    output = output.replaceAll(`{{${name}}}`, value);
-  });
-
-  return output;
-}
-
-async function createTextInputMessage(
-  content: string,
-  modelConfig: ModelConfig,
-): Promise<ChatMessage> {
+async function createTextInputMessage(content: string): Promise<ChatMessage> {
   if (isURL(content)) {
     const urlDetail = await fetchSiteContent(content);
     const userContent = urlDetail.content;
@@ -95,12 +66,9 @@ async function createTextInputMessage(
       urlDetail,
     });
   } else {
-    const userContent = fillTemplateWith(content, modelConfig);
-    console.log("[User Input] after template: ", userContent);
-
     return createMessage({
       role: "user",
-      content: userContent,
+      content: content,
     });
   }
 }
@@ -165,14 +133,13 @@ function transformAssistantMessageForSending(
 
 async function createUserMessage(
   content: string,
-  modelConfig: ModelConfig,
   uploadedFile?: FileWrap,
 ): Promise<ChatMessage> {
   let userMessage: ChatMessage;
   if (uploadedFile) {
     userMessage = await createFileInputMessage(uploadedFile);
   } else {
-    userMessage = await createTextInputMessage(content, modelConfig);
+    userMessage = await createTextInputMessage(content);
   }
   return userMessage;
 }
@@ -190,7 +157,7 @@ export async function callSession(
   let userMessage: ChatMessage;
 
   try {
-    userMessage = await createUserMessage(content, modelConfig, uploadedFile);
+    userMessage = await createUserMessage(content, uploadedFile);
   } catch (error: any) {
     // an error occurred when creating user message, show error message as bot message and don't call API
     const userMessage = createMessage({
@@ -214,7 +181,6 @@ export async function callSession(
   const botMessage: ChatMessage = createMessage({
     role: "assistant",
     streaming: true,
-    model: modelConfig.model,
   });
 
   const contextPrompts = session.bot.context.slice();

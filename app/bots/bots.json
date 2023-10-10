@@ -6,13 +6,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -31,13 +28,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -56,13 +50,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -81,13 +72,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -106,13 +94,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -131,13 +116,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
@@ -156,13 +138,10 @@
     "modelConfig": {
       "model": "gpt-4",
       "temperature": 1,
-      "maxTokens": 8000,
+      "maxTokens": 6000,
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "sendMemory": true,
-      "historyMessageCount": 32,
-      "compressMessageLengthThreshold": 1000,
-      "template": "{{input}}",
       "topP": 1
     },
     "lang": "en",
