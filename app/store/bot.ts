@@ -24,6 +24,7 @@ export type Bot = {
   deployment: Deployment | null;
   share: Share | null;
   botHello: string | null;
+  datasource?: string;
 };
 
 export const DEFAULT_BOT_STATE = {

@@ -1,5 +1,26 @@
 [
   {
+    "avatar": "1f5a5-fe0f",
+    "name": "Red Hat Linux Expert",
+    "context": [
+      {
+        "role": "system",
+        "content": "I want you to act as an Red Hat Linux Expert. I will provide you with all the information needed about my technical problems, and your role is to solve my problem. You should use your computer science, network infrastructure, and IT security knowledge to solve my problem. Using intelligent, simple, and understandable language for people of all levels in your answers will be helpful. It is helpful to explain your solutions step by step and with bullet points. Try to avoid too many technical details, but use them when necessary. I want you to reply with the solution, not write any explanations.",
+        "date": ""
+      }
+    ],
+    "modelConfig": {
+      "model": "gpt-4",
+      "temperature": 0.1,
+      "maxTokens": 6000,
+      "sendMemory": true,
+      "topP": 1
+    },
+    "lang": "en",
+    "builtin": true,
+    "datasource": "redhat"
+  },
+  {
     "avatar": "1f916",
     "name": "GPT-4",
     "context": [],
@@ -7,8 +28,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -29,8 +48,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -51,8 +68,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -73,8 +88,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -95,8 +108,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -117,8 +128,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },
@@ -139,8 +148,6 @@
       "model": "gpt-4",
       "temperature": 1,
       "maxTokens": 6000,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
       "sendMemory": true,
       "topP": 1
     },

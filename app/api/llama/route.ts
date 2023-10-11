@@ -2,9 +2,38 @@ import {
   OpenAI,
   ChatMessage,
   HistoryChatEngine,
-  SummaryChatHistory,
+  serviceContextFromDefaults,
+  ContextChatEngine,
+  ServiceContext,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
+import { getDataSource } from "./datasource";
+import { logRuntime } from "../../utils/runtime";
+
+async function createChatEngine(
+  serviceContext: ServiceContext,
+  chatHistory: ChatMessage[],
+  datasource?: string,
+) {
+  if (datasource) {
+    // Split text and create embeddings. Store them in a VectorStoreIndex
+    const index = await logRuntime(
+      `Retrieving datasource '${datasource}'`,
+      async () => await getDataSource(serviceContext, datasource),
+    );
+
+    const retriever = index.asRetriever();
+    retriever.similarityTopK = 5;
+    // TODO: add history to context chat engine
+    // TODO: generate new system prompt if bot has one
+    return new ContextChatEngine({ retriever, chatHistory });
+  }
+
+  return new HistoryChatEngine({
+    llm: serviceContext.llm as OpenAI,
+    chatHistory: chatHistory,
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,8 +41,14 @@ export async function POST(request: NextRequest) {
     const {
       message,
       chatHistory,
+      datasource,
       config,
-    }: { message: string; chatHistory: ChatMessage[]; config: any } = body;
+    }: {
+      message: string;
+      chatHistory: ChatMessage[];
+      datasource: string | undefined;
+      config: any;
+    } = body;
     if (!message || !chatHistory || !config) {
       return NextResponse.json(
         {
@@ -31,10 +66,16 @@ export async function POST(request: NextRequest) {
       maxTokens: config.maxTokens,
     });
 
-    const chatEngine = new HistoryChatEngine({
+    const serviceContext = serviceContextFromDefaults({
       llm: llm,
-      chatHistory: new SummaryChatHistory({ messages: chatHistory, llm: llm }),
+      chunkSize: 512,
     });
+
+    const chatEngine = await createChatEngine(
+      serviceContext,
+      chatHistory,
+      datasource,
+    );
     const messagesBefore = chatHistory.length;
 
     if (config.stream) {
@@ -52,8 +93,7 @@ export async function POST(request: NextRequest) {
           onNext();
         } else {
           // get the new messages (might be more than one using the SummaryChatHistory)
-          const newMessages =
-            chatEngine.chatHistory.messages.slice(messagesBefore);
+          const newMessages = chatEngine.chatHistory.slice(messagesBefore);
           writer.write(
             `data: ${JSON.stringify({
               done: true,
@@ -74,7 +114,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       const response = await chatEngine.chat(message);
-      const newMessages = chatEngine.chatHistory.messages.slice(messagesBefore);
+      const newMessages = chatEngine.chatHistory.slice(messagesBefore);
       return NextResponse.json({
         content: response.response,
         newMessages: newMessages,

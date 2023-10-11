@@ -22,6 +22,7 @@ export interface ChatOptions {
   message: string;
   chatHistory: RequestMessage[];
   config: LLMConfig;
+  datasource?: string;
   onUpdate?: (message: string) => void;
   onFinish: (newMessages: RequestMessage[]) => void;
   onError?: (err: Error) => void;
@@ -30,15 +31,11 @@ export interface ChatOptions {
 
 export class LLMApi {
   async chat(options: ChatOptions) {
-    const chatHistory = options.chatHistory.map((v) => ({
-      role: v.role,
-      content: v.content,
-    }));
-
     const requestPayload = {
       message: options.message,
-      chatHistory: chatHistory,
+      chatHistory: options.chatHistory,
       config: options.config,
+      datasource: options.datasource,
     };
 
     console.log("[Request] payload: ", requestPayload);
