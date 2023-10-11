@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { BUILTIN_BOT_STORE } from "../bots/index";
-import { StoreKey } from "../constant";
 import { FileWrap } from "../utils/file";
 import { Bot } from "./bot";
 import { useAppConfig } from "./config";
@@ -161,22 +160,8 @@ export const useChatStore = create<ChatStore>()(
       },
     }),
     {
-      name: StoreKey.Chat,
-      version: 3.2,
-      migrate(persistedState, version) {
-        const state = persistedState as any;
-        const newState = JSON.parse(JSON.stringify(state)) as ChatStore;
-
-        if (version < 3.2) {
-          newState.sessions.forEach((s) => {
-            if (!s.bot) {
-              s.bot = (s as any).mask;
-            }
-          });
-        }
-
-        return newState;
-      },
+      name: "chat-store",
+      version: 1,
     },
   ),
 );

@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { StoreKey } from "../constant";
 
 export enum SubmitKey {
   Enter = "Enter",
@@ -27,8 +26,6 @@ export const DEFAULT_CONFIG = {
     temperature: 0.5,
     topP: 1,
     maxTokens: 2000,
-    presence_penalty: 0,
-    frequency_penalty: 0,
     sendMemory: true,
   },
 };
@@ -83,12 +80,6 @@ export const ModalConfigValidator = {
   maxTokens(x: number) {
     return limitNumber(x, 0, 100000, 2000);
   },
-  presence_penalty(x: number) {
-    return limitNumber(x, -2, 2, 0);
-  },
-  frequency_penalty(x: number) {
-    return limitNumber(x, -2, 2, 0);
-  },
   temperature(x: number) {
     return limitNumber(x, 0, 1, 1);
   },
@@ -113,18 +104,8 @@ export const useAppConfig = create<ChatConfigStore>()(
       },
     }),
     {
-      name: StoreKey.Config,
-      version: 3.3,
-      migrate(persistedState, version) {
-        if (version === 3.3) return persistedState as any;
-
-        const state = persistedState as ChatConfig;
-        state.modelConfig.sendMemory = true;
-        state.modelConfig.frequency_penalty = 0;
-        state.modelConfig.topP = 1;
-
-        return state;
-      },
+      name: "app-config",
+      version: 1,
     },
   ),
 );

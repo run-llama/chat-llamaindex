@@ -102,16 +102,6 @@ const de: LocaleType = {
       Title: "Max Tokens", //Maximale Token
       SubTitle: "Maximale Anzahl der Anfrage- plus Antwort-Token",
     },
-    PresencePenalty: {
-      Title: "Presence Penalty", //Anwesenheitsstrafe
-      SubTitle:
-        "Ein größerer Wert erhöht die Wahrscheinlichkeit, dass über neue Themen gesprochen wird",
-    },
-    FrequencyPenalty: {
-      Title: "Frequency Penalty", // HäufigkeitStrafe
-      SubTitle:
-        "Ein größerer Wert verringert die Wahrscheinlichkeit, dass dieselbe Zeile wiederholt wird",
-    },
     Backup: {
       Download: {
         Title: "Backup Bots",

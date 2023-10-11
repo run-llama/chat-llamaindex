@@ -4,7 +4,6 @@ import { BUILTIN_BOTS } from "../bots";
 import Locale, { getLang, Lang } from "../locales";
 import { ChatMessage } from "./session";
 import { ModelConfig, useAppConfig } from "./config";
-import { StoreKey } from "../constant";
 import { nanoid } from "nanoid";
 import { Deployment } from "./deployment";
 
@@ -143,7 +142,7 @@ export const useBotStore = create<BotStore>()(
       },
     }),
     {
-      name: StoreKey.Bot,
+      name: "bot-store",
       version: 3.1,
 
       migrate(state, version) {

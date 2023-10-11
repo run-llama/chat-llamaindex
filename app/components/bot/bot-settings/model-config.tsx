@@ -98,47 +98,6 @@ export function ModelConfigList(props: {
             }
           />
         </ConfigItem>
-        <ConfigItem
-          title={Locale.Settings.PresencePenalty.Title}
-          subTitle={Locale.Settings.PresencePenalty.SubTitle}
-        >
-          <InputRange
-            value={props.modelConfig.presence_penalty?.toFixed(1)}
-            min="-2"
-            max="2"
-            step="0.1"
-            onChange={(e) => {
-              props.updateConfig(
-                (config) =>
-                  (config.presence_penalty =
-                    ModalConfigValidator.presence_penalty(
-                      e.currentTarget.valueAsNumber,
-                    )),
-              );
-            }}
-          ></InputRange>
-        </ConfigItem>
-
-        <ConfigItem
-          title={Locale.Settings.FrequencyPenalty.Title}
-          subTitle={Locale.Settings.FrequencyPenalty.SubTitle}
-        >
-          <InputRange
-            value={props.modelConfig.frequency_penalty?.toFixed(1)}
-            min="-2"
-            max="2"
-            step="0.1"
-            onChange={(e) => {
-              props.updateConfig(
-                (config) =>
-                  (config.frequency_penalty =
-                    ModalConfigValidator.frequency_penalty(
-                      e.currentTarget.valueAsNumber,
-                    )),
-              );
-            }}
-          ></InputRange>
-        </ConfigItem>
 
         <ConfigItem title={Locale.Memory.Title} subTitle={Locale.Memory.Send}>
           <Checkbox

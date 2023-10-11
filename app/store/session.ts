@@ -1,12 +1,10 @@
 import { nanoid } from "nanoid";
 import { ChatControllerPool } from "../client/controller";
 import { LLMApi, RequestMessage } from "../client/platforms/llm";
-import { getLang } from "../locales";
 import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
 import { prettyObject } from "../utils/format";
 import { fetchSiteContent, isURL } from "../utils/url";
 import { Bot, createEmptyBot } from "./bot";
-import { ModelConfig } from "./config";
 
 export type URLDetail = {
   url: string;

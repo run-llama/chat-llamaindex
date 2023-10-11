@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { getCSSVar, useMobileScreen } from "../utils";
 
 import dynamic from "next/dynamic";
-import { Path, SlotID } from "../constant";
+import { Path } from "../constant";
 import { ErrorBoundary } from "./layout/error";
 
 import { getLang } from "../locales";
@@ -179,7 +179,7 @@ function Screen() {
       ) : (
         <>
           {showSidebarOnMobile && <SideBar />}
-          <div id={SlotID.AppBody} className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden">
             <Routes>
               <Route path={Path.Chat} element={<ChatPage />} />
               <Route path={Path.Settings} element={<SettingsPage />} />
