@@ -16,8 +16,6 @@ export interface LLMConfig {
   temperature?: number;
   topP?: number;
   stream?: boolean;
-  presence_penalty?: number;
-  frequency_penalty?: number;
 }
 
 export interface ChatOptions {
