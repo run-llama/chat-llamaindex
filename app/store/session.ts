@@ -204,6 +204,7 @@ export async function callSession(
   let result;
   const api = new LLMApi();
   await api.chat({
+    datasource: session.bot.datasource,
     message: transformUserMessageForSending(userMessage).content,
     chatHistory: sendMessages,
     config: { ...modelConfig, stream: true },
