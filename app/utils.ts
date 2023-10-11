@@ -13,11 +13,7 @@ export async function copyToClipboard(
   displayResult: DisplayResultFn,
 ) {
   try {
-    if (window.__TAURI__) {
-      window.__TAURI__.writeText(text);
-    } else {
-      await navigator.clipboard.writeText(text);
-    }
+    await navigator.clipboard.writeText(text);
 
     displayResult({
       title: Locale.Copy.Success,
