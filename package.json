@@ -4,7 +4,7 @@
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env BUILD_MODE=standalone next build",
+    "build": "cross-env next build",
     "start": "next start",
     "lint": "next lint",
     "format:check": "prettier --check --ignore-path .gitignore app",

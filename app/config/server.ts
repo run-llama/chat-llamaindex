@@ -4,7 +4,6 @@ declare global {
       OPENAI_API_KEY?: string;
       BASE_URL?: string;
       VERCEL?: "1";
-      BUILD_MODE?: "standalone" | "export";
       LINKEDIN_CLIENT_ID?: string;
       LINKEDIN_CLIENT_SECRET?: string;
       SLACK_WEBHOOK_URL?: string;

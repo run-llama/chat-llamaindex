@@ -1,7 +1,5 @@
 "use client";
 
-require("../polyfill");
-
 import React, { useContext, useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -93,10 +91,7 @@ const useHasHydrated = () => {
 
 const loadAsyncGoogleFont = () => {
   const linkEl = document.createElement("link");
-  const proxyFontUrl = "/google-fonts";
-  const remoteFontUrl = "https://fonts.googleapis.com";
-  const googleFontUrl =
-    getClientConfig()?.buildMode === "export" ? remoteFontUrl : proxyFontUrl;
+  const googleFontUrl = "https://fonts.googleapis.com";
   linkEl.rel = "stylesheet";
   linkEl.href =
     googleFontUrl + "/css2?family=Noto+Sans:wght@300;400;700;900&display=swap";

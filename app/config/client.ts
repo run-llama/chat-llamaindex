@@ -1,7 +1,6 @@
-import { BuildConfig, getBuildConfig } from "./build";
 import { getServerSideConfig } from "./server";
 
-export type ClientConfig = BuildConfig & {
+export type ClientConfig = {
   hasNextAuth: boolean;
 };
 
@@ -23,7 +22,6 @@ export function getClientConfig(): ClientConfig {
   if (typeof process !== "undefined") {
     // server side generation of the client config
     return {
-      ...getBuildConfig(),
       hasNextAuth: !!getServerSideConfig().nextAuthUrl,
     };
   }
