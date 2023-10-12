@@ -34,13 +34,17 @@ import { FileName, Path } from "../constant";
 import Locale from "../locales";
 import { SubmitKey, Theme, useAppConfig, useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
-import { downloadAs, readFromFile } from "../utils";
+import { downloadAs, readFromFile, useMobileScreen } from "../utils";
 import { ErrorBoundary } from "./layout/error";
 import { BotAvatar, EmojiAvatarPicker } from "./ui/emoji";
 import { cn } from "@/app/lib/utils";
+import { useSidebarContext } from "@/app/components/home";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 
 function SettingHeader() {
   const navigate = useNavigate();
+  const { setShowSidebar } = useSidebarContext();
+  const isMobileScreen = useMobileScreen();
   return (
     <div className="relative flex justify-between items-center px-5 py-3.5">
       <div>
@@ -49,7 +53,14 @@ function SettingHeader() {
           {Locale.Settings.SubTitle}
         </div>
       </div>
-      <Button variant="outline" size="icon" onClick={() => navigate(Path.Home)}>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          navigate(Path.Home);
+          if (isMobileScreen) setShowSidebar(true);
+        }}
+      >
         <X className="w-4 h-4" />
       </Button>
     </div>
@@ -62,7 +73,7 @@ function CommonSettings() {
   const updateConfig = config.update;
   return (
     <>
-      <Card>
+      <Card className="mb-5">
         <CardContent className="divide-y p-5">
           <ConfigItem title={Locale.Settings.Avatar}>
             <Popover open={showEmojiPicker}>
@@ -245,7 +256,7 @@ function BackupItems() {
   };
 
   return (
-    <Card>
+    <Card className="mb-5">
       <CardContent className="divide-y p-5">
         <ConfigItem
           title={Locale.Settings.Backup.Download.Title}
@@ -270,10 +281,13 @@ function BackupItems() {
 
 export function Settings() {
   const navigate = useNavigate();
+  const { setShowSidebar } = useSidebarContext();
+  const isMobileScreen = useMobileScreen();
   useEffect(() => {
     const keydownEvent = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         navigate(Path.Home);
+        if (isMobileScreen) setShowSidebar(true);
       }
     };
     document.addEventListener("keydown", keydownEvent);
@@ -286,11 +300,11 @@ export function Settings() {
     <ErrorBoundary>
       <SettingHeader />
       <Separator />
-      <div className="space-y-5 p-5">
+      <ScrollArea className="p-5 h-[80vh]">
         <CommonSettings />
         <BackupItems />
         <DangerItems />
-      </div>
+      </ScrollArea>
     </ErrorBoundary>
   );
 }
