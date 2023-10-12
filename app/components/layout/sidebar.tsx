@@ -17,12 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Typography from "../ui/typography";
+import { useSidebarContext } from "@/app/components/home";
+import { useMobileScreen } from "@/app/utils";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
 });
 
 export function SideBar(props: { className?: string }) {
+  const { setShowSidebar } = useSidebarContext();
+  const isMobileScreen = useMobileScreen();
   const { data: session } = useSession();
   const clientConfig = getClientConfig();
   const navigate = useNavigate();
@@ -33,6 +37,7 @@ export function SideBar(props: { className?: string }) {
       text: Locale.Home.Settings,
       action: () => {
         navigate(Path.Settings);
+        if (isMobileScreen) setShowSidebar(false);
       },
     },
     {
@@ -47,7 +52,7 @@ export function SideBar(props: { className?: string }) {
   const shortUsername = session?.user?.name!.substring(0, 2).toUpperCase();
 
   return (
-    <div className="h-full relative group border-r w-[300px]">
+    <div className="h-full relative group border-r w-full md:w-[300px]">
       <div className="w-full h-full p-5 flex flex-col gap-5">
         <div className="flex flex-col flex-1">
           <div className="mb-5 flex justify-between gap-5 items-start">

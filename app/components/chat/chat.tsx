@@ -66,8 +66,8 @@ function ChatHeader() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
   return (
-    <div>
-      <div>
+    <div className="relative">
+      <div className="absolute top-4 left-5">
         {isMobileScreen && (
           <Button
             size="icon"
@@ -111,7 +111,7 @@ export function Chat() {
       const rows = inputRef.current ? autoGrowTextArea(inputRef.current) : 1;
       const inputRows = Math.min(
         20,
-        Math.max(2 + Number(!isMobileScreen), rows),
+        Math.max(1 + Number(!isMobileScreen), rows),
       );
       setInputRows(inputRows);
     },
@@ -455,9 +455,9 @@ export function Chat() {
             />
           )}
         </div>
-        <div className="flex flex-1 items-center">
+        <div className="flex flex-1 items-end">
           <Textarea
-            className="ring-inset focus-visible:ring-offset-0"
+            className="ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]"
             ref={inputRef}
             placeholder={Locale.Chat.Input(submitKey)}
             onInput={(e) => onInput(e.currentTarget.value)}
@@ -471,7 +471,7 @@ export function Chat() {
               fontSize: config.fontSize,
             }}
           />
-          <div className="flex items-center gap-2.5 absolute right-[35px]">
+          <div className="my-2 flex items-center gap-2.5 absolute right-[35px]">
             <FileUploader
               config={{
                 inputId: "document-uploader",
@@ -482,10 +482,20 @@ export function Chat() {
               onUpload={doSubmitFile}
               onError={showError}
             />
-            <Button onClick={() => doSubmit(userInput)} disabled={isRunning}>
-              <Send className="h-4 w-4 mr-2" />
-              {isMobileScreen ? undefined : Locale.Chat.Send}
-            </Button>
+            {isMobileScreen ? (
+              <Button
+                size="icon"
+                onClick={() => doSubmit(userInput)}
+                disabled={isRunning}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button onClick={() => doSubmit(userInput)} disabled={isRunning}>
+                <Send className="h-4 w-4 mr-2" />
+                {Locale.Chat.Send}
+              </Button>
+            )}
           </div>
         </div>
       </div>
