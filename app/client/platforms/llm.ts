@@ -33,7 +33,10 @@ export class LLMApi {
   async chat(options: ChatOptions) {
     const requestPayload = {
       message: options.message,
-      chatHistory: options.chatHistory,
+      chatHistory: options.chatHistory.map((m) => ({
+        role: m.role,
+        content: m.content,
+      })),
       config: options.config,
       datasource: options.datasource,
     };

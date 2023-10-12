@@ -6,20 +6,7 @@ const en = {
     Actions: {
       ChatList: "Go To Chat List",
       Copy: "Copy",
-      Stop: "Stop",
-      Retry: "Retry",
-      Pin: "Pin",
-      PinToastContent: "Pinned 1 messages to contextual prompts",
-      PinToastAction: "View",
       Delete: "Delete",
-    },
-    Commands: {
-      new: "Start a new chat",
-      newm: "Start a new chat with bot",
-      next: "Next Chat",
-      prev: "Previous Chat",
-      clear: "Clear Context",
-      del: "Delete Chat",
     },
     InputActions: {
       Stop: "Stop generating",

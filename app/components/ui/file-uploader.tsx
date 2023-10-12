@@ -10,6 +10,7 @@ export interface FileUploaderProps {
     inputId?: string;
     fileSizeLimit?: number;
     allowedExtensions?: string[];
+    disabled: boolean;
   };
   onUpload: (file: FileWrap) => Promise<void>;
   onError: (errMsg: string) => void;
@@ -77,7 +78,7 @@ export default function FileUploader({
         style={{ display: "none" }}
         onChange={onFileChange}
         accept={allowedExtensions?.join(",")}
-        disabled={uploading}
+        disabled={config?.disabled || uploading}
       />
       <label
         htmlFor={inputId}

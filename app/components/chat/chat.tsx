@@ -155,11 +155,6 @@ export function Chat() {
     setAutoScroll(true);
   };
 
-  // stop response
-  const onUserStop = (messageId: string) => {
-    ChatControllerPool.stop(session.id, messageId);
-  };
-
   useEffect(() => {
     chatStore.updateCurrentSession((session) => {
       const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
@@ -196,7 +191,9 @@ export function Chat() {
       return;
     }
     if (shouldSubmit(e)) {
-      doSubmit(userInput);
+      if (!isRunning) {
+        doSubmit(userInput);
+      }
       e.preventDefault();
     }
   };
@@ -319,7 +316,6 @@ export function Chat() {
 
   const autoFocus = !isMobileScreen; // wont auto focus on mobile screen
 
-  const stopAll = () => ChatControllerPool.stopAll();
   const clearContext = () => {
     chatStore.updateCurrentSession((session) => {
       if (session.clearContextIndex === session.messages.length) {
@@ -329,7 +325,8 @@ export function Chat() {
       }
     });
   };
-  const couldStop = ChatControllerPool.hasPending();
+  const stop = () => ChatControllerPool.stop(session.id);
+  const isRunning = ChatControllerPool.isRunning(session.id);
 
   return (
     <div className="flex flex-col relative h-full" key={session.id}>
@@ -423,13 +420,7 @@ export function Chat() {
                         className="py-1 px-0 w-fit"
                       >
                         <div className="flex items-center divide-x">
-                          {message.streaming ? (
-                            <ChatAction
-                              text={Locale.Chat.Actions.Stop}
-                              icon={<PauseCircle className="w-4 h-4" />}
-                              onClick={() => onUserStop(message.id ?? i)}
-                            />
-                          ) : (
+                          {!message.streaming && (
                             <>
                               <ChatAction
                                 text={Locale.Chat.Actions.Delete}
@@ -466,9 +457,9 @@ export function Chat() {
             showTitle
             buttonVariant="outline"
           />
-          {couldStop && (
+          {isRunning && (
             <ChatAction
-              onClick={stopAll}
+              onClick={stop}
               text={Locale.Chat.InputActions.Stop}
               icon={<PauseCircle className="w-4 h-4" />}
               showTitle
@@ -498,11 +489,12 @@ export function Chat() {
                 inputId: "document-uploader",
                 allowedExtensions: ALLOWED_DOCUMENT_EXTENSIONS,
                 fileSizeLimit: DOCUMENT_FILE_SIZE_LIMIT,
+                disabled: isRunning,
               }}
               onUpload={doSubmitFile}
               onError={showError}
             />
-            <Button onClick={() => doSubmit(userInput)}>
+            <Button onClick={() => doSubmit(userInput)} disabled={isRunning}>
               <Send className="h-4 w-4 mr-2" />
               {isMobileScreen ? undefined : Locale.Chat.Send}
             </Button>

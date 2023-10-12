@@ -1,37 +1,21 @@
-// To store message streaming controller
+// To store AbortControllers per session
 export const ChatControllerPool = {
   controllers: {} as Record<string, AbortController>,
 
-  addController(
-    sessionId: string,
-    messageId: string,
-    controller: AbortController,
-  ) {
-    const key = this.key(sessionId, messageId);
-    this.controllers[key] = controller;
-    return key;
+  addController(sessionId: string, controller: AbortController) {
+    this.controllers[sessionId] = controller;
   },
 
-  stop(sessionId: string, messageId: string) {
-    const key = this.key(sessionId, messageId);
-    const controller = this.controllers[key];
+  stop(sessionId: string) {
+    const controller = this.controllers[sessionId];
     controller?.abort();
   },
 
-  stopAll() {
-    Object.values(this.controllers).forEach((v) => v.abort());
+  isRunning(sessionId: string) {
+    return this.controllers[sessionId] !== undefined;
   },
 
-  hasPending() {
-    return Object.values(this.controllers).length > 0;
-  },
-
-  remove(sessionId: string, messageId: string) {
-    const key = this.key(sessionId, messageId);
-    delete this.controllers[key];
-  },
-
-  key(sessionId: string, messageIndex: string) {
-    return `${sessionId},${messageIndex}`;
+  remove(sessionId: string) {
+    delete this.controllers[sessionId];
   },
 };
