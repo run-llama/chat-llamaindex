@@ -11,8 +11,6 @@ export enum FileName {
   Bots = "bots.json",
 }
 
-export const LAST_INPUT_KEY = "last-input";
-
 export const REQUEST_TIMEOUT_MS = 60000;
 
 export const FETCH_SITE_CONTENT_URL = "/api/fetch";
