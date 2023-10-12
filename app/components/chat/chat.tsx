@@ -29,7 +29,6 @@ import {
   ALLOWED_DOCUMENT_EXTENSIONS,
   CHAT_PAGE_SIZE,
   DOCUMENT_FILE_SIZE_LIMIT,
-  LAST_INPUT_KEY,
   REQUEST_TIMEOUT_MS,
 } from "../../constant";
 import Locale from "../../locales";
@@ -149,7 +148,6 @@ export function Chat() {
     chatStore.onUserInput(userInput).then(() => {
       setTemporaryURLInput("");
     });
-    localStorage.setItem(LAST_INPUT_KEY, userInput);
     setUserInput("");
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
@@ -180,16 +178,6 @@ export function Chat() {
 
   // check if should send message
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // if ArrowUp and no userInput, fill with last input
-    if (
-      e.key === "ArrowUp" &&
-      userInput.length <= 0 &&
-      !(e.metaKey || e.altKey || e.ctrlKey)
-    ) {
-      setUserInput(localStorage.getItem(LAST_INPUT_KEY) ?? "");
-      e.preventDefault();
-      return;
-    }
     if (shouldSubmit(e)) {
       if (!isRunning) {
         doSubmit(userInput);
