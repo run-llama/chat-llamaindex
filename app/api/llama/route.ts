@@ -1,10 +1,11 @@
 import {
   OpenAI,
   ChatMessage,
-  HistoryChatEngine,
   serviceContextFromDefaults,
-  ContextChatEngine,
   ServiceContext,
+  DefaultContextGenerator,
+  StatelessChatEngine,
+  SummaryChatHistory,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { getDataSource } from "./datasource";
@@ -12,26 +13,24 @@ import { logRuntime } from "../../utils/runtime";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
-  chatHistory: ChatMessage[],
   datasource?: string,
 ) {
+  let contextGenerator;
   if (datasource) {
     // Split text and create embeddings. Store them in a VectorStoreIndex
     const index = await logRuntime(
       `Retrieving datasource '${datasource}'`,
       async () => await getDataSource(serviceContext, datasource),
     );
-
     const retriever = index.asRetriever();
     retriever.similarityTopK = 5;
-    // TODO: add history to context chat engine
-    // TODO: generate new system prompt if bot has one
-    return new ContextChatEngine({ retriever, chatHistory });
+
+    contextGenerator = new DefaultContextGenerator({ retriever });
   }
 
-  return new HistoryChatEngine({
-    llm: serviceContext.llm as OpenAI,
-    chatHistory: chatHistory,
+  return new StatelessChatEngine({
+    llm: serviceContext.llm,
+    contextGenerator,
   });
 }
 
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       message,
-      chatHistory,
+      chatHistory: messages,
       datasource,
       config,
     }: {
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest) {
       datasource: string | undefined;
       config: any;
     } = body;
-    if (!message || !chatHistory || !config) {
+    if (!message || !messages || !config) {
       return NextResponse.json(
         {
           error:
@@ -67,23 +66,19 @@ export async function POST(request: NextRequest) {
     });
 
     const serviceContext = serviceContextFromDefaults({
-      llm: llm,
+      llm,
       chunkSize: 512,
     });
 
-    const chatEngine = await createChatEngine(
-      serviceContext,
-      chatHistory,
-      datasource,
-    );
-    const messagesBefore = chatHistory.length;
+    const chatEngine = await createChatEngine(serviceContext, datasource);
+    const chatHistory = new SummaryChatHistory({ llm, messages });
 
     if (config.stream) {
       let responseStream = new TransformStream();
       const writer = responseStream.writable.getWriter();
       const encoder = new TextEncoder();
 
-      const stream = await chatEngine.chat(message, undefined, true);
+      const stream = await chatEngine.chat(message, chatHistory, true);
       const onNext = async () => {
         const { value, done } = await stream.next();
         if (!done) {
@@ -92,12 +87,10 @@ export async function POST(request: NextRequest) {
           );
           onNext();
         } else {
-          // get the new messages (might be more than one using the SummaryChatHistory)
-          const newMessages = chatEngine.chatHistory.slice(messagesBefore);
           writer.write(
             `data: ${JSON.stringify({
               done: true,
-              newMessages: newMessages,
+              newMessages: chatHistory.newMessages(),
             })}\n\n`,
           );
           writer.close();
@@ -113,11 +106,10 @@ export async function POST(request: NextRequest) {
         },
       });
     } else {
-      const response = await chatEngine.chat(message);
-      const newMessages = chatEngine.chatHistory.slice(messagesBefore);
+      const response = await chatEngine.chat(message, chatHistory);
       return NextResponse.json({
         content: response.response,
-        newMessages: newMessages,
+        newMessages: chatHistory.newMessages(),
       });
     }
   } catch (error) {
