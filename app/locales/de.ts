@@ -7,20 +7,7 @@ const de: LocaleType = {
     Actions: {
       ChatList: "Zur Chat-Liste gehen",
       Copy: "Kopieren",
-      Stop: "Stop",
-      Retry: "Wiederholen",
       Delete: "Löschen",
-      Pin: "Pin",
-      PinToastContent: "Eine Nachricht zum Kontext hinzugefügt",
-      PinToastAction: "Anzeigen",
-    },
-    Commands: {
-      new: "Start a new chat",
-      newm: "Start a new chat with bot",
-      next: "Next Chat",
-      prev: "Previous Chat",
-      clear: "Kontext löschen",
-      del: "Delete Chat",
     },
     InputActions: {
       Stop: "Stop",

@@ -190,7 +190,6 @@ export async function callSession(
     ...contextPrompts,
     ...recentMessages.map(transformAssistantMessageForSending),
   ];
-  const messageIndex = session.messages.length + 1;
 
   // save user's and bot's message
   const savedUserMessage = {
@@ -223,7 +222,7 @@ export async function callSession(
       // optional memory message)
       session.messages = session.messages.slice(0, -2).concat(newChatMessages);
       callbacks.onUpdateMessages(session.messages);
-      ChatControllerPool.remove(session.id, botMessage.id);
+      ChatControllerPool.remove(session.id);
       result = newChatMessages.slice(-1);
     },
     onError(error) {
@@ -238,18 +237,14 @@ export async function callSession(
       userMessage.isError = !isAborted;
       botMessage.isError = !isAborted;
       callbacks.onUpdateMessages(session.messages);
-      ChatControllerPool.remove(session.id, botMessage.id ?? messageIndex);
+      ChatControllerPool.remove(session.id);
 
       console.error("[Chat] failed ", error);
       result = botMessage;
     },
     onController(controller) {
       // collect controller for stop/retry
-      ChatControllerPool.addController(
-        session.id,
-        botMessage.id ?? messageIndex,
-        controller,
-      );
+      ChatControllerPool.addController(session.id, controller);
     },
   });
   return result;
