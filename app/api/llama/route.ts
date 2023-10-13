@@ -4,7 +4,7 @@ import {
   serviceContextFromDefaults,
   ServiceContext,
   DefaultContextGenerator,
-  StatelessChatEngine,
+  HistoryChatEngine,
   SummaryChatHistory,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
@@ -28,7 +28,7 @@ async function createChatEngine(
     contextGenerator = new DefaultContextGenerator({ retriever });
   }
 
-  return new StatelessChatEngine({
+  return new HistoryChatEngine({
     llm: serviceContext.llm,
     contextGenerator,
   });
