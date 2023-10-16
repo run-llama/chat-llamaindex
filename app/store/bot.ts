@@ -3,9 +3,9 @@ import { persist } from "zustand/middleware";
 import { BUILTIN_BOTS } from "../bots";
 import Locale, { getLang, Lang } from "../locales";
 import { ChatMessage } from "./session";
-import { ModelConfig, useAppConfig } from "./config";
 import { nanoid } from "nanoid";
 import { Deployment } from "./deployment";
+import { LLMConfig, ModelType } from "../client/platforms/llm";
 
 export type Share = {
   id: string;
@@ -18,7 +18,7 @@ export type Bot = {
   name: string;
   hideContext: boolean;
   context: ChatMessage[];
-  modelConfig: ModelConfig;
+  modelConfig: LLMConfig;
   lang: Lang;
   builtin: boolean;
   deployment: Deployment | null;
@@ -55,7 +55,12 @@ export const createEmptyBot = () =>
     avatar: DEFAULT_BOT_AVATAR,
     name: DEFAULT_BOT_NAME,
     context: [],
-    modelConfig: { ...useAppConfig.getState().modelConfig },
+    modelConfig: {
+      model: "gpt-3.5-turbo" as ModelType,
+      temperature: 0.5,
+      maxTokens: 2000,
+      sendMemory: true,
+    },
     lang: getLang(),
     builtin: false,
     createdAt: Date.now(),
@@ -125,18 +130,7 @@ export const useBotStore = create<BotStore>()(
         const userBots = Object.values(get().bots).sort(
           (a, b) => b.createdAt - a.createdAt,
         );
-        const config = useAppConfig.getState();
-        const buildinBots = BUILTIN_BOTS.map(
-          (m) =>
-            ({
-              ...m,
-              modelConfig: {
-                ...config.modelConfig,
-                ...m.modelConfig,
-              },
-            }) as Bot,
-        );
-        return userBots.concat(buildinBots);
+        return userBots.concat(BUILTIN_BOTS as Bot[]);
       },
       search(text) {
         return Object.values(get().bots);

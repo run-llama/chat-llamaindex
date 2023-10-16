@@ -6,10 +6,12 @@ import {
   DefaultContextGenerator,
   HistoryChatEngine,
   SummaryChatHistory,
+  SimpleChatHistory,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { getDataSource } from "./datasource";
 import { logRuntime } from "../../utils/runtime";
+import { LLMConfig } from "../../client/platforms/llm";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
       message: string;
       chatHistory: ChatMessage[];
       datasource: string | undefined;
-      config: any;
+      config: LLMConfig;
     } = body;
     if (!message || !messages || !config) {
       return NextResponse.json(
@@ -71,7 +73,9 @@ export async function POST(request: NextRequest) {
     });
 
     const chatEngine = await createChatEngine(serviceContext, datasource);
-    const chatHistory = new SummaryChatHistory({ llm, messages });
+    const chatHistory = config.sendMemory
+      ? new SummaryChatHistory({ llm, messages })
+      : new SimpleChatHistory({ messages });
 
     if (config.stream) {
       let responseStream = new TransformStream();

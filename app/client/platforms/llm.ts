@@ -11,11 +11,22 @@ export interface RequestMessage {
   content: string;
 }
 
+export const ALL_MODELS = [
+  "gpt-4",
+  "gpt-4-32k",
+  "gpt-3.5-turbo",
+  "gpt-3.5-turbo-16k",
+] as const;
+
+export type ModelType = (typeof ALL_MODELS)[number];
+
 export interface LLMConfig {
-  model: string;
+  model: ModelType;
   temperature?: number;
   topP?: number;
   stream?: boolean;
+  sendMemory?: boolean;
+  maxTokens?: number;
 }
 
 export interface ChatOptions {

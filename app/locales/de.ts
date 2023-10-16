@@ -44,7 +44,6 @@ const de: LocaleType = {
   },
   Memory: {
     Title: "Gedächtnis-Prompt",
-    EmptyContent: "Noch nichts.",
     Send: "Gedächtnis senden",
   },
   Home: {
@@ -104,10 +103,7 @@ const de: LocaleType = {
   },
   Store: {
     DefaultBotName: "Neuer Bot",
-    DefaultTopic: "Neues Gespräch",
     BotHello: "Hallo! Wie kann ich Ihnen heute helfen?",
-    Error:
-      "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal.",
   },
   Copy: {
     Success: "In die Zwischenablage kopiert",

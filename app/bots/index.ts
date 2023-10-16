@@ -1,13 +1,12 @@
 import { Bot } from "../store/bot";
 
-import bots from "./bots.json";
-
-import { type BuiltinBot } from "./typing";
-export { type BuiltinBot } from "./typing";
-
 import Locale from "../locales";
+import { BUILTIN_BOTS } from "./bots";
+export { BUILTIN_BOTS } from "./bots";
 
 export const BUILTIN_BOT_ID = 100000;
+
+export type BuiltinBot = Omit<Bot, "id" | "deployment" | "share" | "botHello">;
 
 export const BUILTIN_BOT_STORE = {
   buildinId: BUILTIN_BOT_ID,
@@ -31,6 +30,4 @@ export const BUILTIN_BOT_STORE = {
   },
 };
 
-export const BUILTIN_BOTS: BuiltinBot[] = bots.map((m: any) =>
-  BUILTIN_BOT_STORE.add(m),
-);
+BUILTIN_BOTS.forEach((m: any) => BUILTIN_BOT_STORE.add(m));
