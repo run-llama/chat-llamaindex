@@ -8,13 +8,45 @@ import {
   SelectValue,
 } from "@/app/components/ui/select";
 import Locale from "../../../locales";
-import { ALL_MODELS, ModalConfigValidator, ModelConfig } from "../../../store";
 import { Card, CardContent } from "../../ui/card";
 import ConfigItem from "./config-item";
+import {
+  ALL_MODELS,
+  ModelType,
+  LLMConfig,
+} from "../../../client/platforms/llm";
+
+function limitNumber(
+  x: number,
+  min: number,
+  max: number,
+  defaultValue: number,
+) {
+  if (typeof x !== "number" || isNaN(x)) {
+    return defaultValue;
+  }
+
+  return Math.min(max, Math.max(min, x));
+}
+
+const ModalConfigValidator = {
+  model(x: string) {
+    return x as ModelType;
+  },
+  maxTokens(x: number) {
+    return limitNumber(x, 0, 100000, 2000);
+  },
+  temperature(x: number) {
+    return limitNumber(x, 0, 1, 1);
+  },
+  topP(x: number) {
+    return limitNumber(x, 0, 1, 1);
+  },
+};
 
 export function ModelConfigList(props: {
-  modelConfig: ModelConfig;
-  updateConfig: (updater: (config: ModelConfig) => void) => void;
+  modelConfig: LLMConfig;
+  updateConfig: (updater: (config: LLMConfig) => void) => void;
 }) {
   return (
     <Card>
@@ -32,9 +64,9 @@ export function ModelConfigList(props: {
               <SelectValue placeholder="Select model" />
             </SelectTrigger>
             <SelectContent>
-              {ALL_MODELS.map((v) => (
-                <SelectItem value={v.name} key={v.name} disabled={!v.available}>
-                  {v.name}
+              {ALL_MODELS.map((model) => (
+                <SelectItem value={model} key={model}>
+                  {model}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -46,7 +78,7 @@ export function ModelConfigList(props: {
           subTitle={Locale.Settings.Temperature.SubTitle}
         >
           <InputRange
-            value={props.modelConfig.temperature?.toFixed(1)}
+            value={(props.modelConfig.temperature ?? 0.5).toFixed(1)}
             min="0"
             max="1" // lets limit it to 0-1
             step="0.1"

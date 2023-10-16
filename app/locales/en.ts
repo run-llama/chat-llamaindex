@@ -42,7 +42,6 @@ const en = {
   },
   Memory: {
     Title: "Memory Prompt",
-    EmptyContent: "Nothing yet.",
     Send: "Send Memory",
   },
   Home: {
@@ -104,9 +103,7 @@ const en = {
   },
   Store: {
     DefaultBotName: "New Bot",
-    DefaultTopic: "New Conversation",
     BotHello: "Hello! How can I assist you today?",
-    Error: "Something went wrong, please try again later.",
   },
   Copy: {
     Success: "Copied to clipboard",

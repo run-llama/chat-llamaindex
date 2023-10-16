@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import { BUILTIN_BOT_STORE } from "../bots/index";
 import { FileWrap } from "../utils/file";
 import { Bot } from "./bot";
-import { useAppConfig } from "./config";
 import { ChatSession, callSession, createEmptySession } from "./session";
 
 interface ChatStore {
@@ -86,13 +85,9 @@ export const useChatStore = create<ChatStore>()(
         }));
         const session = get().sessions[index];
 
-        const config = useAppConfig.getState();
-        const globalModelConfig = config.modelConfig;
-
         session.bot = {
           ...bot,
           modelConfig: {
-            ...globalModelConfig,
             ...bot.modelConfig,
           },
         };
