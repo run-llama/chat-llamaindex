@@ -1,7 +1,6 @@
-export function logRuntime<T>(str: string, func: () => T): T {
+export async function getRuntime(func: () => Promise<void>): Promise<number> {
   const start = Date.now();
-  const r = func();
+  await func();
   const end = Date.now();
-  console.log(`${str}: ${end - start}ms`);
-  return r;
+  return end - start;
 }
