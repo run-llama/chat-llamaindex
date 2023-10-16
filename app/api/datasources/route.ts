@@ -16,3 +16,6 @@ export async function GET() {
     datasources: DATASOURCES,
   });
 }
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";

@@ -17,10 +17,10 @@ export type URLDetailContent = URLDetail & {
 };
 
 export type ChatMessage = RequestMessage & {
-  date: string;
+  date?: string;
   streaming?: boolean;
   isError?: boolean;
-  id: string;
+  id?: string;
   urlDetail?: URLDetail;
 };
 
@@ -164,7 +164,6 @@ export async function callSession(
     });
     const botMessage = createMessage({
       role: "assistant",
-      id: userMessage.id! + 1,
       content: prettyObject({
         error: true,
         message: error.message || "Invalid user message",
