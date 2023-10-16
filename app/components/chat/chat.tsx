@@ -158,7 +158,7 @@ export function Chat() {
       const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
       session.messages.forEach((m) => {
         // check if should stop all stale messages
-        if (m.isError || new Date(m.date).getTime() < stopTiming) {
+        if (m.isError || (m.date && new Date(m.date).getTime() < stopTiming)) {
           if (m.streaming) {
             m.streaming = false;
           }
@@ -342,7 +342,7 @@ export function Chat() {
             const shouldShowClearContextDivider = i === clearContextIndex - 1;
 
             return (
-              <div className="space-y-5" key={message.id}>
+              <div className="space-y-5" key={i}>
                 <div
                   className={
                     isUser
@@ -397,7 +397,7 @@ export function Chat() {
                         <div className="text-xs text-muted-foreground opacity-80 whitespace-nowrap text-right w-full box-border pointer-events-none z-[1]">
                           {isContext
                             ? Locale.Chat.IsContext
-                            : message.date.toLocaleString()}
+                            : message.date?.toLocaleString()}
                         </div>
                       </div>
                     </HoverCardTrigger>
@@ -410,11 +410,13 @@ export function Chat() {
                         <div className="flex items-center divide-x">
                           {!message.streaming && (
                             <>
-                              <ChatAction
-                                text={Locale.Chat.Actions.Delete}
-                                icon={<Trash className="w-4 h-4" />}
-                                onClick={() => onDelete(message.id ?? i)}
-                              />
+                              {message.id && (
+                                <ChatAction
+                                  text={Locale.Chat.Actions.Delete}
+                                  icon={<Trash className="w-4 h-4" />}
+                                  onClick={() => onDelete(message.id!)}
+                                />
+                              )}
                               <ChatAction
                                 text={Locale.Chat.Actions.Copy}
                                 icon={<Clipboard className="w-4 h-4" />}

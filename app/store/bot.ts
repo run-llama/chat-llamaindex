@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { BUILTIN_BOTS } from "../bots";
-import Locale, { getLang, Lang } from "../locales";
+import Locale from "../locales";
 import { ChatMessage } from "./session";
 import { nanoid } from "nanoid";
 import { Deployment } from "./deployment";
@@ -19,7 +19,6 @@ export type Bot = {
   hideContext: boolean;
   context: ChatMessage[];
   modelConfig: LLMConfig;
-  lang: Lang;
   builtin: boolean;
   deployment: Deployment | null;
   share: Share | null;
@@ -61,7 +60,6 @@ export const createEmptyBot = () =>
       maxTokens: 2000,
       sendMemory: true,
     },
-    lang: getLang(),
     builtin: false,
     createdAt: Date.now(),
     deployment: null,

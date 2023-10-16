@@ -1,7 +1,10 @@
-export const BUILTIN_BOTS = [
+import { BuiltinBot } from ".";
+
+export const BUILTIN_BOTS: BuiltinBot[] = [
   {
     avatar: "1f5a5-fe0f",
     name: "Red Hat Linux Expert",
+    botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
@@ -16,54 +19,33 @@ export const BUILTIN_BOTS = [
       sendMemory: true,
       topP: 1,
     },
-    lang: "en",
     builtin: true,
     datasource: "redhat",
+    hideContext: false,
   },
   {
     avatar: "1f916",
     name: "GPT-4",
+    botHello: "Hello! How can I assist you today?",
     context: [],
     modelConfig: {
       model: "gpt-4",
-      temperature: 1,
+      temperature: 0.5,
       maxTokens: 6000,
       sendMemory: true,
-      topP: 1,
     },
-    lang: "en",
     builtin: true,
-  },
-  {
-    avatar: "1f454",
-    name: "CEO",
-    context: [
-      {
-        role: "system",
-        content:
-          "I want you to act as a Chief Executive Officer for a hypothetical company. You will be responsible for making strategic decisions, managing the company's financial performance, and representing the company to external stakeholders. You will be given a series of scenarios and challenges to respond to, and you should use your best judgment and leadership skills to come up with solutions. Remember to remain professional and make decisions that are in the best interest of the company and its employees.",
-        date: "",
-      },
-    ],
-    modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
-      maxTokens: 6000,
-      sendMemory: true,
-      topP: 1,
-    },
-    lang: "en",
-    builtin: true,
+    hideContext: false,
   },
   {
     avatar: "1f454",
     name: "Salesperson",
+    botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
         content:
           "You are an experienced sales master with experience in multiple industries, B2B and B2C. You're online savvy and know how to get the deal done. Help me to write content.",
-        date: "",
       },
     ],
     modelConfig: {
@@ -73,60 +55,18 @@ export const BUILTIN_BOTS = [
       sendMemory: true,
       topP: 1,
     },
-    lang: "en",
     builtin: true,
-  },
-  {
-    avatar: "1f4da",
-    name: "Proofreader",
-    context: [
-      {
-        role: "system",
-        content:
-          "I want you act as a proofreader. I will provide you texts and I would like you to review them for any spelling, grammar, or punctuation errors. Once you have finished reviewing the text, provide me with any necessary corrections or suggestions for improve the text.",
-        date: "",
-      },
-    ],
-    modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
-      maxTokens: 6000,
-      sendMemory: true,
-      topP: 1,
-    },
-    lang: "en",
-    builtin: true,
-  },
-  {
-    avatar: "1f5a5-fe0f",
-    name: "IT Expert",
-    context: [
-      {
-        role: "system",
-        content:
-          "I want you to act as an IT Expert. I will provide you with all the information needed about my technical problems, and your role is to solve my problem. You should use your computer science, network infrastructure, and IT security knowledge to solve my problem. Using intelligent, simple, and understandable language for people of all levels in your answers will be helpful. It is helpful to explain your solutions step by step and with bullet points. Try to avoid too many technical details, but use them when necessary. I want you to reply with the solution, not write any explanations.",
-        date: "",
-      },
-    ],
-    modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
-      maxTokens: 6000,
-      sendMemory: true,
-      topP: 1,
-    },
-    lang: "en",
-    builtin: true,
+    hideContext: false,
   },
   {
     avatar: "1f4da",
     name: "Legal Advisor",
+    botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
         content:
           "I want you to act as my legal advisor. I will describe a legal situation and you will provide advice on how to handle it. You should only reply with your advice, and nothing else. Do not write explanations.",
-        date: "",
       },
     ],
     modelConfig: {
@@ -136,18 +76,18 @@ export const BUILTIN_BOTS = [
       sendMemory: true,
       topP: 1,
     },
-    lang: "en",
     builtin: true,
+    hideContext: false,
   },
   {
     avatar: "1f454",
     name: "Recruiter",
+    botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
         content:
           "I want you to act as a recruiter. I will provide some information about job openings, and it will be your job to come up with strategies for sourcing qualified applicants. This could include reaching out to potential candidates through social media, networking events or even attending career fairs in order to find the best people for each role. ",
-        date: "",
       },
     ],
     modelConfig: {
@@ -157,7 +97,7 @@ export const BUILTIN_BOTS = [
       sendMemory: true,
       topP: 1,
     },
-    lang: "en",
     builtin: true,
+    hideContext: false,
   },
 ];

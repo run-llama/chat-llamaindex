@@ -181,11 +181,10 @@ export function ContextPrompts(props: {
 
   const createNewEmptyPrompt = () => {
     addContextPrompt(
-      createMessage({
+      {
         role: "user",
         content: "",
-        date: "",
-      }),
+      },
       props.context.length,
     );
   };
@@ -216,11 +215,10 @@ export function ContextPrompts(props: {
               remove={() => removeContextPrompt(i)}
               insert={() => {
                 addContextPrompt(
-                  createMessage({
+                  {
                     role: "user",
                     content: "",
-                    date: new Date().toLocaleString(),
-                  }),
+                  },
                   i + 1,
                 );
               }}

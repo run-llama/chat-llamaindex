@@ -9,8 +9,6 @@ import dynamic from "next/dynamic";
 import { Path } from "../constant";
 import { ErrorBoundary } from "./layout/error";
 
-import { getLang } from "../locales";
-
 import { useSession } from "next-auth/react";
 import {
   Route,
@@ -66,17 +64,6 @@ export function useSwitchTheme() {
       metaDescriptionLight?.setAttribute("content", themeColor);
     }
   }, [config.theme]);
-}
-
-function useHtmlLang() {
-  useEffect(() => {
-    const lang = getLang();
-    const htmlLang = document.documentElement.lang;
-
-    if (lang !== htmlLang) {
-      document.documentElement.lang = lang;
-    }
-  }, []);
 }
 
 const useHasHydrated = () => {
@@ -188,7 +175,6 @@ function Screen() {
 
 export function Home({ bot }: { bot?: Bot }) {
   useSwitchTheme();
-  useHtmlLang();
 
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
