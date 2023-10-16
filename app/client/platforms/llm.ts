@@ -58,7 +58,7 @@ export class LLMApi {
     options.onController?.(controller);
 
     try {
-      const chatPath = "/api/llama";
+      const chatPath = "/api/llm";
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),

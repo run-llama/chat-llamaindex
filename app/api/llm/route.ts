@@ -1,17 +1,17 @@
 import {
-  OpenAI,
   ChatMessage,
-  serviceContextFromDefaults,
-  ServiceContext,
   DefaultContextGenerator,
   HistoryChatEngine,
-  SummaryChatHistory,
+  OpenAI,
+  ServiceContext,
   SimpleChatHistory,
+  SummaryChatHistory,
+  serviceContextFromDefaults,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
-import { getDataSource } from "./datasource";
-import { logRuntime } from "../../utils/runtime";
 import { LLMConfig } from "../../client/platforms/llm";
+import { DATASOURCES_CHUNK_SIZE } from "../../constant";
+import { getDataSource } from "../datasources/datasource";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
@@ -19,11 +19,7 @@ async function createChatEngine(
 ) {
   let contextGenerator;
   if (datasource) {
-    // Split text and create embeddings. Store them in a VectorStoreIndex
-    const index = await logRuntime(
-      `Retrieving datasource '${datasource}'`,
-      async () => await getDataSource(serviceContext, datasource),
-    );
+    const index = await getDataSource(serviceContext, datasource);
     const retriever = index.asRetriever();
     retriever.similarityTopK = 5;
 
@@ -69,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     const serviceContext = serviceContextFromDefaults({
       llm,
-      chunkSize: 512,
+      chunkSize: DATASOURCES_CHUNK_SIZE,
     });
 
     const chatEngine = await createChatEngine(serviceContext, datasource);
