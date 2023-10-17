@@ -9,7 +9,7 @@ import { Updater } from "@/app/typing";
 const BotItemContext = createContext<{
   bot: Bot;
   isActive: boolean;
-  isBuiltin: boolean;
+  isReadOnly: boolean;
   isShareble: boolean;
   ensureSession: () => void;
   cloneBot: () => void;
@@ -34,7 +34,7 @@ export const BotItemContextProvider = (props: {
     newBot.name = `My ${bot.name}`;
   };
 
-  const isBuiltin = bot.builtin;
+  const isReadOnly = bot.readOnly;
   const isShareble = !!bot.share;
 
   const ensureSession = () => {
@@ -58,7 +58,7 @@ export const BotItemContextProvider = (props: {
       value={{
         bot,
         isActive,
-        isBuiltin,
+        isReadOnly,
         isShareble,
         ensureSession,
         cloneBot,

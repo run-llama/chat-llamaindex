@@ -19,7 +19,7 @@ export type Bot = {
   hideContext: boolean;
   context: ChatMessage[];
   modelConfig: LLMConfig;
-  builtin: boolean;
+  readOnly: boolean;
   deployment: Deployment | null;
   share: Share | null;
   botHello: string | null;
@@ -60,7 +60,7 @@ export const createEmptyBot = () =>
       maxTokens: 2000,
       sendMemory: true,
     },
-    builtin: false,
+    readOnly: false,
     createdAt: Date.now(),
     deployment: null,
     share: null,
@@ -89,7 +89,7 @@ export const useBotStore = create<BotStore>()(
           ...createEmptyBot(),
           ...bot,
           id,
-          builtin: options?.readOnly || false,
+          readOnly: options?.readOnly || false,
         };
         if (options?.reset) {
           bots[id].share = null;
