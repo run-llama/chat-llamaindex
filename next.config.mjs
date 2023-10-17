@@ -10,6 +10,9 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ["pdf-parse", "llamaindex"],
+    outputFileTracingIncludes: {
+      "/*": ["./cache/**/*"],
+    },
   },
 };
 
