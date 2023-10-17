@@ -1,15 +1,17 @@
 import { BuiltinBot } from ".";
 
+const TEMPLATE = (PERSONA: string) =>
+  `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
+
 export const BUILTIN_BOTS: BuiltinBot[] = [
   {
     avatar: "1f5a5-fe0f",
     name: "Red Hat Linux Expert",
-    botHello: "Hello! How can I assist you today?",
+    botHello: "Hello! How can I help you with Red Hat Linux?",
     context: [
       {
         role: "system",
-        content:
-          "I want you to act as an Red Hat Linux Expert. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your solutions step by step and with bullet points.",
+        content: TEMPLATE("Red Hat Linux Expert"),
       },
     ],
     modelConfig: {
@@ -17,87 +19,64 @@ export const BUILTIN_BOTS: BuiltinBot[] = [
       temperature: 0.1,
       maxTokens: 8000,
       sendMemory: true,
-      topP: 1,
     },
-    builtin: true,
+    readOnly: true,
     datasource: "redhat",
     hideContext: false,
   },
-  {
-    avatar: "1f916",
-    name: "GPT-4",
-    botHello: "Hello! How can I assist you today?",
-    context: [],
-    modelConfig: {
-      model: "gpt-4",
-      temperature: 0.5,
-      maxTokens: 6000,
-      sendMemory: true,
-    },
-    builtin: true,
-    hideContext: false,
-  },
+
   {
     avatar: "1f454",
-    name: "Salesperson",
-    botHello: "Hello! How can I assist you today?",
+    name: "Apple Watch Genius",
+    botHello: "Hello! How can I help you with Apple Watches?",
     context: [
       {
         role: "system",
-        content:
-          "You are an experienced sales master with experience in multiple industries, B2B and B2C. You're online savvy and know how to get the deal done. Help me to write content.",
+        content: TEMPLATE("Apple Genius specialized in Apple Watches"),
       },
     ],
     modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
-      maxTokens: 6000,
+      model: "gpt-3.5-turbo-16k",
+      temperature: 0.1,
+      maxTokens: 8000,
       sendMemory: true,
-      topP: 1,
     },
-    builtin: true,
+    readOnly: true,
+    datasource: "watchos",
     hideContext: false,
   },
   {
     avatar: "1f4da",
-    name: "Legal Advisor",
+    name: "German Basic Law Expert",
     botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
-        content:
-          "I want you to act as my legal advisor. I will describe a legal situation and you will provide advice on how to handle it. You should only reply with your advice, and nothing else. Do not write explanations.",
+        content: TEMPLATE("Lawyer specialized in the basic law of Germany"),
       },
     ],
     modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
-      maxTokens: 6000,
+      model: "gpt-3.5-turbo-16k",
+      temperature: 0.1,
+      maxTokens: 8000,
       sendMemory: true,
-      topP: 1,
     },
-    builtin: true,
+    readOnly: true,
+    datasource: "basic_law_germany",
     hideContext: false,
   },
   {
-    avatar: "1f454",
-    name: "Recruiter",
+    avatar: "1f916",
+    name: "GPT-3.5-Turbo",
     botHello: "Hello! How can I assist you today?",
-    context: [
-      {
-        role: "system",
-        content:
-          "I want you to act as a recruiter. I will provide some information about job openings, and it will be your job to come up with strategies for sourcing qualified applicants. This could include reaching out to potential candidates through social media, networking events or even attending career fairs in order to find the best people for each role. ",
-      },
-    ],
+    context: [],
     modelConfig: {
-      model: "gpt-4",
-      temperature: 1,
+      model: "gpt-3.5-turbo",
+      temperature: 0.5,
       maxTokens: 6000,
       sendMemory: true,
-      topP: 1,
     },
-    builtin: true,
+    readOnly: true,
     hideContext: false,
   },
 ];
