@@ -8,7 +8,7 @@ import { LLMConfig } from "@/app/client/platforms/llm";
 export default function BotSettings(props: { extraConfigs?: JSX.Element }) {
   const { bot, updateBot } = useBot();
   const updateConfig = (updater: (config: LLMConfig) => void) => {
-    if (bot.builtin) return;
+    if (bot.readOnly) return;
     const config = { ...bot.modelConfig };
     updater(config);
     updateBot((bot) => {

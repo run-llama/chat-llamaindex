@@ -26,7 +26,7 @@ import DeployBotDialogContent from "./deploy-bot-dialog";
 import ShareBotDialogContent from "./share-bot-dialog";
 
 export default function BotOptions() {
-  const { isBuiltin, isShareble, cloneBot } = useBot();
+  const { isReadOnly, isShareble, cloneBot } = useBot();
   const [dialogContent, setDialogContent] = useState<JSX.Element | null>(null);
 
   return (
@@ -48,7 +48,7 @@ export default function BotOptions() {
             </DropdownMenuItem>
             <DialogTrigger asChild>
               <DropdownMenuItem
-                disabled={isBuiltin}
+                disabled={isReadOnly}
                 onClick={() => setDialogContent(<EditBotDialogContent />)}
               >
                 <ClipboardEdit className="mr-2 w-4 h-4" />
@@ -57,7 +57,7 @@ export default function BotOptions() {
             </DialogTrigger>
             <AlertDialogTrigger className="w-full">
               <DropdownMenuItem
-                disabled={isBuiltin && !isShareble}
+                disabled={isReadOnly && !isShareble}
                 onClick={() => setDialogContent(<DeleteBotDialogContent />)}
               >
                 <XCircle className="mr-2 w-4 h-4" />
@@ -66,7 +66,7 @@ export default function BotOptions() {
             </AlertDialogTrigger>
             <DialogTrigger asChild>
               <DropdownMenuItem
-                disabled={isBuiltin && !isShareble}
+                disabled={isReadOnly && !isShareble}
                 onClick={() => setDialogContent(<DeployBotDialogContent />)}
               >
                 <Zap className="mr-2 w-4 h-4" />
@@ -75,7 +75,7 @@ export default function BotOptions() {
             </DialogTrigger>
             <DialogTrigger asChild>
               <DropdownMenuItem
-                disabled={isBuiltin}
+                disabled={isReadOnly}
                 onClick={() => setDialogContent(<ShareBotDialogContent />)}
               >
                 <Share2 className="mr-2 w-4 h-4" />
