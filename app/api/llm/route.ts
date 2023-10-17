@@ -10,8 +10,8 @@ import {
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig } from "../../client/platforms/llm";
-import { DATASOURCES_CHUNK_SIZE } from "../../constant";
-import { getDataSource } from "../datasources/datasource";
+import { getDataSource } from "./datasource";
+import { DATASOURCES_CHUNK_SIZE } from "@/scripts/constants.mjs";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
