@@ -84,8 +84,8 @@ dependencies:
     specifier: ^1.11.11
     version: 1.11.11
   llamaindex:
-    specifier: 0.0.0-20231006013839
-    version: 0.0.0-20231006013839(encoding@0.1.13)
+    specifier: 0.0.0-20231016163150
+    version: 0.0.0-20231016163150(encoding@0.1.13)
   lucide-react:
     specifier: ^0.277.0
     version: 0.277.0(react@18.2.0)
@@ -253,10 +253,10 @@ packages:
       '@jridgewell/trace-mapping': 0.3.19
     dev: false
 
-  /@anthropic-ai/sdk@0.6.2(encoding@0.1.13):
-    resolution: {integrity: sha512-fB9PUj9RFT+XjkL+E9Ol864ZIJi+1P8WnbHspN3N3/GK2uSzjd0cbVIKTGgf4v3N8MwaQu+UWnU7C4BG/fap/g==}
+  /@anthropic-ai/sdk@0.6.7(encoding@0.1.13):
+    resolution: {integrity: sha512-cSr7XwOR2zNNrrPiv0BakNdeo5MR2h6iBJYm4fgELLg13i9ISaBh8Auc1tQ6fzziRL3VdPw2NdoRoMR2zG2HDQ==}
     dependencies:
-      '@types/node': 18.18.4
+      '@types/node': 18.18.5
       '@types/node-fetch': 2.6.6
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -264,6 +264,7 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2974,8 +2975,8 @@ packages:
       form-data: 4.0.0
     dev: false
 
-  /@types/node@18.18.4:
-    resolution: {integrity: sha512-t3rNFBgJRugIhackit2mVcLfF6IRc0JE4oeizPQL8Zrm8n2WY/0wOdpOPhdtG0V9Q2TlW/axbF1MJ6z+Yj/kKQ==}
+  /@types/node@18.18.5:
+    resolution: {integrity: sha512-4slmbtwV59ZxitY4ixUZdy1uRLf9eSIvBWPQxNjhHYWEtn0FryfKpyS2cvADYXTayWdKEIsJengncrVvkI4I6A==}
     dev: false
 
   /@types/node@20.5.9:
@@ -6057,23 +6058,23 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /llamaindex@0.0.0-20231006013839(encoding@0.1.13):
-    resolution: {integrity: sha512-lo7N3Qzq0YkAf0d4rEzImcs0MPkfilJGeGxt5gXROVAiR2L31Fo/4M6yPl0uMDDWHZzncV+5H3fwhSXvZCIKvA==}
+  /llamaindex@0.0.0-20231016163150(encoding@0.1.13):
+    resolution: {integrity: sha512-WzbR6Pz9wT2ZMDZ4rmpzhrLFNTm71XaBkTLR4hgWhHboty1IZMM6wcWmo2ylJady7CWU7PVcGEowrnayYx4DCQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@anthropic-ai/sdk': 0.6.2(encoding@0.1.13)
+      '@anthropic-ai/sdk': 0.6.7(encoding@0.1.13)
       '@notionhq/client': 2.2.13(encoding@0.1.13)
       lodash: 4.17.21
       mammoth: 1.6.0
       md-utils-ts: 2.0.0
       mongodb: 6.1.0
       notion-md-crawler: 0.0.2(encoding@0.1.13)
-      openai: 4.11.1(encoding@0.1.13)
+      openai: 4.12.3(encoding@0.1.13)
       papaparse: 5.4.1
       pdf-parse: 1.1.1
-      portkey-ai: 0.1.11
+      portkey-ai: 0.1.13
       rake-modified: 1.0.8
-      replicate: 0.18.1
+      replicate: 0.20.1
       tiktoken: 1.0.10
       uuid: 9.0.1
       wink-nlp: 1.14.3
@@ -7226,11 +7227,11 @@ packages:
       is-wsl: 2.2.0
     dev: true
 
-  /openai@4.11.1(encoding@0.1.13):
-    resolution: {integrity: sha512-GU0HQWbejXuVAQlDjxIE8pohqnjptFDIm32aPlNT1H9ucMz1VJJD0DaTJRQsagNaJ97awWjjVLEG7zCM6sm4SA==}
+  /openai@4.12.3(encoding@0.1.13):
+    resolution: {integrity: sha512-Kw8M8qioKg+iw2tCpdJ1G772uV0tk4SRF1MtySYSPr82YH+Csl61kYv2KzKAOqINcOVn5eSN26t0ImIsdJexfw==}
     hasBin: true
     dependencies:
-      '@types/node': 18.18.4
+      '@types/node': 18.18.5
       '@types/node-fetch': 2.6.6
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -7238,6 +7239,7 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -7392,8 +7394,8 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /portkey-ai@0.1.11:
-    resolution: {integrity: sha512-KRZLB7zdvJ40P6WuRAb6VE2gin7SXhbRs7ESqnxDeO8C+ECtKDrrS5g0+l3pD9+HZO4iCvvIROaRyd1NOyLmWw==}
+  /portkey-ai@0.1.13:
+    resolution: {integrity: sha512-cCclnsbHGiFN6dz0FW29h0bixoRAsqJCkDhK56K9TRjWC6PDFaplYYaxo7SIO0Cjb0NKsjtEH5QdT0kPmirbLQ==}
     dependencies:
       agentkeepalive: 4.5.0
     dev: false
@@ -7930,8 +7932,8 @@ packages:
     engines: {node: '>=0.10'}
     dev: false
 
-  /replicate@0.18.1:
-    resolution: {integrity: sha512-JFK5qWL7AAajsIjtkW/nTaoX+yKp8zkaANe+pQpBh9RjH5vIy6/tn/sVNlRF1z5bCJLupshJBHFgnHRdWjbKXg==}
+  /replicate@0.20.1:
+    resolution: {integrity: sha512-QVyI1rowGsSfNuDrRmumYPdCHa/fN/RkI3NHpcK0i5hSSiWK69URAyheAC/0MIAiS3oUs4kD56PB9zEI4oHENw==}
     engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
     dev: false
 

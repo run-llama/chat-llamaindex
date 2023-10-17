@@ -38,7 +38,7 @@
     "encoding": "^0.1.13",
     "fuse.js": "^6.6.2",
     "html-to-image": "^1.11.11",
-    "llamaindex": "0.0.0-20231006013839",
+    "llamaindex": "0.0.0-20231016163150",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.3.1",
     "nanoid": "^4.0.2",
