@@ -13,13 +13,6 @@ import {
 import { Button, buttonVariants } from "@/app/components/ui/button";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { ScrollArea } from "@/app/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/app/components/ui/select";
 import { Separator } from "@/app/components/ui/separator";
 import Typography from "@/app/components/ui/typography";
 import { useToast } from "@/app/components/ui/use-toast";
@@ -29,7 +22,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileName, Path } from "../constant";
 import Locale from "../locales";
-import { Theme, useAppConfig, useChatStore } from "../store";
+import { useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
 import { downloadAs, readFromFile, useMobileScreen } from "../utils";
 import { ErrorBoundary } from "./layout/error";
@@ -60,75 +53,12 @@ function SettingHeader() {
   );
 }
 
-function CommonSettings() {
-  const config = useAppConfig();
-  const updateConfig = config.update;
-  return (
-    <>
-      <Card className="mb-5">
-        <CardContent className="divide-y p-5">
-          <ConfigItem title={Locale.Settings.Theme}>
-            <Select
-              value={config.theme}
-              onValueChange={(value) => {
-                updateConfig((config) => (config.theme = value as Theme));
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select theme" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(Theme).map((v) => (
-                  <SelectItem value={v} key={v}>
-                    {v}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </ConfigItem>
-        </CardContent>
-      </Card>
-    </>
-  );
-}
-
 function DangerItems() {
   const chatStore = useChatStore();
-  const appConfig = useAppConfig();
 
   return (
     <Card>
       <CardContent className="divide-y p-5">
-        <ConfigItem
-          title={Locale.Settings.Danger.Reset.Title}
-          subTitle={Locale.Settings.Danger.Reset.SubTitle}
-        >
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">
-                {Locale.Settings.Danger.Reset.Action}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {Locale.Settings.Danger.Reset.Confirm}
-                </AlertDialogTitle>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className={cn(buttonVariants({ variant: "destructive" }))}
-                  onClick={() => {
-                    appConfig.reset();
-                  }}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </ConfigItem>
         <ConfigItem
           title={Locale.Settings.Danger.Clear.Title}
           subTitle={Locale.Settings.Danger.Clear.SubTitle}
@@ -236,7 +166,6 @@ export function Settings() {
       <SettingHeader />
       <Separator />
       <ScrollArea className="p-5 h-[80vh]">
-        <CommonSettings />
         <BackupItems />
         <DangerItems />
       </ScrollArea>

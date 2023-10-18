@@ -19,7 +19,6 @@ import {
 import { getClientConfig } from "../config/client";
 import { useChatStore } from "../store";
 import { Bot, useBotStore } from "../store/bot";
-import { Theme, useAppConfig } from "../store/config";
 import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
 import { LoadingModule } from "@/app/components/ui/loading";
@@ -34,37 +33,6 @@ const SettingsPage = dynamic(
 const ChatPage = dynamic(async () => (await import("./chat/chat")).Chat, {
   loading: () => <LoadingModule />,
 });
-
-export function useSwitchTheme() {
-  const config = useAppConfig();
-
-  useEffect(() => {
-    document.body.classList.remove("light");
-    document.body.classList.remove("dark");
-
-    if (config.theme === Theme.Dark) {
-      document.body.classList.add("dark");
-    } else if (config.theme === Theme.Light) {
-      document.body.classList.add("light");
-    }
-
-    const metaDescriptionDark = document.querySelector(
-      'meta[name="theme-color"][media*="dark"]',
-    );
-    const metaDescriptionLight = document.querySelector(
-      'meta[name="theme-color"][media*="light"]',
-    );
-
-    if (config.theme === "auto") {
-      metaDescriptionDark?.setAttribute("content", "#151515");
-      metaDescriptionLight?.setAttribute("content", "#fafafa");
-    } else {
-      const themeColor = getCSSVar("--theme-color");
-      metaDescriptionDark?.setAttribute("content", themeColor);
-      metaDescriptionLight?.setAttribute("content", themeColor);
-    }
-  }, [config.theme]);
-}
 
 const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -174,8 +142,6 @@ function Screen() {
 }
 
 export function Home({ bot }: { bot?: Bot }) {
-  useSwitchTheme();
-
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
   }, []);
