@@ -84,8 +84,8 @@ dependencies:
     specifier: ^1.11.11
     version: 1.11.11
   llamaindex:
-    specifier: 0.0.0-20231016163150
-    version: 0.0.0-20231016163150(encoding@0.1.13)
+    specifier: 0.0.0-20231018030303
+    version: 0.0.0-20231018030303(encoding@0.1.13)
   lucide-react:
     specifier: ^0.277.0
     version: 0.277.0(react@18.2.0)
@@ -6058,8 +6058,8 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /llamaindex@0.0.0-20231016163150(encoding@0.1.13):
-    resolution: {integrity: sha512-WzbR6Pz9wT2ZMDZ4rmpzhrLFNTm71XaBkTLR4hgWhHboty1IZMM6wcWmo2ylJady7CWU7PVcGEowrnayYx4DCQ==}
+  /llamaindex@0.0.0-20231018030303(encoding@0.1.13):
+    resolution: {integrity: sha512-f/cgUEyh6Nl5HFhjCoCatnE0izaclVmsnx8UMQanoUHR+jAQ/6CVQ2Pno6lE0ajAH2Zn/cjqbW2EF2wqqcFXKg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@anthropic-ai/sdk': 0.6.7(encoding@0.1.13)
