@@ -24,7 +24,8 @@ import { FileName, Path } from "../constant";
 import Locale from "../locales";
 import { useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
-import { downloadAs, readFromFile, useMobileScreen } from "../utils";
+import { downloadAs, readFromFile } from "../utils/download";
+import { useMobileScreen } from "../utils/mobile";
 import { ErrorBoundary } from "./layout/error";
 
 function SettingHeader() {

@@ -5,7 +5,7 @@ import { Input } from "@/app/components/ui/input";
 import { LoadingThreeDot } from "@/app/components/ui/loading";
 import { useToast } from "@/app/components/ui/use-toast";
 import { Bot } from "@/app/store/bot";
-import { copyToClipboard } from "@/app/utils";
+import { copyToClipboard } from "@/app/utils/clipboard";
 import { Copy } from "lucide-react";
 import { useEffect } from "react";
 import { useMutation } from "react-query";

@@ -1,7 +1,7 @@
 import React from "react";
 import { LINKEDIN_URL } from "../../constant";
 import Locale from "../../locales";
-import { downloadAs } from "../../utils";
+import { downloadAs } from "../../utils/download";
 import {
   AlertDialog,
   AlertDialogAction,

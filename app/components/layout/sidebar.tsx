@@ -18,7 +18,7 @@ import {
 } from "../ui/dropdown-menu";
 import Typography from "../ui/typography";
 import { useSidebarContext } from "@/app/components/home";
-import { useMobileScreen } from "@/app/utils";
+import { useMobileScreen } from "@/app/utils/mobile";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
