@@ -3,12 +3,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
 import { Deployment } from "./deployment";
-import { ChatSession, ChatMessage } from "./session";
-import {
-  BUILTIN_BOTS,
-  botListToMap,
-  createEmptyBot,
-} from "@/app/bots/bot.data";
+import { ChatSession, ChatMessage, callSession } from "./session";
+import { createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
 
 export type Share = {
   id: string;
@@ -54,11 +50,13 @@ type BotStore = BotState & {
   clearAllData: () => void;
 };
 
+const demoBots = createDemoBots();
+
 export const useBotStore = create<BotStore>()(
   persist(
     (set, get) => ({
-      bots: botListToMap(BUILTIN_BOTS),
-      currentBotId: BUILTIN_BOTS[0].id,
+      bots: demoBots,
+      currentBotId: Object.values(demoBots)[0].id,
 
       currentBot() {
         return get().bots[get().currentBotId];
