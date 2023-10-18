@@ -134,26 +134,6 @@ export const useBotStore = create<BotStore>()(
     }),
     {
       name: "bot-store",
-      version: 3.1,
-
-      migrate(state, version) {
-        const newState = JSON.parse(JSON.stringify(state)) as BotState;
-
-        // migrate bot id to nanoid
-        if (version < 3) {
-          Object.values(newState.bots).forEach((m) => (m.id = nanoid()));
-        }
-
-        if (version < 3.1) {
-          const updatedBots: Record<string, Bot> = {};
-          Object.values(newState.bots).forEach((m) => {
-            updatedBots[m.id] = m;
-          });
-          newState.bots = updatedBots;
-        }
-
-        return newState as any;
-      },
     },
   ),
 );
