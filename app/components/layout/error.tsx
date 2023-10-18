@@ -81,7 +81,7 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
-                        {Locale.Settings.Danger.Reset.Confirm}
+                        {Locale.Settings.Danger.Clear.Confirm}
                       </AlertDialogTitle>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

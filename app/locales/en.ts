@@ -43,20 +43,13 @@ const en = {
     Title: "Settings",
     SubTitle: "All Settings",
     Danger: {
-      Reset: {
-        Title: "Reset All Settings",
-        SubTitle: "Reset all setting items to default",
-        Action: "Reset",
-        Confirm: "Confirm to reset all settings to default?",
-      },
       Clear: {
         Title: "Clear All Data",
         SubTitle: "Clear all messages and settings",
         Action: "Clear",
-        Confirm: "Confirm to clear all messages and settings?",
+        Confirm: "Confirm to clear all data?",
       },
     },
-    Theme: "Theme",
 
     Model: "Model",
     Temperature: {
