@@ -52,7 +52,6 @@ const loadAsyncGoogleFont = () => {
   document.head.appendChild(linkEl);
 };
 
-// TODO(thucpn): check this code is still needed
 // if a bot is passed this HOC ensures that the bot is added to the store
 // and that the user can directly have a chat session with it
 function withBot(Component: React.FunctionComponent, bot?: Bot) {
