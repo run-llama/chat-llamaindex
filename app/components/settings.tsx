@@ -1,4 +1,5 @@
 import ConfigItem from "@/app/components/bot/bot-settings/config-item";
+import { useSidebarContext } from "@/app/components/home";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,12 +12,7 @@ import {
 } from "@/app/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/app/components/ui/button";
 import { Card, CardContent } from "@/app/components/ui/card";
-import { InputRange } from "@/app/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/app/components/ui/popover";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -27,19 +23,16 @@ import {
 import { Separator } from "@/app/components/ui/separator";
 import Typography from "@/app/components/ui/typography";
 import { useToast } from "@/app/components/ui/use-toast";
+import { cn } from "@/app/lib/utils";
 import { ArchiveRestore, HardDriveDownload, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileName, Path } from "../constant";
 import Locale from "../locales";
-import { SubmitKey, Theme, useAppConfig, useChatStore } from "../store";
+import { Theme, useAppConfig, useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
 import { downloadAs, readFromFile, useMobileScreen } from "../utils";
 import { ErrorBoundary } from "./layout/error";
-import { BotAvatar, EmojiAvatarPicker } from "./ui/emoji";
-import { cn } from "@/app/lib/utils";
-import { useSidebarContext } from "@/app/components/home";
-import { ScrollArea } from "@/app/components/ui/scroll-area";
 
 function SettingHeader() {
   const navigate = useNavigate();
@@ -68,51 +61,12 @@ function SettingHeader() {
 }
 
 function CommonSettings() {
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const config = useAppConfig();
   const updateConfig = config.update;
   return (
     <>
       <Card className="mb-5">
         <CardContent className="divide-y p-5">
-          <ConfigItem title={Locale.Settings.Avatar}>
-            <Popover open={showEmojiPicker}>
-              <PopoverTrigger onClick={() => setShowEmojiPicker(true)}>
-                <BotAvatar avatar={config.avatar} />
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-fit">
-                <EmojiAvatarPicker
-                  onEmojiClick={(avatar: string) => {
-                    updateConfig((config) => (config.avatar = avatar));
-                    setShowEmojiPicker(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          </ConfigItem>
-
-          <ConfigItem title={Locale.Settings.SendKey}>
-            <Select
-              value={config.submitKey}
-              onValueChange={(value) => {
-                updateConfig(
-                  (config) => (config.submitKey = value as SubmitKey),
-                );
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select key" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(SubmitKey).map((v) => (
-                  <SelectItem value={v} key={v}>
-                    {v}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </ConfigItem>
-
           <ConfigItem title={Locale.Settings.Theme}>
             <Select
               value={config.theme}
@@ -131,25 +85,6 @@ function CommonSettings() {
                 ))}
               </SelectContent>
             </Select>
-          </ConfigItem>
-
-          <ConfigItem
-            title={Locale.Settings.FontSize.Title}
-            subTitle={Locale.Settings.FontSize.SubTitle}
-          >
-            <InputRange
-              title={`${config.fontSize ?? 14}px`}
-              value={config.fontSize}
-              min="12"
-              max="18"
-              step="1"
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.fontSize = Number.parseInt(e.currentTarget.value)),
-                )
-              }
-            ></InputRange>
           </ConfigItem>
         </CardContent>
       </Card>
