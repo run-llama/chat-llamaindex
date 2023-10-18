@@ -1,11 +1,15 @@
+import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { BUILTIN_BOTS } from "../bots";
-import Locale from "../locales";
-import { ChatMessage } from "./session";
-import { nanoid } from "nanoid";
+import { LLMConfig } from "../client/platforms/llm";
 import { Deployment } from "./deployment";
-import { LLMConfig, ModelType } from "../client/platforms/llm";
+import { ChatSession, ChatMessage, callSession } from "./session";
+import {
+  BUILTIN_BOTS,
+  botListToMap,
+  createEmptyBot,
+} from "@/app/bots/bot.data";
+import { FileWrap } from "@/app/utils/file";
 
 export type Share = {
   id: string;
@@ -13,75 +17,100 @@ export type Share = {
 
 export type Bot = {
   id: string;
-  createdAt: number;
   avatar: string;
   name: string;
   hideContext: boolean;
   context: ChatMessage[];
   modelConfig: LLMConfig;
   readOnly: boolean;
-  deployment: Deployment | null;
-  share: Share | null;
   botHello: string | null;
   datasource?: string;
+  deployment?: Deployment;
+  share?: Share;
+  createdAt?: number;
+  session: ChatSession;
 };
 
-export const DEFAULT_BOT_STATE = {
-  bots: {} as Record<string, Bot>,
+type BotState = {
+  bots: Record<string, Bot>;
+  currentBotId: string;
 };
 
-export type BotState = typeof DEFAULT_BOT_STATE;
 type BotStore = BotState & {
-  restore: (state: BotState) => void;
-  backup: () => BotState;
+  currentBot: () => Bot;
+  selectBot: (id: string) => void;
+  currentSession: () => ChatSession;
+  updateCurrentSession: (updater: (session: ChatSession) => void) => void;
+  onUserInput: (input: string | FileWrap) => Promise<void>;
+  get: (id: string) => Bot | undefined;
+  getByShareId: (shareId: string) => Bot | undefined;
+  getAll: () => Bot[];
   create: (
     bot?: Partial<Bot>,
     options?: { readOnly?: boolean; reset?: boolean },
   ) => Bot;
   update: (id: string, updater: (bot: Bot) => void) => void;
   delete: (id: string) => void;
-  search: (text: string) => Bot[];
-  get: (id?: string) => Bot | null;
-  getAll: () => Bot[];
-  getByShareId: (shareId: string) => Bot | null;
+  restore: (state: BotState) => void;
+  backup: () => BotState;
+  clearAllData: () => void;
 };
-
-export const DEFAULT_BOT_AVATAR = "gpt-bot";
-export const DEFAULT_BOT_NAME = Locale.Store.DefaultBotName;
-export const createEmptyBot = () =>
-  ({
-    id: nanoid(),
-    avatar: DEFAULT_BOT_AVATAR,
-    name: DEFAULT_BOT_NAME,
-    context: [],
-    modelConfig: {
-      model: "gpt-3.5-turbo" as ModelType,
-      temperature: 0.5,
-      maxTokens: 2000,
-      sendMemory: true,
-    },
-    readOnly: false,
-    createdAt: Date.now(),
-    deployment: null,
-    share: null,
-    botHello: Locale.Store.BotHello,
-    hideContext: false,
-  }) as Bot;
 
 export const useBotStore = create<BotStore>()(
   persist(
     (set, get) => ({
-      ...DEFAULT_BOT_STATE,
+      bots: botListToMap(BUILTIN_BOTS),
+      currentBotId: BUILTIN_BOTS[0].id,
 
-      restore(state: BotState) {
-        if (!state.bots) {
-          throw new Error("no state object");
-        }
-        set(() => ({ bots: state.bots }));
+      currentBot() {
+        return get().bots[get().currentBotId];
       },
-      backup() {
-        return get();
+      selectBot(id) {
+        set(() => ({ currentBotId: id }));
       },
+      currentSession() {
+        return get().currentBot().session;
+      },
+      updateCurrentSession(updater) {
+        const bots = get().bots;
+        updater(bots[get().currentBotId].session);
+        set(() => ({ bots }));
+      },
+      async onUserInput(input) {
+        const inputContent = input instanceof FileWrap ? input.name : input;
+        const session = get().currentSession();
+        await callSession(
+          get().currentBot(),
+          session,
+          inputContent,
+          {
+            onUpdateMessages: (messages) => {
+              get().updateCurrentSession((session) => {
+                // trigger re-render of messages
+                session.messages = messages;
+              });
+            },
+          },
+          input instanceof FileWrap ? input : undefined,
+        );
+      },
+
+      get(id) {
+        return get().bots[id];
+      },
+      getAll() {
+        const list = Object.values(get().bots).map((b) => ({
+          ...b,
+          createdAt: b.createdAt || 0,
+        }));
+        return list.sort((a, b) => b.createdAt - a.createdAt);
+      },
+      getByShareId(shareId) {
+        return get()
+          .getAll()
+          .find((b) => shareId === b.share?.id);
+      },
+
       create(bot, options) {
         const bots = get().bots;
         const id = nanoid();
@@ -92,12 +121,10 @@ export const useBotStore = create<BotStore>()(
           readOnly: options?.readOnly || false,
         };
         if (options?.reset) {
-          bots[id].share = null;
-          bots[id].deployment = null;
+          bots[id].share = undefined;
+          bots[id].deployment = undefined;
         }
-
         set(() => ({ bots }));
-
         return bots[id];
       },
       update(id, updater) {
@@ -115,23 +142,18 @@ export const useBotStore = create<BotStore>()(
         set(() => ({ bots }));
       },
 
-      getByShareId(shareId) {
-        const bots = Object.values(get().bots).filter(
-          (v) => shareId === v.share?.id,
-        );
-        return bots.length === 0 ? null : bots[0];
+      backup() {
+        return get();
       },
-      get(id) {
-        return get().bots[id ?? 1145141919810];
+      restore(state: BotState) {
+        if (!state.bots) {
+          throw new Error("no state object");
+        }
+        set(() => ({ bots: state.bots }));
       },
-      getAll() {
-        const userBots = Object.values(get().bots).sort(
-          (a, b) => b.createdAt - a.createdAt,
-        );
-        return userBots.concat(BUILTIN_BOTS as Bot[]);
-      },
-      search(text) {
-        return Object.values(get().bots);
+      clearAllData() {
+        localStorage.clear();
+        location.reload();
       },
     }),
     {

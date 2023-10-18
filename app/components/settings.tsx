@@ -22,7 +22,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileName, Path } from "../constant";
 import Locale from "../locales";
-import { useChatStore } from "../store";
 import { useBotStore } from "../store/bot";
 import { downloadAs, readFromFile } from "../utils/download";
 import { useMobileScreen } from "../utils/mobile";
@@ -55,8 +54,7 @@ function SettingHeader() {
 }
 
 function DangerItems() {
-  const chatStore = useChatStore();
-
+  const botStore = useBotStore();
   return (
     <Card>
       <CardContent className="divide-y p-5">
@@ -81,7 +79,7 @@ function DangerItems() {
                 <AlertDialogAction
                   className={cn(buttonVariants({ variant: "destructive" }))}
                   onClick={() => {
-                    chatStore.clearAllData();
+                    botStore.clearAllData();
                   }}
                 >
                   Continue

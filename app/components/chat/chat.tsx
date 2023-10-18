@@ -32,7 +32,7 @@ import {
   REQUEST_TIMEOUT_MS,
 } from "../../constant";
 import Locale from "../../locales";
-import { ChatMessage, createMessage, useChatStore } from "../../store";
+import { ChatMessage, createMessage } from "../../store";
 import { useMobileScreen } from "../../utils/mobile";
 import { autoGrowTextArea } from "../../utils/autogrow";
 import { copyToClipboard } from "@/app/utils/clipboard";
@@ -43,6 +43,7 @@ import { Separator } from "../ui/separator";
 import Typography from "../ui/typography";
 import { ChatAction } from "./chat-action";
 import { ClearContextDivider } from "./clear-context-divider";
+import { useBotStore } from "@/app/store/bot";
 
 type RenderMessage = ChatMessage & { preview?: boolean };
 
@@ -56,8 +57,8 @@ const Markdown = dynamic(
 function ChatHeader() {
   const isMobileScreen = useMobileScreen();
   const { setShowSidebar } = useSidebarContext();
-  const chatStore = useChatStore();
-  const session = chatStore.currentSession();
+  const botStore = useBotStore();
+  const bot = botStore.currentBot();
   return (
     <div className="relative">
       <div className="absolute top-4 left-5">
@@ -73,9 +74,9 @@ function ChatHeader() {
         )}
       </div>
       <div className="text-center py-4">
-        <Typography.H4>{session.bot.name}</Typography.H4>
+        <Typography.H4>{bot.name}</Typography.H4>
         <div className="text-sm text-muted-foreground">
-          {Locale.Chat.SubTitle(session.messages.length)}
+          {Locale.Chat.SubTitle(bot.session.messages.length)}
         </div>
       </div>
       <Separator />
@@ -85,8 +86,9 @@ function ChatHeader() {
 
 export function Chat() {
   const { toast } = useToast();
-  const chatStore = useChatStore();
-  const session = chatStore.currentSession();
+  const botStore = useBotStore();
+  const bot = botStore.currentBot();
+  const session = botStore.currentSession();
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState("");
@@ -128,7 +130,7 @@ export function Chat() {
   };
 
   const doSubmitFile = async (fileInput: FileWrap) => {
-    await chatStore.onUserInput(fileInput);
+    await botStore.onUserInput(fileInput);
   };
 
   const doSubmit = (userInput: string) => {
@@ -136,7 +138,7 @@ export function Chat() {
     if (isURL(userInput)) {
       setTemporaryURLInput(userInput);
     }
-    chatStore.onUserInput(userInput).then(() => {
+    botStore.onUserInput(userInput).then(() => {
       setTemporaryURLInput("");
     });
     setUserInput("");
@@ -145,7 +147,7 @@ export function Chat() {
   };
 
   useEffect(() => {
-    chatStore.updateCurrentSession((session) => {
+    botStore.updateCurrentSession((session) => {
       const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
       session.messages.forEach((m) => {
         // check if should stop all stale messages
@@ -178,7 +180,7 @@ export function Chat() {
   };
 
   const deleteMessage = (msgId?: string) => {
-    chatStore.updateCurrentSession(
+    botStore.updateCurrentSession(
       (session) =>
         (session.messages = session.messages.filter((m) => m.id !== msgId)),
     );
@@ -189,8 +191,8 @@ export function Chat() {
   };
 
   const context: RenderMessage[] = useMemo(() => {
-    return session.bot.hideContext ? [] : session.bot.context.slice();
-  }, [session.bot.context, session.bot.hideContext]);
+    return bot.hideContext ? [] : bot.context.slice();
+  }, [bot.context, bot.hideContext]);
 
   const getUrlTypePrefix = (type: string) => {
     if (type === "text/html") return "HTML";
@@ -229,18 +231,18 @@ export function Chat() {
 
     return context
       .concat(
-        session.bot.botHello
+        bot.botHello
           ? [
               createMessage({
                 role: "assistant",
-                content: session.bot.botHello,
+                content: bot.botHello,
               }),
             ]
           : [],
       )
       .concat(getFrontendMessages(session.messages as RenderMessage[]))
       .concat(getUrlPreviewMessage() || []);
-  }, [session.messages, session.bot.botHello, temporaryURLInput, context]);
+  }, [session.messages, bot.botHello, temporaryURLInput, context]);
 
   const [msgRenderIndex, _setMsgRenderIndex] = useState(
     Math.max(0, renderMessages.length - CHAT_PAGE_SIZE),
@@ -289,14 +291,14 @@ export function Chat() {
     (session.clearContextIndex ?? -1) >= 0
       ? session.clearContextIndex! +
         context.length +
-        (session.bot.botHello ? 1 : 0) -
+        (bot.botHello ? 1 : 0) -
         msgRenderIndex
       : -1;
 
   const autoFocus = !isMobileScreen; // wont auto focus on mobile screen
 
   const clearContext = () => {
-    chatStore.updateCurrentSession((session) => {
+    botStore.updateCurrentSession((session) => {
       if (session.clearContextIndex === session.messages.length) {
         session.clearContextIndex = undefined;
       } else {
@@ -304,11 +306,11 @@ export function Chat() {
       }
     });
   };
-  const stop = () => ChatControllerPool.stop(session.id);
-  const isRunning = ChatControllerPool.isRunning(session.id);
+  const stop = () => ChatControllerPool.stop(bot.id);
+  const isRunning = ChatControllerPool.isRunning(bot.id);
 
   return (
-    <div className="flex flex-col relative h-full" key={session.id}>
+    <div className="flex flex-col relative h-full" key={bot.id}>
       <ChatHeader />
       <ScrollArea
         className="flex-1 overflow-auto overflow-x-hidden relative overscroll-none pb-10 p-5"

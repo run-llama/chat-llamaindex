@@ -100,7 +100,7 @@ async function handleAI(
   text: string,
 ): Promise<ChatMessage | undefined> {
   const session = getChatSession(chatId);
-  return await callSession(session, text, {
+  return await callSession(ctx.startData.bot, session, text, {
     onUpdateMessages: (newMessages) => {
       session.messages = newMessages;
     },
@@ -120,7 +120,7 @@ function getChatSession(chatId: number): ChatSession {
 }
 
 function resetChat(chatId: number): void {
-  ctx.chats[chatId] = createEmptySession(ctx.startData.bot);
+  ctx.chats[chatId] = createEmptySession();
 }
 
 async function start(data: StartCommandData): Promise<void> {

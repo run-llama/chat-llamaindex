@@ -2413,7 +2413,7 @@ acorn@^8.9.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.10.0.tgz#8be5b3907a67221a81ab23c7889c4c5526b62ec5"
   integrity sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==
 
-agentkeepalive@^4.2.1:
+agentkeepalive@^4.2.1, agentkeepalive@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-4.5.0.tgz#2673ad1389b3c418c5a20c5d7364f93ca04be923"
   integrity sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==
@@ -5195,10 +5195,10 @@ listr2@^5.0.7:
     through "^2.3.8"
     wrap-ansi "^7.0.0"
 
-llamaindex@^0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/llamaindex/-/llamaindex-0.0.29.tgz#892960e0cd4df0585ade6978227546f1c998af68"
-  integrity sha512-3efTF/Nk3lmwPn7nKdimL/ajVan5Tj9taYivsRv3LI7kcxggfcGvU4Y82hNaB1RB8QJYzdAzC0tBvwt6uKDTUA==
+llamaindex@0.0.0-20231016163150:
+  version "0.0.0-20231016163150"
+  resolved "https://registry.yarnpkg.com/llamaindex/-/llamaindex-0.0.0-20231016163150.tgz#bede1f6385bcd9a49c1e5e6b3b52b35ea4b984ff"
+  integrity sha512-WzbR6Pz9wT2ZMDZ4rmpzhrLFNTm71XaBkTLR4hgWhHboty1IZMM6wcWmo2ylJady7CWU7PVcGEowrnayYx4DCQ==
   dependencies:
     "@anthropic-ai/sdk" "^0.6.2"
     "@notionhq/client" "^2.2.13"
@@ -5207,11 +5207,12 @@ llamaindex@^0.0.29:
     md-utils-ts "^2.0.0"
     mongodb "^6.1.0"
     notion-md-crawler "^0.0.2"
-    openai "^4.10.0"
+    openai "^4.11.1"
     papaparse "^5.4.1"
     pdf-parse "^1.1.1"
+    portkey-ai "^0.1.13"
     rake-modified "^1.0.8"
-    replicate "^0.18.1"
+    replicate "^0.20.1"
     tiktoken "^1.0.10"
     uuid "^9.0.1"
     wink-nlp "^1.14.3"
@@ -6373,10 +6374,10 @@ open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openai@^4.10.0:
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.11.1.tgz#c2ed9b5e58c3c626b8d43e4eae0cfdbcd44cc844"
-  integrity sha512-GU0HQWbejXuVAQlDjxIE8pohqnjptFDIm32aPlNT1H9ucMz1VJJD0DaTJRQsagNaJ97awWjjVLEG7zCM6sm4SA==
+openai@^4.11.1:
+  version "4.12.4"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.12.4.tgz#663f75611de766904942422cec7fbbfc0a906c77"
+  integrity sha512-oPNVJkpgxDUKF6WGGdHEZh5m/kjmYxS2Y1q7YVFCkvKUGthb8OGYRGCFBRPq5CQJezifzABTZRlVYnXLd6L4vQ==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -6386,6 +6387,7 @@ openai@^4.10.0:
     form-data-encoder "1.7.2"
     formdata-node "^4.3.2"
     node-fetch "^2.6.7"
+    web-streams-polyfill "^3.2.1"
 
 openid-client@^5.4.0:
   version "5.4.3"
@@ -6548,6 +6550,13 @@ pirates@^4.0.1:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.6.tgz#3018ae32ecfcff6c29ba2267cbf21166ac1f36b9"
   integrity sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==
+
+portkey-ai@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/portkey-ai/-/portkey-ai-0.1.13.tgz#31d9d67137ee027e8c5f13255ff6a15b9c784e33"
+  integrity sha512-cCclnsbHGiFN6dz0FW29h0bixoRAsqJCkDhK56K9TRjWC6PDFaplYYaxo7SIO0Cjb0NKsjtEH5QdT0kPmirbLQ==
+  dependencies:
+    agentkeepalive "^4.5.0"
 
 postcss-import@^15.1.0:
   version "15.1.0"
@@ -7033,10 +7042,10 @@ repeat-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
-replicate@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/replicate/-/replicate-0.18.1.tgz#50b1952b468c83d725aa9e8ae8c399d905d24ea6"
-  integrity sha512-JFK5qWL7AAajsIjtkW/nTaoX+yKp8zkaANe+pQpBh9RjH5vIy6/tn/sVNlRF1z5bCJLupshJBHFgnHRdWjbKXg==
+replicate@^0.20.1:
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/replicate/-/replicate-0.20.1.tgz#3f9032eaa6a8469dac9abab914967fc2e6cb1549"
+  integrity sha512-QVyI1rowGsSfNuDrRmumYPdCHa/fN/RkI3NHpcK0i5hSSiWK69URAyheAC/0MIAiS3oUs4kD56PB9zEI4oHENw==
 
 resolve-from@^4.0.0:
   version "4.0.0"
@@ -7607,7 +7616,7 @@ through@^2.3.8:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
 
-tiktoken@^1.0.10:
+tiktoken@1.0.10, tiktoken@^1.0.10:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/tiktoken/-/tiktoken-1.0.10.tgz#d5ade07bc19f4424c404646b606e64674b0df5ef"
   integrity sha512-gF8ndTCNu7WcRFbl1UUWaFIB4CTXmHzS3tRYdyUYF7x3C6YR6Evoao4zhKDmWIwv2PzNbzoQMV8Pxt+17lEDbA==
@@ -8057,7 +8066,7 @@ web-streams-polyfill@4.0.0-beta.3:
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.3.tgz#2898486b74f5156095e473efe989dcf185047a38"
   integrity sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==
 
-web-streams-polyfill@^3.0.3:
+web-streams-polyfill@^3.0.3, web-streams-polyfill@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==

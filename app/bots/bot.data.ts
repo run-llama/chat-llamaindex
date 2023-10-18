@@ -1,10 +1,14 @@
-import { BuiltinBot } from ".";
+import { Bot } from "@/app/store/bot";
+import { nanoid } from "nanoid";
+import Locale from "../locales";
+import { ModelType } from "@/app/client/platforms/llm";
 
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
 
-export const BUILTIN_BOTS: BuiltinBot[] = [
+export const BUILTIN_BOTS: Bot[] = [
   {
+    id: "BUILTIN_BOTS_RH_LINUX",
     avatar: "1f5a5-fe0f",
     name: "Red Hat Linux Expert",
     botHello: "Hello! How can I help you with Red Hat Linux?",
@@ -23,9 +27,13 @@ export const BUILTIN_BOTS: BuiltinBot[] = [
     readOnly: true,
     datasource: "redhat",
     hideContext: false,
+    session: {
+      messages: [],
+    },
   },
 
   {
+    id: "BUILTIN_BOTS_APPLE_WATCH",
     avatar: "1f454",
     name: "Apple Watch Genius",
     botHello: "Hello! How can I help you with Apple Watches?",
@@ -44,8 +52,12 @@ export const BUILTIN_BOTS: BuiltinBot[] = [
     readOnly: true,
     datasource: "watchos",
     hideContext: false,
+    session: {
+      messages: [],
+    },
   },
   {
+    id: "BUILTIN_BOTS_GERMAN_BASIC_LAW",
     avatar: "1f4da",
     name: "German Basic Law Expert",
     botHello: "Hello! How can I assist you today?",
@@ -64,8 +76,12 @@ export const BUILTIN_BOTS: BuiltinBot[] = [
     readOnly: true,
     datasource: "basic_law_germany",
     hideContext: false,
+    session: {
+      messages: [],
+    },
   },
   {
+    id: "BUILTIN_BOTS_GPT_3_5_TURBO",
     avatar: "1f916",
     name: "GPT-3.5-Turbo",
     botHello: "Hello! How can I assist you today?",
@@ -78,5 +94,41 @@ export const BUILTIN_BOTS: BuiltinBot[] = [
     },
     readOnly: true,
     hideContext: false,
+    session: {
+      messages: [],
+    },
   },
 ];
+
+export const botListToMap = (bots: Bot[]): Record<string, Bot> => {
+  const map: Record<string, Bot> = {};
+  bots.forEach((bot) => {
+    map[bot.id] = bot;
+  });
+  return map;
+};
+
+export const DEFAULT_BOT_AVATAR = "gpt-bot";
+export const DEFAULT_BOT_NAME = Locale.Store.DefaultBotName;
+
+export const createEmptyBot = (): Bot => ({
+  id: nanoid(),
+  avatar: DEFAULT_BOT_AVATAR,
+  name: DEFAULT_BOT_NAME,
+  context: [],
+  modelConfig: {
+    model: "gpt-3.5-turbo" as ModelType,
+    temperature: 0.5,
+    maxTokens: 2000,
+    sendMemory: true,
+  },
+  readOnly: false,
+  createdAt: Date.now(),
+  deployment: undefined,
+  share: undefined,
+  botHello: Locale.Store.BotHello,
+  hideContext: false,
+  session: {
+    messages: [],
+  },
+});
