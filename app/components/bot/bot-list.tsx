@@ -1,7 +1,6 @@
 import EditBotDialogContent from "@/app/components/bot/bot-options/edit-bot-dialog";
 import { BotItemContextProvider } from "@/app/components/bot/use-bot";
 import { Dialog, DialogTrigger } from "@/app/components/ui/dialog";
-import { useChatStore } from "@/app/store";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ import BotItem from "./bot-item";
 
 export default function BotList() {
   const botStore = useBotStore();
-  const chatStore = useChatStore();
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [editBotId, setEditBotId] = useState<string | undefined>(undefined);
@@ -28,7 +26,7 @@ export default function BotList() {
 
   const onClickCreate = () => {
     const newBot = botStore.create();
-    chatStore.ensureSession(newBot);
+    botStore.selectBot(newBot.id);
     setEditBotId(newBot.id);
   };
 
@@ -37,7 +35,7 @@ export default function BotList() {
     b.name.toLowerCase().includes(searchText.toLowerCase()),
   );
   const botList = searchText.length > 0 ? filteredBots : allBots;
-  const editBot = botStore.get(editBotId);
+  const editBot = editBotId ? botStore.get(editBotId) : undefined;
 
   return (
     <div className="flex-1" onClick={onClickContainer}>

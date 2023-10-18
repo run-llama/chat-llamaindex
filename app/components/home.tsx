@@ -17,7 +17,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { getClientConfig } from "../config/client";
-import { useChatStore } from "../store";
 import { Bot, useBotStore } from "../store/bot";
 import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
@@ -53,6 +52,7 @@ const loadAsyncGoogleFont = () => {
   document.head.appendChild(linkEl);
 };
 
+// TODO(thucpn): check this code is still needed
 // if a bot is passed this HOC ensures that the bot is added to the store
 // and that the user can directly have a chat session with it
 function withBot(Component: React.FunctionComponent, bot?: Bot) {
@@ -60,7 +60,6 @@ function withBot(Component: React.FunctionComponent, bot?: Bot) {
     const [botInitialized, setBotInitialized] = useState(false);
     const navigate = useNavigate();
     const botStore = useBotStore();
-    const chatStore = useChatStore();
     if (bot && !botInitialized) {
       if (!bot.share?.id) {
         throw new Error("bot must have a shared id");
@@ -71,7 +70,7 @@ function withBot(Component: React.FunctionComponent, bot?: Bot) {
         sharedBot = botStore.create(bot, { readOnly: true });
       }
       // let the user directly chat with the bot
-      chatStore.ensureSession(sharedBot);
+      botStore.selectBot(sharedBot.id);
       setTimeout(() => {
         // redirect to chat - use history API to clear URL
         history.pushState({}, "", "/");

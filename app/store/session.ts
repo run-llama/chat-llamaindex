@@ -4,7 +4,7 @@ import { LLMApi, RequestMessage } from "../client/platforms/llm";
 import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
 import { prettyObject } from "../utils/format";
 import { fetchSiteContent, isURL } from "../utils/url";
-import { Bot, createEmptyBot } from "./bot";
+import { Bot } from "./bot";
 
 export type URLDetail = {
   url: string;
@@ -35,20 +35,13 @@ export function createMessage(override: Partial<ChatMessage>): ChatMessage {
 }
 
 export interface ChatSession {
-  id: string;
-
   messages: ChatMessage[];
   clearContextIndex?: number;
-
-  bot: Bot;
 }
 
-export function createEmptySession(bot?: Bot): ChatSession {
+export function createEmptySession(): ChatSession {
   return {
-    id: nanoid(),
     messages: [],
-
-    bot: bot ?? createEmptyBot(),
   };
 }
 
@@ -143,6 +136,7 @@ async function createUserMessage(
 }
 
 export async function callSession(
+  bot: Bot,
   session: ChatSession,
   content: string,
   callbacks: {
@@ -150,7 +144,7 @@ export async function callSession(
   },
   uploadedFile?: FileWrap,
 ): Promise<ChatMessage | undefined> {
-  const modelConfig = session.bot.modelConfig;
+  const modelConfig = bot.modelConfig;
 
   let userMessage: ChatMessage;
 
@@ -180,7 +174,7 @@ export async function callSession(
     streaming: true,
   });
 
-  const contextPrompts = session.bot.context.slice();
+  const contextPrompts = bot.context.slice();
   // get messages starting from the last clear context index (or all messages if there is no clear context index)
   const recentMessages = !session.clearContextIndex
     ? session.messages
@@ -202,7 +196,7 @@ export async function callSession(
   let result;
   const api = new LLMApi();
   await api.chat({
-    datasource: session.bot.datasource,
+    datasource: bot.datasource,
     message: transformUserMessageForSending(userMessage).content,
     chatHistory: sendMessages,
     config: { ...modelConfig, stream: true },
@@ -221,7 +215,7 @@ export async function callSession(
       // optional memory message)
       session.messages = session.messages.slice(0, -2).concat(newChatMessages);
       callbacks.onUpdateMessages(session.messages);
-      ChatControllerPool.remove(session.id);
+      ChatControllerPool.remove(bot.id);
       result = newChatMessages.slice(-1);
     },
     onError(error) {
@@ -236,14 +230,14 @@ export async function callSession(
       userMessage.isError = !isAborted;
       botMessage.isError = !isAborted;
       callbacks.onUpdateMessages(session.messages);
-      ChatControllerPool.remove(session.id);
+      ChatControllerPool.remove(bot.id);
 
       console.error("[Chat] failed ", error);
       result = botMessage;
     },
     onController(controller) {
       // collect controller for stop/retry
-      ChatControllerPool.addController(session.id, controller);
+      ChatControllerPool.addController(bot.id, controller);
     },
   });
   return result;

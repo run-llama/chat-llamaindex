@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Path } from "../../constant";
-import { useChatStore } from "../../store";
 import { Bot, useBotStore } from "../../store/bot";
 import { useSidebarContext } from "../home";
 import { Updater } from "@/app/typing";
@@ -22,7 +21,6 @@ export const BotItemContextProvider = (props: {
   children: JSX.Element;
 }) => {
   const bot = props.bot;
-  const chatStore = useChatStore();
   const botStore = useBotStore();
   const navigate = useNavigate();
   const { setShowSidebar } = useSidebarContext();
@@ -39,7 +37,7 @@ export const BotItemContextProvider = (props: {
 
   const ensureSession = () => {
     navigate(Path.Home);
-    chatStore.ensureSession(bot);
+    botStore.selectBot(bot.id);
     setShowSidebar(false);
   };
 
@@ -51,7 +49,7 @@ export const BotItemContextProvider = (props: {
     botStore.update(bot.id, updater);
   };
 
-  const isActive = chatStore.currentSession().bot.id === props.bot.id;
+  const isActive = botStore.currentBotId === props.bot.id;
 
   return (
     <BotItemContext.Provider
