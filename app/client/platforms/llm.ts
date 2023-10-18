@@ -3,8 +3,14 @@ import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
 
-export const ROLES = ["system", "user", "assistant", "URL", "memory"] as const;
-export type MessageRole = (typeof ROLES)[number];
+export const MESSAGE_ROLES = [
+  "system",
+  "user",
+  "assistant",
+  "URL",
+  "memory",
+] as const;
+export type MessageRole = (typeof MESSAGE_ROLES)[number];
 
 export interface RequestMessage {
   role: MessageRole;

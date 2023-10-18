@@ -9,9 +9,9 @@ import {
 import { Textarea } from "@/app/components/ui/textarea";
 import { ArrowDownLeftSquare, PlusCircle, XCircle } from "lucide-react";
 import { useQuery } from "react-query";
-import { ROLES } from "../../../client/platforms/llm";
+import { MESSAGE_ROLES } from "../../../client/platforms/llm";
 import Locale from "../../../locales";
-import { ChatMessage, createMessage } from "../../../store";
+import { ChatMessage } from "../../../store";
 import { fetchSiteContent, isURL } from "../../../utils/url";
 
 interface PromptInputStatusProps {
@@ -124,7 +124,7 @@ function ContextPromptItem(props: {
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
-              {ROLES.map((r) => (
+              {MESSAGE_ROLES.map((r) => (
                 <SelectItem key={r} value={r}>
                   {r}
                 </SelectItem>

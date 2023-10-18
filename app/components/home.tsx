@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import { getCSSVar, useMobileScreen } from "../utils";
+import { useMobileScreen } from "../utils/mobile";
 
 import dynamic from "next/dynamic";
 import { Path } from "../constant";

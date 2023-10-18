@@ -8,7 +8,7 @@ import RemarkBreaks from "remark-breaks";
 import RemarkGfm from "remark-gfm";
 import RemarkMath from "remark-math";
 import Locale from "../../locales";
-import { copyToClipboard } from "../../utils";
+import { copyToClipboard } from "@/app/utils/clipboard";
 
 import {
   Dialog,

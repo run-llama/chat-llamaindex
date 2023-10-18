@@ -33,11 +33,9 @@ import {
 } from "../../constant";
 import Locale from "../../locales";
 import { ChatMessage, createMessage, useChatStore } from "../../store";
-import {
-  autoGrowTextArea,
-  copyToClipboard,
-  useMobileScreen,
-} from "../../utils";
+import { useMobileScreen } from "../../utils/mobile";
+import { autoGrowTextArea } from "../../utils/autogrow";
+import { copyToClipboard } from "@/app/utils/clipboard";
 import { prettyObject } from "../../utils/format";
 import { useSidebarContext } from "../home";
 import FileUploader from "../ui/file-uploader";
