@@ -1,5 +1,3 @@
-import { SubmitKey } from "../store/config";
-
 const en = {
   Chat: {
     SubTitle: (count: number) => `${count} messages`,
@@ -10,19 +8,11 @@ const en = {
     },
     InputActions: {
       Stop: "Stop generating",
-      ToBottom: "To Latest",
       Clear: "Clear Context",
-      Settings: "Settings",
     },
     Typing: "Typing…",
-    Input: (submitKey: string) => {
-      var inputHints = `${submitKey} to send`;
-      if (submitKey === String(SubmitKey.Enter)) {
-        inputHints += ", Shift + Enter to wrap";
-      }
-      inputHints += ", enter URLs to add a PDF or HTML document to the context";
-      return inputHints;
-    },
+    Input:
+      "Enter to send, Shift + Enter to wrap, enter URLs to add a PDF or HTML document to the context",
     Send: "Send",
     IsContext: "Contextual Prompt",
     LoadingURL: "Loading content...",
@@ -66,13 +56,6 @@ const en = {
         Confirm: "Confirm to clear all messages and settings?",
       },
     },
-    Avatar: "Avatar",
-    FontSize: {
-      Title: "Font Size",
-      SubTitle: "Adjust font size of chat content",
-    },
-
-    SendKey: "Send Key",
     Theme: "Theme",
 
     Model: "Model",
@@ -110,8 +93,6 @@ const en = {
     Failed: "Copy failed, please grant permission to access clipboard",
   },
   Context: {
-    Toast: (x: any) => `With ${x} contextual prompts`,
-    Edit: "Current Chat Settings",
     Add: "Add a Prompt",
     Clear: "Context Cleared",
     Revert: "Revert",
@@ -175,19 +156,6 @@ const en = {
     Quote:
       "“This tool has saved me countless hours of work and helped me apply AI features to my work faster than ever before.”",
     LoginLinkedinTitle: "Login with LinkedIn",
-  },
-
-  UI: {
-    Confirm: "Confirm",
-    Cancel: "Cancel",
-    Close: "Close",
-    Create: "Create",
-    Edit: "Edit",
-  },
-
-  URLCommand: {
-    Code: "Detected access code from url, confirm to apply? ",
-    Settings: "Detected settings from url, confirm to apply?",
   },
 };
 

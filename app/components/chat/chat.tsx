@@ -32,12 +32,7 @@ import {
   REQUEST_TIMEOUT_MS,
 } from "../../constant";
 import Locale from "../../locales";
-import {
-  ChatMessage,
-  createMessage,
-  useAppConfig,
-  useChatStore,
-} from "../../store";
+import { ChatMessage, createMessage, useChatStore } from "../../store";
 import {
   autoGrowTextArea,
   copyToClipboard,
@@ -94,13 +89,11 @@ export function Chat() {
   const { toast } = useToast();
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
-  const config = useAppConfig();
-  const fontSize = config.fontSize;
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState("");
   const [temporaryURLInput, setTemporaryURLInput] = useState("");
-  const { submitKey, shouldSubmit } = useSubmitHandler();
+  const { shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll, scrollDomToBottom } = useScrollToBottom();
   const isMobileScreen = useMobileScreen();
 
@@ -388,7 +381,6 @@ export function Chat() {
                               if (!isMobileScreen) return;
                               setUserInput(message.content);
                             }}
-                            fontSize={fontSize}
                             parentRef={scrollRef}
                             defaultShow={i >= messages.length - 6}
                           />
@@ -461,7 +453,7 @@ export function Chat() {
           <Textarea
             className="ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]"
             ref={inputRef}
-            placeholder={Locale.Chat.Input(submitKey)}
+            placeholder={Locale.Chat.Input}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}
@@ -469,9 +461,6 @@ export function Chat() {
             onClick={scrollToBottom}
             rows={inputRows}
             autoFocus={autoFocus}
-            style={{
-              fontSize: config.fontSize,
-            }}
           />
           <div className="my-2 flex items-center gap-2.5 absolute right-[35px]">
             <FileUploader

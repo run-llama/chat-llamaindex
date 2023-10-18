@@ -1,9 +1,6 @@
 import { useRef, useEffect } from "react";
-import { SubmitKey, useAppConfig } from "../store";
 
 export function useSubmitHandler() {
-  const config = useAppConfig();
-  const submitKey = config.submitKey;
   const isComposing = useRef(false);
 
   useEffect(() => {
@@ -27,21 +24,10 @@ export function useSubmitHandler() {
     if (e.key !== "Enter") return false;
     if (e.key === "Enter" && (e.nativeEvent.isComposing || isComposing.current))
       return false;
-    return (
-      (config.submitKey === SubmitKey.AltEnter && e.altKey) ||
-      (config.submitKey === SubmitKey.CtrlEnter && e.ctrlKey) ||
-      (config.submitKey === SubmitKey.ShiftEnter && e.shiftKey) ||
-      (config.submitKey === SubmitKey.MetaEnter && e.metaKey) ||
-      (config.submitKey === SubmitKey.Enter &&
-        !e.altKey &&
-        !e.ctrlKey &&
-        !e.shiftKey &&
-        !e.metaKey)
-    );
+    return !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey;
   };
 
   return {
-    submitKey,
     shouldSubmit,
   };
 }
