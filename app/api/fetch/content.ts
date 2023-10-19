@@ -5,7 +5,7 @@ import stringify from "remark-stringify";
 import axios from "axios";
 import pdf from "pdf-parse";
 import { remove } from "unist-util-remove";
-import { URLDetailContent } from "../store";
+import { URLDetailContent } from "@/app/client/fetch/url";
 
 function removeCommentsAndTables() {
   return (tree: any) => {
@@ -14,7 +14,7 @@ function removeCommentsAndTables() {
   };
 }
 
-export async function htmlToMarkdown(html: string): Promise<string> {
+async function htmlToMarkdown(html: string): Promise<string> {
   const processor = unified()
     .use(parse) // Parse the HTML
     .use(removeCommentsAndTables) // Remove comment nodes

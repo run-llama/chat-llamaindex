@@ -1,11 +1,12 @@
 import { nanoid } from "nanoid";
 import { ChatControllerPool } from "../client/controller";
 import { LLMApi, RequestMessage } from "../client/platforms/llm";
-import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
+import { FileWrap } from "../utils/file";
+import { getDetailContentFromFile } from "../client/fetch/file";
 import { prettyObject } from "../utils/format";
-import { fetchSiteContent, isURL } from "../utils/url";
+import { fetchSiteContent, isURL } from "../client/fetch/url";
 import { Bot } from "./bot";
-import { Embedding, URLDetail, URLDetailContent } from "../client/fetch";
+import { Embedding, URLDetail } from "../client/fetch/url";
 
 export type ChatMessage = RequestMessage & {
   date?: string;
@@ -52,24 +53,6 @@ async function createTextInputMessage(content: string): Promise<ChatMessage> {
       role: "user",
       content: content,
     });
-  }
-}
-
-async function getDetailContentFromFile(
-  file: FileWrap,
-): Promise<URLDetailContent> {
-  switch (file.extension) {
-    case "pdf": {
-      const pdfFile = new PDFFile(file);
-      return await pdfFile.getFileDetail();
-    }
-    case "txt": {
-      const plainTextFile = new PlainTextFile(file);
-      return await plainTextFile.getFileDetail();
-    }
-    default: {
-      throw new Error("Not supported file type");
-    }
   }
 }
 

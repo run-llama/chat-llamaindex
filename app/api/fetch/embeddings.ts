@@ -1,4 +1,4 @@
-import { Embedding } from "@/app/client/fetch";
+import { Embedding } from "@/app/client/fetch/url";
 import {
   DATASOURCES_CHUNK_OVERLAP,
   DATASOURCES_CHUNK_SIZE,

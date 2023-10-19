@@ -12,7 +12,7 @@ import { useScrollToBottom } from "@/app/hooks/useScroll";
 import { useSubmitHandler } from "@/app/hooks/useSubmit";
 import { cn } from "@/app/lib/utils";
 import { FileWrap } from "@/app/utils/file";
-import { isURL } from "@/app/utils/url";
+import { isURL } from "@/app/client/fetch/url";
 import {
   Clipboard,
   Eraser,

@@ -2,7 +2,7 @@ import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
-import { Embedding } from "../fetch";
+import { Embedding } from "../fetch/url";
 
 export const MESSAGE_ROLES = [
   "system",
