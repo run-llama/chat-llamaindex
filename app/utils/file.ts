@@ -1,5 +1,5 @@
+import { URLDetailContent } from "../client/fetch";
 import { FETCH_SITE_CONTENT_URL } from "../constant";
-import { URLDetailContent } from "../store";
 import Locale from "../locales";
 
 export interface ReadableFile {
@@ -100,11 +100,18 @@ export class PlainTextFile extends TextFile {
 
   async getFileDetail(): Promise<URLDetailContent> {
     const textContent = await this.readFileAsText();
-    return {
-      content: textContent,
-      url: this.file.name,
-      size: textContent.length,
-      type: "text/plain",
-    };
+    const response = await fetch(FETCH_SITE_CONTENT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: textContent,
+        fileName: this.file.name,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    return data as URLDetailContent;
   }
 }

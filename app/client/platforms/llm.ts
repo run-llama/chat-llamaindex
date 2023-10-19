@@ -2,6 +2,7 @@ import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 
 import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
+import { Embedding } from "../fetch";
 
 export const MESSAGE_ROLES = [
   "system",
@@ -40,6 +41,7 @@ export interface ChatOptions {
   chatHistory: RequestMessage[];
   config: LLMConfig;
   datasource?: string;
+  embeddings?: Embedding[];
   onUpdate?: (message: string) => void;
   onFinish: (newMessages: RequestMessage[]) => void;
   onError?: (err: Error) => void;
@@ -56,6 +58,7 @@ export class LLMApi {
       })),
       config: options.config,
       datasource: options.datasource,
+      embeddings: options.embeddings,
     };
 
     console.log("[Request] payload: ", requestPayload);
