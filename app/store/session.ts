@@ -5,16 +5,7 @@ import { FileWrap, PDFFile, PlainTextFile } from "../utils/file";
 import { prettyObject } from "../utils/format";
 import { fetchSiteContent, isURL } from "../utils/url";
 import { Bot } from "./bot";
-
-export type URLDetail = {
-  url: string;
-  size: number;
-  type: "text/html" | "application/pdf" | "text/plain";
-};
-
-export type URLDetailContent = URLDetail & {
-  content?: string;
-};
+import { Embedding, URLDetail, URLDetailContent } from "../client/fetch";
 
 export type ChatMessage = RequestMessage & {
   date?: string;
@@ -98,18 +89,6 @@ async function createFileInputMessage(file: FileWrap): Promise<ChatMessage> {
   });
 }
 
-function transformUserMessageForSending(
-  userMessage: ChatMessage,
-): RequestMessage {
-  const { content, urlDetail } = userMessage;
-  if (!urlDetail) return userMessage;
-  // if the user sends a URL message, let the LLM summarize the content of the URL
-  return {
-    role: userMessage.role,
-    content: `Summarize the following text briefly in 200 words or less:\n\n${content}`,
-  };
-}
-
 function transformAssistantMessageForSending(
   message: ChatMessage,
 ): RequestMessage {
@@ -179,7 +158,7 @@ export async function callSession(
   const recentMessages = !session.clearContextIndex
     ? session.messages
     : session.messages.slice(session.clearContextIndex);
-  const sendMessages = [
+  let sendMessages = [
     ...contextPrompts,
     ...recentMessages.map(transformAssistantMessageForSending),
   ];
@@ -192,12 +171,28 @@ export async function callSession(
   session.messages = session.messages.concat([savedUserMessage, botMessage]);
   callbacks.onUpdateMessages(session.messages);
 
+  let embeddings;
+  let message;
+  if (userMessage.urlDetail) {
+    // if the user sends document, let the LLM summarize the content of the URL and just use the document's embeddings
+    message = "Summarize the given context briefly in 200 words or less";
+    embeddings = userMessage.urlDetail?.embeddings;
+    sendMessages = [];
+  } else {
+    // collect embeddings of all messages
+    message = userMessage.content;
+    embeddings = session.messages
+      .flatMap((message: ChatMessage) => message.urlDetail?.embeddings)
+      .filter((m) => m !== undefined) as Embedding[];
+  }
+
   // make request
   let result;
   const api = new LLMApi();
   await api.chat({
     datasource: bot.datasource,
-    message: transformUserMessageForSending(userMessage).content,
+    embeddings,
+    message: message,
     chatHistory: sendMessages,
     config: { ...modelConfig, stream: true },
     onUpdate(message) {

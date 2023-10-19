@@ -3,13 +3,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
 import { Deployment } from "./deployment";
-import { ChatSession, ChatMessage, callSession } from "./session";
+import { ChatSession, ChatMessage } from "./session";
 import {
   BUILTIN_BOTS,
   botListToMap,
   createEmptyBot,
 } from "@/app/bots/bot.data";
-import { FileWrap } from "@/app/utils/file";
 
 export type Share = {
   id: string;
@@ -41,7 +40,6 @@ type BotStore = BotState & {
   selectBot: (id: string) => void;
   currentSession: () => ChatSession;
   updateCurrentSession: (updater: (session: ChatSession) => void) => void;
-  onUserInput: (input: string | FileWrap) => Promise<void>;
   get: (id: string) => Bot | undefined;
   getByShareId: (shareId: string) => Bot | undefined;
   getAll: () => Bot[];
@@ -76,25 +74,6 @@ export const useBotStore = create<BotStore>()(
         updater(bots[get().currentBotId].session);
         set(() => ({ bots }));
       },
-      async onUserInput(input) {
-        const inputContent = input instanceof FileWrap ? input.name : input;
-        const session = get().currentSession();
-        await callSession(
-          get().currentBot(),
-          session,
-          inputContent,
-          {
-            onUpdateMessages: (messages) => {
-              get().updateCurrentSession((session) => {
-                // trigger re-render of messages
-                session.messages = messages;
-              });
-            },
-          },
-          input instanceof FileWrap ? input : undefined,
-        );
-      },
-
       get(id) {
         return get().bots[id];
       },
@@ -110,7 +89,6 @@ export const useBotStore = create<BotStore>()(
           .getAll()
           .find((b) => shareId === b.share?.id);
       },
-
       create(bot, options) {
         const bots = get().bots;
         const id = nanoid();

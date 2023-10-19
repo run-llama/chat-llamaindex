@@ -32,7 +32,7 @@ import {
   REQUEST_TIMEOUT_MS,
 } from "../../constant";
 import Locale from "../../locales";
-import { ChatMessage, createMessage } from "../../store";
+import { ChatMessage, callSession, createMessage } from "../../store";
 import { useMobileScreen } from "../../utils/mobile";
 import { autoGrowTextArea } from "../../utils/autogrow";
 import { copyToClipboard } from "@/app/utils/clipboard";
@@ -129,8 +129,26 @@ export function Chat() {
     });
   };
 
+  const onUserInput = async (input: string | FileWrap) => {
+    const inputContent = input instanceof FileWrap ? input.name : input;
+    await callSession(
+      bot,
+      session,
+      inputContent,
+      {
+        onUpdateMessages: (messages) => {
+          botStore.updateCurrentSession((session) => {
+            // trigger re-render of messages
+            session.messages = messages;
+          });
+        },
+      },
+      input instanceof FileWrap ? input : undefined,
+    );
+  };
+
   const doSubmitFile = async (fileInput: FileWrap) => {
-    await botStore.onUserInput(fileInput);
+    await onUserInput(fileInput);
   };
 
   const doSubmit = (userInput: string) => {
@@ -138,7 +156,7 @@ export function Chat() {
     if (isURL(userInput)) {
       setTemporaryURLInput(userInput);
     }
-    botStore.onUserInput(userInput).then(() => {
+    onUserInput(userInput).then(() => {
       setTemporaryURLInput("");
     });
     setUserInput("");

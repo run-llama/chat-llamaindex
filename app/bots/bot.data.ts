@@ -87,9 +87,9 @@ export const BUILTIN_BOTS: Bot[] = [
     botHello: "Hello! How can I assist you today?",
     context: [],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-16k",
       temperature: 0.5,
-      maxTokens: 6000,
+      maxTokens: 8000,
       sendMemory: true,
     },
     readOnly: true,

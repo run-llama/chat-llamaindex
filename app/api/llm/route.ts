@@ -2,25 +2,36 @@ import {
   ChatMessage,
   DefaultContextGenerator,
   HistoryChatEngine,
+  IndexDict,
   OpenAI,
   ServiceContext,
   SimpleChatHistory,
   SummaryChatHistory,
+  TextNode,
+  VectorStoreIndex,
   serviceContextFromDefaults,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig } from "../../client/platforms/llm";
 import { getDataSource } from "./datasource";
 import { DATASOURCES_CHUNK_SIZE } from "@/scripts/constants.mjs";
+import { Embedding } from "@/app/client/fetch";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
   datasource?: string,
+  embeddings?: Embedding[],
 ) {
   let contextGenerator;
-  if (datasource) {
-    const index = await getDataSource(serviceContext, datasource);
-    const retriever = index.asRetriever();
+  if (datasource || embeddings) {
+    let index;
+    if (datasource) {
+      index = await getDataSource(serviceContext, datasource);
+    }
+    if (embeddings) {
+      index = await createIndex(serviceContext, embeddings);
+    }
+    const retriever = index!.asRetriever();
     retriever.similarityTopK = 5;
 
     contextGenerator = new DefaultContextGenerator({ retriever });
@@ -32,6 +43,32 @@ async function createChatEngine(
   });
 }
 
+async function createIndex(
+  serviceContext: ServiceContext,
+  embeddings: Embedding[],
+) {
+  const embeddingResults = embeddings.map((config) => {
+    return new TextNode({ text: config.text, embedding: config.embedding });
+  });
+  const indexDict = new IndexDict();
+  for (const node of embeddingResults) {
+    indexDict.addNode(node);
+  }
+
+  const index = await VectorStoreIndex.init({
+    indexStruct: indexDict,
+    serviceContext: serviceContext,
+  });
+
+  index.vectorStore.add(embeddingResults);
+  if (!index.vectorStore.storesText) {
+    await index.docStore.addDocuments(embeddingResults, true);
+  }
+  await index.indexStore?.addIndexStruct(indexDict);
+  index.indexStruct = indexDict;
+  return index;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -40,11 +77,13 @@ export async function POST(request: NextRequest) {
       chatHistory: messages,
       datasource,
       config,
+      embeddings,
     }: {
       message: string;
       chatHistory: ChatMessage[];
       datasource: string | undefined;
       config: LLMConfig;
+      embeddings: Embedding[] | undefined;
     } = body;
     if (!message || !messages || !config) {
       return NextResponse.json(
@@ -68,7 +107,11 @@ export async function POST(request: NextRequest) {
       chunkSize: DATASOURCES_CHUNK_SIZE,
     });
 
-    const chatEngine = await createChatEngine(serviceContext, datasource);
+    const chatEngine = await createChatEngine(
+      serviceContext,
+      datasource,
+      embeddings,
+    );
     const chatHistory = config.sendMemory
       ? new SummaryChatHistory({ llm, messages })
       : new SimpleChatHistory({ messages });
