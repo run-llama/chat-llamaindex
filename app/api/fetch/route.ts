@@ -1,10 +1,10 @@
 import {
   fetchContentFromURL,
   getPDFContentFromBuffer,
-} from "@/app/utils/content";
+} from "@/app/api/fetch/content";
 import { NextResponse, NextRequest } from "next/server";
 import splitAndEmbed from "./embeddings";
-import { URLDetailContent } from "@/app/client/fetch";
+import { URLDetailContent } from "@/app/client/fetch/url";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const urlContent = await fetchContentFromURL(site);
+    urlContent.embeddings = await splitAndEmbed(urlContent.content!);
     return NextResponse.json(urlContent);
   } catch (error) {
     return NextResponse.json(

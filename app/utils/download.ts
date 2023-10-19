@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 export function downloadAs(text: string, filename: string) {
   const element = document.createElement("a");
   element.setAttribute(

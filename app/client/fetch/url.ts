@@ -1,5 +1,20 @@
-import { FETCH_SITE_CONTENT_URL } from "../constant";
-import { URLDetailContent } from "../store";
+import { FETCH_SITE_CONTENT_URL } from "../../constant";
+
+export type Embedding = {
+  text: string;
+  embedding: number[];
+};
+
+export type URLDetail = {
+  url: string;
+  size: number;
+  type: "text/html" | "application/pdf" | "text/plain";
+  embeddings?: Embedding[];
+};
+
+export type URLDetailContent = URLDetail & {
+  content?: string;
+};
 
 export const isURL = (text: string) => {
   const isUrlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;

@@ -12,7 +12,7 @@ import { useQuery } from "react-query";
 import { MESSAGE_ROLES } from "../../../client/platforms/llm";
 import Locale from "../../../locales";
 import { ChatMessage } from "../../../store";
-import { fetchSiteContent, isURL } from "../../../utils/url";
+import { fetchSiteContent, isURL } from "../../../client/fetch/url";
 
 interface PromptInputStatusProps {
   status: "loading" | "success" | "error";
