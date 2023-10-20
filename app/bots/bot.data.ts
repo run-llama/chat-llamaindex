@@ -95,11 +95,9 @@ export const createDemoBots = (): Record<string, Bot> => {
   return map;
 };
 
-export const DEFAULT_BOT_AVATAR = "gpt-bot";
-
 export const createEmptyBot = (): Bot => ({
   id: nanoid(),
-  avatar: DEFAULT_BOT_AVATAR,
+  avatar: "1f916",
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
