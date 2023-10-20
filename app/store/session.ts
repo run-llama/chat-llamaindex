@@ -171,30 +171,33 @@ export async function callSession(
 
   // make request
   let result;
+  const controller = new AbortController();
+  ChatControllerPool.addController(bot.id, controller);
   const api = new LLMApi();
   await api.chat({
     datasource: bot.datasource,
     embeddings,
     message: message,
     chatHistory: sendMessages,
-    config: { ...modelConfig, stream: true },
+    config: modelConfig,
+    controller,
     onUpdate(message) {
-      botMessage.streaming = true;
       if (message) {
         botMessage.content = message;
+        callbacks.onUpdateMessages(session.messages.concat());
+      }
+    },
+    onFinish(memoryMessage?: RequestMessage) {
+      botMessage.streaming = false;
+      if (memoryMessage) {
+        // all optional memory message returned by the LLM
+        const newChatMessages = createMessage({ ...memoryMessage });
+        session.messages = session.messages.concat(newChatMessages);
       }
       callbacks.onUpdateMessages(session.messages.concat());
-    },
-    onFinish(newMessages: RequestMessage[]) {
-      const newChatMessages = newMessages.map((message) => ({
-        ...createMessage(message),
-      }));
-      // remove user and bot message and add all the messages returned by the LLM (which includes user, bot and an
-      // optional memory message)
-      session.messages = session.messages.slice(0, -2).concat(newChatMessages);
-      callbacks.onUpdateMessages(session.messages);
       ChatControllerPool.remove(bot.id);
-      result = newChatMessages.slice(-1).at(0);
+      // TODO: check send memory message to telegram
+      result = botMessage;
     },
     onError(error) {
       const isAborted = error.message.includes("aborted");
@@ -212,10 +215,6 @@ export async function callSession(
 
       console.error("[Chat] failed ", error);
       result = botMessage;
-    },
-    onController(controller) {
-      // collect controller for stop/retry
-      ChatControllerPool.addController(bot.id, controller);
     },
   });
   return result;
