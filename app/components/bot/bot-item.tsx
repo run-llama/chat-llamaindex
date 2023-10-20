@@ -9,18 +9,22 @@ function BotItemUI() {
   return (
     <div
       className={cn(
-        "flex items-center justify-between cursor-pointer mb-2 last:mb-0 rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground",
+        "flex items-center cursor-pointer mb-2 last:mb-0 rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground relative",
         isActive && "border-primary",
       )}
-      onClick={ensureSession}
     >
-      <div className="flex items-center justify-between space-x-2">
+      <div
+        className="flex items-center space-x-2 w-full p-4 pr-12"
+        onClick={ensureSession}
+      >
         <div className="w-[18px] h-[18px]">
           <BotAvatar avatar={bot.avatar} />
         </div>
         <div className="font-medium">{bot.name}</div>
       </div>
-      <BotOptions />
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+        <BotOptions />
+      </div>
     </div>
   );
 }
