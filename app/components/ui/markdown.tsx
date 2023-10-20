@@ -21,7 +21,7 @@ import { Separator } from "@/app/components/ui/separator";
 import { useToast } from "@/app/components/ui/use-toast";
 import React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { LoadingThreeDot } from "@/app/components/ui/loading";
+import { Loading } from "@/app/components/ui/loading";
 
 export function Mermaid(props: { code: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -177,7 +177,7 @@ export function Markdown(
       onDoubleClickCapture={props.onDoubleClickCapture}
     >
       {props.loading ? (
-        <LoadingThreeDot />
+        <Loading />
       ) : (
         <MarkdownContent content={props.content} />
       )}

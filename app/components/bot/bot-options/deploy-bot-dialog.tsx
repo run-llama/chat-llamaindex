@@ -15,7 +15,7 @@ import {
 import { Input } from "../../ui/input";
 import { Separator } from "../../ui/separator";
 import { useBot } from "../use-bot";
-import { LoadingThreeDot } from "@/app/components/ui/loading";
+import { Loading } from "@/app/components/ui/loading";
 
 enum Status {
   Stopped = "STOPPED",
@@ -81,7 +81,7 @@ export default function DeployBotDialogContent() {
       case Status.Stopping:
         return (
           <div className="text-primary">
-            <LoadingThreeDot />
+            <Loading />
           </div>
         );
       case Status.Running:
