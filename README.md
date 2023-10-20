@@ -31,10 +31,6 @@ Unc is enterprise-ready, featuring:
 
 ## ⚡️ Quick start
 
-### Use Gitpod
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/marcusschiesser/unc)
-
 ### Local Development
 
 Requirement: [NodeJS](https://nodejs.org) 18
@@ -46,6 +42,14 @@ git clone https://github.com/marcusschiesser/unc
 cd unc
 ```
 
+- Set the environment variables
+
+```bash
+cp .env.template .env.development.local
+```
+
+Edit environment variables in `.env.development.local`.
+
 - Run the dev server
 
 ```bash
@@ -56,8 +60,9 @@ pnpm dev
 ### Recreate Storage
 
 The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a different [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
-The `cache` folder in the file system is used as [Storage](The https://ts.llamaindex.ai/modules/low_level/storage) for the `VectorStoreIndex`. To re-create the storage 
-Vector Indexes 
+The `cache` folder in the file system is used as [Storage](The https://ts.llamaindex.ai/modules/low_level/storage) for the `VectorStoreIndex`. To re-create the storage
+Vector Indexes
+
 ```bash
 pnpm run generate
 ```
