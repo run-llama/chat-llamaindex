@@ -13,8 +13,6 @@ export enum FileName {
 
 export const REQUEST_TIMEOUT_MS = 60000;
 
-export const FETCH_SITE_CONTENT_URL = "/api/fetch";
-
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;
 

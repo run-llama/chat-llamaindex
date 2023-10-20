@@ -1,6 +1,5 @@
 import { REQUEST_TIMEOUT_MS } from "@/app/constant";
 
-import { prettyObject } from "@/app/utils/format";
 import { fetchEventSource } from "@fortaine/fetch-event-source";
 import { Embedding } from "../fetch/url";
 
@@ -31,7 +30,6 @@ export interface LLMConfig {
   model: ModelType;
   temperature?: number;
   topP?: number;
-  stream?: boolean;
   sendMemory?: boolean;
   maxTokens?: number;
 }
@@ -42,11 +40,13 @@ export interface ChatOptions {
   config: LLMConfig;
   datasource?: string;
   embeddings?: Embedding[];
-  onUpdate?: (message: string) => void;
-  onFinish: (newMessages: RequestMessage[]) => void;
+  controller: AbortController;
+  onUpdate: (message: string) => void;
+  onFinish: (memoryMessage?: RequestMessage) => void;
   onError?: (err: Error) => void;
-  onController?: (controller: AbortController) => void;
 }
+
+const CHAT_PATH = "/api/llm";
 
 export class LLMApi {
   async chat(options: ChatOptions) {
@@ -63,92 +63,58 @@ export class LLMApi {
 
     console.log("[Request] payload: ", requestPayload);
 
-    const controller = new AbortController();
-    options.onController?.(controller);
+    const requestTimeoutId = setTimeout(
+      () => options.controller?.abort(),
+      REQUEST_TIMEOUT_MS,
+    );
+
+    options.controller.signal.onabort = () => options.onFinish();
+    const handleError = (e: any) => {
+      clearTimeout(requestTimeoutId);
+      console.log("[Request] failed to make a chat request", e);
+      options.onError?.(e as Error);
+    };
 
     try {
-      const chatPath = "/api/llm";
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
-        signal: controller.signal,
+        signal: options.controller?.signal,
         headers: {
           "Content-Type": "application/json",
-          "x-requested-with": "XMLHttpRequest",
         },
       };
 
-      // make a fetch request
-      const requestTimeoutId = setTimeout(
-        () => controller.abort(),
-        REQUEST_TIMEOUT_MS,
-      );
-
-      let responseText = "";
-      let finished = false;
-
-      const finish = (newMessages?: RequestMessage[]) => {
-        if (!finished) {
-          if (!newMessages) {
-            options.onFinish([{ role: "assistant", content: responseText }]);
-          } else {
-            options.onFinish(newMessages);
-          }
-          finished = true;
-        }
-      };
-
-      controller.signal.onabort = () => finish();
-
-      await fetchEventSource(chatPath, {
+      let llmResponse = "";
+      await fetchEventSource(CHAT_PATH, {
         ...chatPayload,
         async onopen(res) {
           clearTimeout(requestTimeoutId);
-          const contentType = res.headers.get("content-type");
-          console.log("[OpenAI] request response content type: ", contentType);
-
-          if (res.ok && contentType?.startsWith("application/json")) {
-            // if the response is application/json, then it's a normal chat response - no streaming
-            const result = await res.clone().json();
-            return finish(result.newMessages);
-          }
-
           if (!res.ok) {
-            responseText = await res.clone().text();
-            try {
-              const resJson = await res.clone().json();
-              responseText = prettyObject(resJson);
-            } catch {}
-            return finish();
+            const json = await res.json();
+            handleError(new Error(json.message));
           }
         },
         onmessage(msg) {
+          const data = msg.data;
           try {
-            const json = JSON.parse(msg.data);
-            if (json.done || finished) {
-              return finish(json.newMessages);
+            const json = JSON.parse(data);
+            if (json.done) {
+              options.onFinish(json.memoryMessage);
             }
-            const delta = json.content;
-            if (delta) {
-              responseText += delta;
-              options.onUpdate?.(responseText);
+          } catch {
+            // not a JSON, so we received a new token
+            if (data) {
+              llmResponse += data;
+              options.onUpdate(llmResponse);
             }
-          } catch (e) {
-            console.error("[Request] error parsing streaming delta", msg);
           }
         },
-        onclose() {
-          finish();
-        },
-        onerror(e) {
-          options.onError?.(e);
-          throw e;
-        },
+        onerror: handleError,
         openWhenHidden: true,
       });
     } catch (e) {
-      console.log("[Request] failed to make a chat request", e);
-      options.onError?.(e as Error);
+      handleError(e);
     }
   }
 }

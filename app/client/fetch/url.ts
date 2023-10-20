@@ -1,5 +1,3 @@
-import { FETCH_SITE_CONTENT_URL } from "../../constant";
-
 export type Embedding = {
   text: string;
   embedding: number[];
@@ -24,7 +22,7 @@ export const isURL = (text: string) => {
 export async function fetchSiteContent(
   site: string,
 ): Promise<URLDetailContent> {
-  const response = await fetch(`${FETCH_SITE_CONTENT_URL}?site=${site}`);
+  const response = await fetch(`/api/fetch?site=${site}`);
   const data = await response.json();
   if (!response.ok) throw new Error(data.error);
   return data as URLDetailContent;

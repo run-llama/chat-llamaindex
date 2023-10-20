@@ -1,4 +1,5 @@
 import {
+  ChatHistory,
   ChatMessage,
   DefaultContextGenerator,
   HistoryChatEngine,
@@ -72,6 +73,36 @@ async function createIndex(
   return index;
 }
 
+function createReadableStream(
+  stream: AsyncGenerator<string, void, unknown>,
+  chatHistory: ChatHistory,
+) {
+  let responseStream = new TransformStream();
+  const writer = responseStream.writable.getWriter();
+  const encoder = new TextEncoder();
+  const onNext = async () => {
+    const { value, done } = await stream.next();
+    if (!done) {
+      writer.write(encoder.encode(`data: ${value}\n\n`));
+      onNext();
+    } else {
+      writer.write(
+        `data: ${JSON.stringify({
+          done: true,
+          // get the optional message containing the chat summary
+          memoryMessage: chatHistory
+            .newMessages()
+            .filter((m) => m.role === "memory")
+            .at(0),
+        })}\n\n`,
+      );
+      writer.close();
+    }
+  };
+  onNext();
+  return responseStream.readable;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -120,47 +151,18 @@ export async function POST(request: NextRequest) {
       ? new SummaryChatHistory({ llm, messages })
       : new SimpleChatHistory({ messages });
 
-    if (config.stream) {
-      let responseStream = new TransformStream();
-      const writer = responseStream.writable.getWriter();
-      const encoder = new TextEncoder();
+    const stream = await chatEngine.chat(message, chatHistory, true);
+    const readableStream = createReadableStream(stream, chatHistory);
 
-      const stream = await chatEngine.chat(message, chatHistory, true);
-      const onNext = async () => {
-        const { value, done } = await stream.next();
-        if (!done) {
-          writer.write(
-            encoder.encode(`data: ${JSON.stringify({ content: value })}\n\n`),
-          );
-          onNext();
-        } else {
-          writer.write(
-            `data: ${JSON.stringify({
-              done: true,
-              newMessages: chatHistory.newMessages(),
-            })}\n\n`,
-          );
-          writer.close();
-        }
-      };
-      onNext();
-
-      return new NextResponse(responseStream.readable, {
-        headers: {
-          "Content-Type": "text/event-stream",
-          Connection: "keep-alive",
-          "Cache-Control": "no-cache, no-transform",
-        },
-      });
-    } else {
-      const response = await chatEngine.chat(message, chatHistory);
-      return NextResponse.json({
-        content: response.response,
-        newMessages: chatHistory.newMessages(),
-      });
-    }
+    return new NextResponse(readableStream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        Connection: "keep-alive",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
   } catch (error) {
-    console.error("[Llama]", error);
+    console.error("[LlamaIndex]", error);
     return NextResponse.json(
       {
         error: (error as Error).message,

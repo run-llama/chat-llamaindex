@@ -1,5 +1,4 @@
 import { URLDetailContent } from "./url";
-import { FETCH_SITE_CONTENT_URL } from "../../constant";
 import { FileWrap } from "../../utils/file";
 
 export async function getDetailContentFromFile(
@@ -33,7 +32,7 @@ class PDFFile extends TextFile {
     const fileDataUrl = await this.file.dataURL;
     const pdfBase64 = fileDataUrl.split(",")[1];
 
-    const response = await fetch(FETCH_SITE_CONTENT_URL, {
+    const response = await fetch("/api/fetch", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +69,7 @@ class PlainTextFile extends TextFile {
 
   async getFileDetail(): Promise<URLDetailContent> {
     const textContent = await this.readFileAsText();
-    const response = await fetch(FETCH_SITE_CONTENT_URL, {
+    const response = await fetch("/api/fetch", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
