@@ -9,6 +9,20 @@ const TEMPLATE = (PERSONA: string) =>
 
 const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
   {
+    avatar: "1f916",
+    name: "My Documents",
+    botHello: "Hello! How can I assist you today?",
+    context: [],
+    modelConfig: {
+      model: "gpt-3.5-turbo-16k",
+      temperature: 0.5,
+      maxTokens: 8000,
+      sendMemory: true,
+    },
+    readOnly: true,
+    hideContext: false,
+  },
+  {
     avatar: "1f5a5-fe0f",
     name: "Red Hat Linux Expert",
     botHello: "Hello! How can I help you with Red Hat Linux?",
@@ -68,20 +82,6 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     datasource: "basic_law_germany",
     hideContext: false,
   },
-  {
-    avatar: "1f916",
-    name: "GPT-3.5-Turbo",
-    botHello: "Hello! How can I assist you today?",
-    context: [],
-    modelConfig: {
-      model: "gpt-3.5-turbo-16k",
-      temperature: 0.5,
-      maxTokens: 8000,
-      sendMemory: true,
-    },
-    readOnly: true,
-    hideContext: false,
-  },
 ];
 
 export const createDemoBots = (): Record<string, Bot> => {
@@ -101,15 +101,13 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-3.5-turbo" as ModelType,
+    model: "gpt-3.5-turbo-16k" as ModelType,
     temperature: 0.5,
-    maxTokens: 2000,
+    maxTokens: 6000,
     sendMemory: true,
   },
   readOnly: false,
   createdAt: Date.now(),
-  deployment: undefined,
-  share: undefined,
   botHello: Locale.Store.BotHello,
   hideContext: false,
   session: createEmptySession(),
