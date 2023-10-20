@@ -194,7 +194,7 @@ export async function callSession(
       session.messages = session.messages.slice(0, -2).concat(newChatMessages);
       callbacks.onUpdateMessages(session.messages);
       ChatControllerPool.remove(bot.id);
-      result = newChatMessages.slice(-1);
+      result = newChatMessages.slice(-1).at(0);
     },
     onError(error) {
       const isAborted = error.message.includes("aborted");

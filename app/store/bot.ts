@@ -113,9 +113,14 @@ export const useBotStore = create<BotStore>()(
         set(() => ({ bots }));
       },
       delete(id) {
-        const bots = get().bots;
+        const bots = JSON.parse(JSON.stringify(get().bots));
         delete bots[id];
-        set(() => ({ bots }));
+
+        let nextId = get().currentBotId;
+        if (nextId === id) {
+          nextId = Object.keys(bots)[0];
+        }
+        set(() => ({ bots, currentBotId: nextId }));
       },
 
       backup() {
