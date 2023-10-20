@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     urlContent.embeddings = await splitAndEmbed(urlContent.content!);
     return NextResponse.json(urlContent);
   } catch (error) {
+    console.error("[Fetch]", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 },
@@ -82,6 +83,7 @@ export async function POST(request: NextRequest) {
       : handleText(fileName, text!));
     return NextResponse.json(json);
   } catch (error) {
+    console.error("[Fetch]", error);
     return NextResponse.json(
       {
         error: (error as Error).message,
@@ -92,3 +94,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
