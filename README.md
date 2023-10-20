@@ -29,17 +29,6 @@ Unc is enterprise-ready, featuring:
 - Supports [Azure OpenAI from Microsoft](https://azure.microsoft.com/en-us/products/ai-services/openai-service), eliminating traffic to OpenAI.
 - Privacy first; personal data is stored locally in the browser.
 
-## 💼 Enterprise
-
-A typical enterprise installation requires:
-
-- Custom user authentication (e.g. Active Directory).
-- Installation in a corporate cloud (AWS or Azure).
-- Integration with data from third-party systems (e.g., Salesforce, ServiceNow, SAP, Oracle).
-
-For enterprise support and installations, reach out to me on
-[LinkedIn](https://linkedin.com/marcusschiesser).
-
 ## ⚡️ Quick start
 
 ### Use Gitpod
@@ -60,12 +49,15 @@ cd unc
 - Run the dev server
 
 ```bash
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
-## ❤️ Community
+### Recreate Storage
 
-Join the Unc community on [GitHub Discussions](https://github.com/marcusschiesser/unc/discussions). You can ask questions, share ideas, and showcase your projects.
-
-Feedback is paramount. Please do share any suggestions, ideas, or bugs you encounter via [GitHub issues](https://github.com/marcusschiesser/unc/issues). Your insight is invaluable for enhancing future releases.
+The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a different [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
+The `cache` folder in the file system is used as [Storage](The https://ts.llamaindex.ai/modules/low_level/storage) for the `VectorStoreIndex`. To re-create the storage 
+Vector Indexes 
+```bash
+pnpm run generate
+```
