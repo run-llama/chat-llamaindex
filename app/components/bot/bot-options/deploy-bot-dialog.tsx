@@ -1,4 +1,3 @@
-import { getClientConfig } from "@/app/config/client";
 import { DEFAULT_DEPLOYMENT, Deployment } from "@/app/store/deployment";
 import { useWorkerStore } from "@/app/store/workers";
 import { Ban, Zap } from "lucide-react";
@@ -53,13 +52,11 @@ export default function DeployBotDialogContent() {
       new URL("../../../workers/telegram.ts", import.meta.url),
     );
     const id = workerStore.create(worker);
-    const config = getClientConfig();
     worker.postMessage({
       command: "start",
       data: {
         token: deployment.token,
         bot: bot,
-        config,
       },
     });
     updateConfig((config) => (config.worker_id = id));

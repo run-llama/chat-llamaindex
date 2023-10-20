@@ -1,7 +1,6 @@
 import "./styles/globals.css";
 import "./styles/lib/markdown.css";
 import "./styles/lib/highlight.css";
-import { getClientConfig } from "./config/client";
 
 import Locale from "./locales";
 import { type Metadata } from "next";
@@ -35,7 +34,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="config" content={JSON.stringify(getClientConfig())} />
         <link rel="manifest" href="/site.webmanifest"></link>
         <script src="/serviceWorkerRegister.js" defer></script>
       </head>
