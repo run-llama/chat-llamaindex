@@ -20,17 +20,17 @@ import { getClientConfig } from "../config/client";
 import { Bot, useBotStore } from "../store/bot";
 import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
-import { LoadingModule } from "@/app/components/ui/loading";
+import { LoadingPage } from "@/app/components/ui/loading";
 
 const SettingsPage = dynamic(
   async () => (await import("./settings")).Settings,
   {
-    loading: () => <LoadingModule />,
+    loading: () => <LoadingPage />,
   },
 );
 
 const ChatPage = dynamic(async () => (await import("./chat/chat")).Chat, {
-  loading: () => <LoadingModule />,
+  loading: () => <LoadingPage />,
 });
 
 const useHasHydrated = () => {
@@ -76,7 +76,7 @@ function withBot(Component: React.FunctionComponent, bot?: Bot) {
         navigate(Path.Chat);
       }, 1);
       setBotInitialized(true);
-      return <LoadingModule />;
+      return <LoadingPage />;
     }
 
     return <Component />;
@@ -119,7 +119,7 @@ function Screen() {
     loadAsyncGoogleFont();
   }, []);
 
-  if (status === "loading") return <LoadingModule />;
+  if (status === "loading") return <LoadingPage />;
   return (
     <main className="flex overflow-hidden h-screen w-screen box-border">
       {clientConfig.hasNextAuth && !session ? (
@@ -145,7 +145,7 @@ export function Home({ bot }: { bot?: Bot }) {
   }, []);
 
   if (!useHasHydrated()) {
-    return <LoadingModule />;
+    return <LoadingPage />;
   }
 
   const BotScreen = withBot(Screen, bot);

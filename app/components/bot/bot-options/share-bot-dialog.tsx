@@ -2,7 +2,7 @@ import { ShareResponse } from "@/app/api/share/route";
 import ConfigItem from "@/app/components/bot/bot-settings/config-item";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
-import { LoadingThreeDot } from "@/app/components/ui/loading";
+import { Loading } from "@/app/components/ui/loading";
 import { useToast } from "@/app/components/ui/use-toast";
 import { Bot } from "@/app/store/bot";
 import { copyToClipboard } from "@/app/utils/clipboard";
@@ -78,7 +78,7 @@ export default function ShareBotDialogContent() {
                     </Button>
                   </div>
                 ) : (
-                  <LoadingThreeDot />
+                  <Loading />
                 )}
               </ConfigItem>
             </CardContent>

@@ -4,7 +4,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/app/components/ui/hover-card";
-import { LoadingThreeDot } from "@/app/components/ui/loading";
+import { Loading } from "@/app/components/ui/loading";
 import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { Textarea } from "@/app/components/ui/textarea";
 import { useToast } from "@/app/components/ui/use-toast";
@@ -50,7 +50,7 @@ type RenderMessage = ChatMessage & { preview?: boolean };
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
   {
-    loading: () => <LoadingThreeDot />,
+    loading: () => <Loading />,
   },
 );
 
