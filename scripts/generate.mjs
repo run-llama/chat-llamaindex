@@ -10,6 +10,7 @@ import {
   DATASOURCES_CACHE_DIR,
   DATASOURCES_DIR,
   DATASOURCES_CHUNK_SIZE,
+  DATASOURCES_CHUNK_OVERLAP,
 } from "./constants.mjs";
 
 async function getRuntime(func) {
@@ -44,6 +45,7 @@ async function generateDatasource(serviceContext, datasource) {
 (async () => {
   const serviceContext = serviceContextFromDefaults({
     chunkSize: DATASOURCES_CHUNK_SIZE,
+    chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
   });
 
   for (const datasource of DATASOURCES) {

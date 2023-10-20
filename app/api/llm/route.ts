@@ -14,7 +14,10 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig } from "../../client/platforms/llm";
 import { getDataSource } from "./datasource";
-import { DATASOURCES_CHUNK_SIZE } from "@/scripts/constants.mjs";
+import {
+  DATASOURCES_CHUNK_OVERLAP,
+  DATASOURCES_CHUNK_SIZE,
+} from "@/scripts/constants.mjs";
 import { Embedding } from "@/app/client/fetch/url";
 
 async function createChatEngine(
@@ -105,6 +108,7 @@ export async function POST(request: NextRequest) {
     const serviceContext = serviceContextFromDefaults({
       llm,
       chunkSize: DATASOURCES_CHUNK_SIZE,
+      chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
     });
 
     const chatEngine = await createChatEngine(
