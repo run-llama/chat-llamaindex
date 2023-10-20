@@ -154,7 +154,7 @@ export async function callSession(
   session.messages = session.messages.concat([savedUserMessage, botMessage]);
   callbacks.onUpdateMessages(session.messages);
 
-  let embeddings;
+  let embeddings: Embedding[] | undefined;
   let message;
   if (userMessage.urlDetail) {
     // if the user sends document, let the LLM summarize the content of the URL and just use the document's embeddings
@@ -167,6 +167,7 @@ export async function callSession(
     embeddings = session.messages
       .flatMap((message: ChatMessage) => message.urlDetail?.embeddings)
       .filter((m) => m !== undefined) as Embedding[];
+    embeddings = embeddings.length > 0 ? embeddings : undefined;
   }
 
   // make request

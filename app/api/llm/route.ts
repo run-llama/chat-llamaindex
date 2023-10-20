@@ -29,11 +29,11 @@ async function createChatEngine(
   let contextGenerator;
   if (datasource || embeddings) {
     let index;
-    if (datasource) {
-      index = await getDataSource(serviceContext, datasource);
-    }
     if (embeddings) {
+      // TODO: merge indexes, currently we prefer own embeddings
       index = await createIndex(serviceContext, embeddings);
+    } else if (datasource) {
+      index = await getDataSource(serviceContext, datasource);
     }
     const retriever = index!.asRetriever();
     retriever.similarityTopK = 5;
