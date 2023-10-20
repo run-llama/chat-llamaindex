@@ -1,18 +1,17 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import { Provider } from "next-auth/providers";
 import LinkedInProvider from "next-auth/providers/linkedin";
-import { getServerSideConfig } from "../config/server";
 import BlankAvatar from "@/app/icons/blank_avatar.png";
 import { sendSlackMessage } from "../slack/slack";
+import { env } from "../env.mjs";
 
 const configureIdentityProvider = () => {
-  const serverConfig = getServerSideConfig();
   const providers: Array<Provider> = [];
-  if (serverConfig.linkedinClientId && serverConfig.linkedinClientSecret) {
+  if (env.LINKEDIN_CLIENT_ID && env.LINKEDIN_CLIENT_SECRET) {
     providers.push(
       LinkedInProvider({
-        clientId: serverConfig.linkedinClientId,
-        clientSecret: serverConfig.linkedinClientSecret,
+        clientId: env.LINKEDIN_CLIENT_ID,
+        clientSecret: env.LINKEDIN_CLIENT_SECRET,
         authorization: {
           params: { scope: "openid profile email" },
         },
@@ -35,15 +34,13 @@ const configureIdentityProvider = () => {
 };
 
 export const options: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   providers: [...configureIdentityProvider()],
   session: {
     strategy: "jwt",
   },
   events: {
     async signIn(message) {
-      const serverConfig = getServerSideConfig();
-      if (!serverConfig.slackWebhookUrl) return;
       sendSlackMessage(
         `User signed in: ${message.profile?.name} - ${message.profile?.email}`,
       );

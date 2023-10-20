@@ -1999,6 +1999,18 @@
   dependencies:
     tslib "^2.4.0"
 
+"@t3-oss/env-core@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-core/-/env-core-0.7.1.tgz#5e0568203d539bb2a35c96f02d33b6e204a194e5"
+  integrity sha512-3+SQt39OlmSaRLqYVFv8uRm1BpFepM5TIiMytRqO9cjH+wB77o6BIJdeyM5h5U4qLBMEzOJWCY4MBaU/rLwbYw==
+
+"@t3-oss/env-nextjs@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-nextjs/-/env-nextjs-0.7.1.tgz#556a49382d22c190e5f9900e703679107cac483e"
+  integrity sha512-tQDbNLGCOvKGi+JoGuJ/CJInJI7/kLWJqtgGppAKS7ZFLdVOqZYR/uRjxlXOWPnxmUKF8VswOAsq7fXUpNZDhA==
+  dependencies:
+    "@t3-oss/env-core" "0.7.1"
+
 "@trysound/sax@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
@@ -5195,10 +5207,10 @@ listr2@^5.0.7:
     through "^2.3.8"
     wrap-ansi "^7.0.0"
 
-llamaindex@0.0.0-20231016163150:
-  version "0.0.0-20231016163150"
-  resolved "https://registry.yarnpkg.com/llamaindex/-/llamaindex-0.0.0-20231016163150.tgz#bede1f6385bcd9a49c1e5e6b3b52b35ea4b984ff"
-  integrity sha512-WzbR6Pz9wT2ZMDZ4rmpzhrLFNTm71XaBkTLR4hgWhHboty1IZMM6wcWmo2ylJady7CWU7PVcGEowrnayYx4DCQ==
+llamaindex@0.0.0-20231018030303:
+  version "0.0.0-20231018030303"
+  resolved "https://registry.yarnpkg.com/llamaindex/-/llamaindex-0.0.0-20231018030303.tgz#a67e2fcfacb57ab413a4246d636b9da7e8e0b3b0"
+  integrity sha512-f/cgUEyh6Nl5HFhjCoCatnE0izaclVmsnx8UMQanoUHR+jAQ/6CVQ2Pno6lE0ajAH2Zn/cjqbW2EF2wqqcFXKg==
   dependencies:
     "@anthropic-ai/sdk" "^0.6.2"
     "@notionhq/client" "^2.2.13"
@@ -8244,6 +8256,11 @@ zod@3.21.4:
   version "3.21.4"
   resolved "https://registry.npmmirror.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
   integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==
+
+zod@^3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
 
 zustand@^4.4.1:
   version "4.4.1"

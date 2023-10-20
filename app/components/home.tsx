@@ -16,7 +16,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { getClientConfig } from "../config/client";
+import { env } from "../env.mjs";
 import { Bot, useBotStore } from "../store/bot";
 import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
@@ -111,7 +111,6 @@ function Screen() {
   const isMobileScreen = useMobileScreen();
   const { showSidebar } = useSidebarContext();
   const { data: session, status } = useSession();
-  const clientConfig = getClientConfig();
 
   const showSidebarOnMobile = showSidebar || !isMobileScreen;
 
@@ -122,7 +121,7 @@ function Screen() {
   if (status === "loading") return <LoadingPage />;
   return (
     <main className="flex overflow-hidden h-screen w-screen box-border">
-      {clientConfig.hasNextAuth && !session ? (
+      {env.NEXT_PUBLIC_HAS_NEXTAUTH && !session ? (
         <LoginPage />
       ) : (
         <>
@@ -140,10 +139,6 @@ function Screen() {
 }
 
 export function Home({ bot }: { bot?: Bot }) {
-  useEffect(() => {
-    console.log("[Config] got config from build time", getClientConfig());
-  }, []);
-
   if (!useHasHydrated()) {
     return <LoadingPage />;
   }

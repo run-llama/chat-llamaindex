@@ -3,7 +3,6 @@ import { Linkedin, LogOut, Settings } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useNavigate } from "react-router-dom";
-import { getClientConfig } from "../../config/client";
 import { LINKEDIN_URL, Path } from "../../constant";
 import Locale from "../../locales";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -19,6 +18,7 @@ import {
 import Typography from "../ui/typography";
 import { useSidebarContext } from "@/app/components/home";
 import { useMobileScreen } from "@/app/utils/mobile";
+import { env } from "../../env.mjs";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
@@ -28,7 +28,6 @@ export function SideBar(props: { className?: string }) {
   const { setShowSidebar } = useSidebarContext();
   const isMobileScreen = useMobileScreen();
   const { data: session } = useSession();
-  const clientConfig = getClientConfig();
   const navigate = useNavigate();
 
   const dropdownItems = [
@@ -68,7 +67,7 @@ export function SideBar(props: { className?: string }) {
         </div>
 
         <div className="flex items-center justify-between">
-          {clientConfig.hasNextAuth ? (
+          {env.NEXT_PUBLIC_HAS_NEXTAUTH ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>

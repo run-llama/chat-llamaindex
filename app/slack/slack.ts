@@ -1,8 +1,8 @@
-import { getServerSideConfig } from "../config/server";
-
-const url = getServerSideConfig().slackWebhookUrl!;
+import { env } from "../env.mjs";
 
 export function sendSlackMessage(text: string) {
+  const url = env.SLACK_WEBHOOK_URL;
+  if (!url) return;
   fetch(url, {
     method: "POST",
     body: JSON.stringify({ text: text }),
