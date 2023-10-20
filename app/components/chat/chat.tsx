@@ -45,8 +45,6 @@ import { ChatAction } from "./chat-action";
 import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
 
-type RenderMessage = ChatMessage & { preview?: boolean };
-
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
   {
@@ -209,7 +207,7 @@ export function Chat() {
     deleteMessage(msgId);
   };
 
-  const context: RenderMessage[] = useMemo(() => {
+  const context: ChatMessage[] = useMemo(() => {
     return bot.hideContext ? [] : bot.context.slice();
   }, [bot.context, bot.hideContext]);
 
@@ -222,7 +220,7 @@ export function Chat() {
 
   // preview messages
   const renderMessages = useMemo(() => {
-    const getFrontendMessages = (messages: RenderMessage[]) => {
+    const getFrontendMessages = (messages: ChatMessage[]) => {
       return messages.map((message) => {
         if (!message.urlDetail) return message;
         const urlTypePrefix = getUrlTypePrefix(message.urlDetail.type);
@@ -259,7 +257,7 @@ export function Chat() {
             ]
           : [],
       )
-      .concat(getFrontendMessages(session.messages as RenderMessage[]))
+      .concat(getFrontendMessages(session.messages))
       .concat(getUrlPreviewMessage() || []);
   }, [session.messages, bot.botHello, temporaryURLInput, context]);
 
@@ -347,10 +345,8 @@ export function Chat() {
             const isMemory = message.role === "memory";
             const isContext = i < context.length;
             const showActions =
-              i > 0 &&
-              !(message.preview || message.content.length === 0) &&
-              !isContext;
-            const showTyping = message.preview || message.streaming;
+              i > 0 && !(message.content.length === 0) && !isContext;
+            const showTyping = message.streaming;
             const shouldShowClearContextDivider = i === clearContextIndex - 1;
 
             return (
@@ -392,7 +388,7 @@ export function Chat() {
                           <Markdown
                             content={message.content}
                             loading={
-                              (message.preview || message.streaming) &&
+                              message.streaming &&
                               message.content.length === 0 &&
                               !isUser
                             }
