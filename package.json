@@ -1,7 +1,7 @@
 {
-  "name": "unc",
+  "name": "chat-llamaindex",
   "private": false,
-  "license": "AGPL-3.0-or-later",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

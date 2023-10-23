@@ -1,33 +1,32 @@
 <br /><br />
 
 <p align="center">
-  <img src="./public/android-chrome-192x192.png" alt="Unc Logo" width="70">
+  <img src="./public/android-chrome-192x192.png" alt="LlamaIndex Chat Logo" width="70">
 </p>
 
-<h3 align="center"><b>Unc</b></h3>
-<p align="center"><b>A privacy-first, enterprise-ready, open-source ChatGPT platform</b></p>
+<h3 align="center"><b>LlamaIndex Chat</b></h3>
+<p align="center"><b>Create chat bots that know your data</b></p>
 
 <p>
       <img
         src="./public/screenshot.png"
-        alt="Unc Screen"
+        alt="LlamaIndex Chat Screen"
         width="100%"
       />
 </p>
 
-Welcome to [Unc](https://unc.de). A robust, scalable open-source platform built specifically for implementing privacy-first, enterprise-level ChatGPT.
+Welcome to [LlamaIndex Chat](https://github.com/run-llama/chat-llamaindex). You can create and share LLM chatbots that
+know your data (PDF or text documents).
 
-Getting started with Unc is a breeze. Visit [unc.de](https://unc.de) - a hosted version of Unc with no user authentication, provides an immediate start.
+Getting started with LlamaIndex Chat is a breeze. Visit [TBD](TBD) - a hosted version of LlamaIndex Chat with no user authentication that provides an immediate start.
 
 ## 🚀 Features
 
-Unc is enterprise-ready, featuring:
+LlamaIndex Chat is an example chat bot application for [LlamaIndexTS](https://github.com/run-llama/LlamaIndexTS). It features:
 
-- Self-hosted, can be installed in own cloud (private or public).
-- Chat with your own HTML and PDF documents.
-- Create bots using prompt engineering (no-code) and share them with other users. This avoids the repetition of frequently used prompts.
-- Supports [Azure OpenAI from Microsoft](https://azure.microsoft.com/en-us/products/ai-services/openai-service), eliminating traffic to OpenAI.
-- Privacy first; personal data is stored locally in the browser.
+- Create bots using prompt engineering and share them with other users.
+- Modify the demo bots by using the UI or directly editing the [bots/bots.data.ts](./bots/bots.data.ts) file.
+- Integrate your own data by uploading documents or generating new [datasources](#datasources).
 
 ## ⚡️ Quick start
 
@@ -38,8 +37,8 @@ Requirement: [NodeJS](https://nodejs.org) 18
 - Clone the repository
 
 ```bash
-git clone https://github.com/marcusschiesser/unc
-cd unc
+git clone https://github.com/run-llama/chat-llamaindex
+cd chat-llamaindex
 ```
 
 - Set the environment variables
@@ -61,17 +60,29 @@ pnpm dev
 
 Deploying to Vercel is simple, just click the button below and follow the instructions:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmarcusschiesser%2Func&env=OPENAI_API_KEY)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Frun-llama%2Fchat-llamaindex&env=OPENAI_API_KEY)
 
 You might want to consider deploying to a [Vercel Pro](https://vercel.com/docs/accounts/plans#pro) account, as the running time
 of the chat engine is limited to 10 seconds on the free plan. Before deploying, make sure to [change the desired running time](./app/api/llm/route.ts#L179) in the code.
 
-## Recreate Storage
+## 📀 Data Sources
 
-The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a different [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
-The `cache` folder in the file system is used as [Storage](The https://ts.llamaindex.ai/modules/low_level/storage) for the `VectorStoreIndex`. To re-create the storage
-Vector Indexes
+The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
+The `cache` folder in the root directoy is used as [Storage](https://ts.llamaindex.ai/modules/low_level/storage) for each `VectorStoreIndex`.
+
+Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](./bots/bots.data.ts).
+
+### Generate Data Sources
+
+To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g. PDFs) to it.
+Then create the `VectorStoreIndex` for the datasource, by running the following command:
 
 ```bash
-pnpm run generate
+pnpm run generate <datasource-name>
 ```
+
+Where `<datasource-name>` is the name of the subfolder with your data files.
+
+## 🙏 Thanks
+
+Thanks go to @Yidadaa for his [ChatGPT-Next-Web](https://github.com/Yidadaa/ChatGPT-Next-Web) project, which was used as a starter template for this project.
