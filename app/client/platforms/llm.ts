@@ -101,6 +101,8 @@ export class LLMApi {
             const json = JSON.parse(data);
             if (json.done) {
               options.onFinish(json.memoryMessage);
+            } else if (json.error) {
+              options.onError?.(new Error(json.error));
             }
           } catch {
             // not a JSON, so we received a new token
