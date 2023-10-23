@@ -6,12 +6,12 @@ import {
 } from "llamaindex";
 
 import {
-  DATASOURCES,
   DATASOURCES_CACHE_DIR,
   DATASOURCES_DIR,
   DATASOURCES_CHUNK_SIZE,
   DATASOURCES_CHUNK_OVERLAP,
 } from "./constants.mjs";
+import { exit } from "process";
 
 async function getRuntime(func) {
   const start = Date.now();
@@ -42,14 +42,20 @@ async function generateDatasource(serviceContext, datasource) {
   );
 }
 
+const datasource = process.argv[2];
+
+if (!datasource) {
+  console.log("Error: You must provide a datasource as the parameter.");
+  console.log("Usage: pnpm run generate <datasource>");
+  exit(1);
+}
+
 (async () => {
   const serviceContext = serviceContextFromDefaults({
     chunkSize: DATASOURCES_CHUNK_SIZE,
     chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
   });
 
-  for (const datasource of DATASOURCES) {
-    await generateDatasource(serviceContext, datasource);
-  }
-  console.log("Finished generating datasources");
+  await generateDatasource(serviceContext, datasource);
+  console.log("Finished generating datasource.");
 })();
