@@ -81,19 +81,29 @@ function createReadableStream(
   const writer = responseStream.writable.getWriter();
   const encoder = new TextEncoder();
   const onNext = async () => {
-    const { value, done } = await stream.next();
-    if (!done) {
-      writer.write(encoder.encode(`data: ${value}\n\n`));
-      onNext();
-    } else {
+    try {
+      const { value, done } = await stream.next();
+      if (!done) {
+        writer.write(encoder.encode(`data: ${value}\n\n`));
+        onNext();
+      } else {
+        writer.write(
+          `data: ${JSON.stringify({
+            done: true,
+            // get the optional message containing the chat summary
+            memoryMessage: chatHistory
+              .newMessages()
+              .filter((m) => m.role === "memory")
+              .at(0),
+          })}\n\n`,
+        );
+        writer.close();
+      }
+    } catch (error) {
+      console.error("[LlamaIndex]", error);
       writer.write(
         `data: ${JSON.stringify({
-          done: true,
-          // get the optional message containing the chat summary
-          memoryMessage: chatHistory
-            .newMessages()
-            .filter((m) => m.role === "memory")
-            .at(0),
+          error: (error as Error).message,
         })}\n\n`,
       );
       writer.close();
