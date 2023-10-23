@@ -48,7 +48,16 @@ export function SideBar(props: { className?: string }) {
     },
   ];
 
-  const shortUsername = session?.user?.name!.substring(0, 2).toUpperCase();
+  const DisplayAvatar = () => {
+    if (!session?.user?.name) return undefined;
+    const shortUsername = session.user.name.substring(0, 2).toUpperCase();
+    return (
+      <Avatar>
+        <AvatarImage src={session.user.image!} />
+        <AvatarFallback>{shortUsername}</AvatarFallback>
+      </Avatar>
+    );
+  };
 
   return (
     <div className="h-full relative group border-r w-full md:w-[300px]">
@@ -70,10 +79,7 @@ export function SideBar(props: { className?: string }) {
           {env.NEXT_PUBLIC_HAS_NEXTAUTH ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src={session?.user?.image!} />
-                  <AvatarFallback>{shortUsername}</AvatarFallback>
-                </Avatar>
+                <DisplayAvatar />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Preferences</DropdownMenuLabel>
