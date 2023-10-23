@@ -176,3 +176,5 @@ export async function POST(request: NextRequest) {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Set max running time of function, for Vercel Pro use 300 seconds, see https://vercel.com/docs/functions/serverless-functions/runtimes#maxduration
+export const maxDuration = 10;
