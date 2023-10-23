@@ -1,4 +1,4 @@
-const UNC_WEB_CACHE = "unc-web-cache";
+const UNC_WEB_CACHE = "chat-llamaindex-web-cache";
 
 self.addEventListener("activate", function (event) {
   console.log("ServiceWorker activated.");

@@ -1,9 +1,9 @@
 import { ThemeToggle } from "@/app/components/layout/theme-toggle";
-import { Linkedin, LogOut, Settings } from "lucide-react";
+import { Github, LogOut, Settings } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useNavigate } from "react-router-dom";
-import { LINKEDIN_URL, Path } from "../../constant";
+import { GITHUB_URL, Path } from "../../constant";
 import Locale from "../../locales";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -107,10 +107,10 @@ export function SideBar(props: { className?: string }) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.open(LINKEDIN_URL, "_blank")}
+            onClick={() => window.open(GITHUB_URL, "_blank")}
           >
-            <Linkedin className="mr-2 h-4 w-4" />
-            <span>{Locale.Home.LinkedIn}</span>
+            <Github className="mr-2 h-4 w-4" />
+            <span>{Locale.Home.Github}</span>
           </Button>
         </div>
       </div>
