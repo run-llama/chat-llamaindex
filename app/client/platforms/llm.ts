@@ -110,6 +110,9 @@ export class LLMApi {
             }
           }
         },
+        onclose() {
+          options.onFinish();
+        },
         onerror: handleError,
         openWhenHidden: true,
       });
