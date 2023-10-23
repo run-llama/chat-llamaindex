@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
 import { Deployment } from "./deployment";
-import { ChatSession, ChatMessage, callSession } from "./session";
+import { ChatSession, ChatMessage } from "./session";
 import { createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
 
 export type Share = {
