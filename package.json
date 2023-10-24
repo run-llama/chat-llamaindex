@@ -63,7 +63,6 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
-    "telegramify-markdown": "^1.1.0",
     "unified": "^10.1.2",
     "unist-util-remove": "^4.0.0",
     "use-debounce": "^9.0.4",
