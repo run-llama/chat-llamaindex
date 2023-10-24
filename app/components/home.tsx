@@ -9,16 +9,13 @@ import dynamic from "next/dynamic";
 import { Path } from "../constant";
 import { ErrorBoundary } from "./layout/error";
 
-import { useSession } from "next-auth/react";
 import {
   Route,
   HashRouter as Router,
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { env } from "../env.mjs";
 import { Bot, useBotStore } from "../store/bot";
-import LoginPage from "./login";
 import { SideBar } from "./layout/sidebar";
 import { LoadingPage } from "@/app/components/ui/loading";
 
@@ -110,7 +107,6 @@ export const useSidebarContext = () => {
 function Screen() {
   const isMobileScreen = useMobileScreen();
   const { showSidebar } = useSidebarContext();
-  const { data: session, status } = useSession();
 
   const showSidebarOnMobile = showSidebar || !isMobileScreen;
 
@@ -118,22 +114,17 @@ function Screen() {
     loadAsyncGoogleFont();
   }, []);
 
-  if (status === "loading") return <LoadingPage />;
   return (
     <main className="flex overflow-hidden h-screen w-screen box-border">
-      {env.NEXT_PUBLIC_HAS_NEXTAUTH && !session ? (
-        <LoginPage />
-      ) : (
-        <>
-          {showSidebarOnMobile && <SideBar />}
-          <div className="flex-1 overflow-hidden">
-            <Routes>
-              <Route path={Path.Chat} element={<ChatPage />} />
-              <Route path={Path.Settings} element={<SettingsPage />} />
-            </Routes>
-          </div>
-        </>
-      )}
+      <>
+        {showSidebarOnMobile && <SideBar />}
+        <div className="flex-1 overflow-hidden">
+          <Routes>
+            <Route path={Path.Chat} element={<ChatPage />} />
+            <Route path={Path.Settings} element={<SettingsPage />} />
+          </Routes>
+        </div>
+      </>
     </main>
   );
 }

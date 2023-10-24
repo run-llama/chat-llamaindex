@@ -1,63 +1,18 @@
 import { ThemeToggle } from "@/app/components/layout/theme-toggle";
-import { Github, LogOut, Settings } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { Github, Settings } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useNavigate } from "react-router-dom";
 import { GITHUB_URL, Path } from "../../constant";
 import Locale from "../../locales";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import Typography from "../ui/typography";
-import { useSidebarContext } from "@/app/components/home";
-import { useMobileScreen } from "@/app/utils/mobile";
-import { env } from "../../env.mjs";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
 });
 
 export function SideBar(props: { className?: string }) {
-  const { setShowSidebar } = useSidebarContext();
-  const isMobileScreen = useMobileScreen();
-  const { data: session } = useSession();
   const navigate = useNavigate();
-
-  const dropdownItems = [
-    {
-      icon: <Settings className="mr-2 h-4 w-4" />,
-      text: Locale.Home.Settings,
-      action: () => {
-        navigate(Path.Settings);
-        if (isMobileScreen) setShowSidebar(false);
-      },
-    },
-    {
-      icon: <LogOut className="mr-2 h-4 w-4" />,
-      text: Locale.Home.Logout,
-      action: () => {
-        signOut();
-      },
-    },
-  ];
-
-  const DisplayAvatar = () => {
-    if (!session?.user?.name) return undefined;
-    const shortUsername = session.user.name.substring(0, 2).toUpperCase();
-    return (
-      <Avatar>
-        <AvatarImage src={session.user.image!} />
-        <AvatarFallback>{shortUsername}</AvatarFallback>
-      </Avatar>
-    );
-  };
 
   return (
     <div className="h-full relative group border-r w-full md:w-[300px]">
@@ -76,33 +31,15 @@ export function SideBar(props: { className?: string }) {
         </div>
 
         <div className="flex items-center justify-between">
-          {env.NEXT_PUBLIC_HAS_NEXTAUTH ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <DisplayAvatar />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Preferences</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {dropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.text} onClick={item.action}>
-                    {item.icon}
-                    <span>{item.text}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => {
-                navigate(Path.Settings);
-              }}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => {
+              navigate(Path.Settings);
+            }}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
 
           <Button
             variant="outline"

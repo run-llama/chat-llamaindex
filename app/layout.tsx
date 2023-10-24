@@ -4,7 +4,6 @@ import "./styles/lib/highlight.css";
 
 import Locale from "./locales";
 import { type Metadata } from "next";
-import { AuthProviders } from "./auth/providers";
 import { Toaster } from "@/app/components/ui/toaster";
 import { ThemeProvider } from "@/app/components/layout/theme-provider";
 
@@ -39,7 +38,7 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProviders>{children}</AuthProviders>
+          {children}
           <Toaster />
         </ThemeProvider>
       </body>
