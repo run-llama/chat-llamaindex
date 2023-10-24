@@ -63,8 +63,7 @@ Deploying to Vercel is simple, just click the button below and follow the instru
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmarcusschiesser%2Func&env=OPENAI_API_KEY)
 
-You might want to consider deploying to a [Vercel Pro](https://vercel.com/docs/accounts/plans#pro) account, as the running time
-of the chat engine is limited to 10 seconds on the free plan. Before deploying, make sure to [change the desired running time](./app/api/llm/route.ts#L179) in the code.
+In case you're deploying to a [Vercel Hobby](https://vercel.com/docs/accounts/plans#hobby) account, make sure to [change the running time](./app/api/llm/route.ts#L179) to 10 seconds as this is the limit for the free plan.
 
 ## Recreate Storage
 
