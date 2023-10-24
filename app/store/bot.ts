@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
-import { ChatSession, ChatMessage } from "./session";
+import { ChatSession, ChatMessage, createEmptySession } from "./session";
 import { createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
 
 export type Share = {
@@ -88,10 +88,12 @@ export const useBotStore = create<BotStore>()(
       create(bot, options) {
         const bots = get().bots;
         const id = nanoid();
+        const session = createEmptySession();
         bots[id] = {
           ...createEmptyBot(),
           ...bot,
           id,
+          session,
           readOnly: options?.readOnly || false,
         };
         if (options?.reset) {
