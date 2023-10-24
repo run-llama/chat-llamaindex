@@ -1,6 +1,6 @@
 {
-  "name": "unc.de",
-  "short_name": "UNC",
+  "name": "chat-llamaindex",
+  "short_name": "chat",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

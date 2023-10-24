@@ -1,7 +1,7 @@
 import { Linkedin } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { LINKEDIN_URL } from "../constant";
+import { GITHUB_URL } from "../constant";
 import Locale from "../locales";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "../lib/utils";
@@ -10,7 +10,7 @@ export default function LoginPage() {
   return (
     <div className="container relative hidden flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
-        href={LINKEDIN_URL}
+        href={GITHUB_URL}
         className={cn(
           buttonVariants({ variant: "ghost" }),
           "absolute right-4 top-4 md:right-8 md:top-8",

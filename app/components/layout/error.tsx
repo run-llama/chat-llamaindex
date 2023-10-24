@@ -1,5 +1,5 @@
 import React from "react";
-import { LINKEDIN_URL } from "../../constant";
+import { GITHUB_URL } from "../../constant";
 import Locale from "../../locales";
 import { downloadAs } from "../../utils/download";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/app/components/ui/alert-dialog";
 import { cn } from "@/app/lib/utils";
 import { Button, buttonVariants } from "@/app/components/ui/button";
-import { Linkedin, RefreshCcw } from "lucide-react";
+import { Github, RefreshCcw } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -41,7 +41,7 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
 
   clearAndSaveData() {
     try {
-      downloadAs(JSON.stringify(localStorage), "unc-snapshot.json");
+      downloadAs(JSON.stringify(localStorage), "chat-llamaindex-snapshot.json");
     } finally {
       localStorage.clear();
       location.reload();
@@ -66,9 +66,9 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open(LINKEDIN_URL, "_blank")}
+                  onClick={() => window.open(GITHUB_URL, "_blank")}
                 >
-                  <Linkedin className="mr-2 h-4 w-4" />
+                  <Github className="mr-2 h-4 w-4" />
                   <span>Report This Error</span>
                 </Button>
                 <AlertDialog>
