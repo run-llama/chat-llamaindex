@@ -1,5 +1,4 @@
 import { ShareResponse } from "@/app/api/share/route";
-import ConfigItem from "@/app/components/bot/bot-settings/config-item";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
 import { Loading } from "@/app/components/ui/loading";
@@ -58,11 +57,12 @@ export default function ShareBotDialogContent() {
         {!shareMutation.error && (
           <Card>
             <CardContent className="divide-y pt-6">
-              <ConfigItem title={Locale.Share.Url.Title}>
+              <div className="flex items-center px-3 py-0 gap-4 text-sm">
+                <div className="font-medium">{Locale.Share.Url.Title}</div>
                 {shareMutation.data ? (
                   <div className="flex flex-1 gap-4">
                     <Input
-                      className="max-w-full flex-1"
+                      className="flex-1 w-full"
                       type="text"
                       value={shareMutation.data.url}
                       readOnly
@@ -78,9 +78,12 @@ export default function ShareBotDialogContent() {
                     </Button>
                   </div>
                 ) : (
-                  <Loading />
+                  <div className="flex flex-1 justify-end items-center text-muted-foreground gap-1">
+                    <Loading />
+                    Loading...
+                  </div>
                 )}
-              </ConfigItem>
+              </div>
             </CardContent>
           </Card>
         )}
