@@ -84,7 +84,7 @@ function createReadableStream(
     try {
       const { value, done } = await stream.next();
       if (!done) {
-        writer.write(encoder.encode(`data: ${value}\n\n`));
+        writer.write(encoder.encode(`data: ${JSON.stringify(value)}\n\n`));
         onNext();
       } else {
         writer.write(
