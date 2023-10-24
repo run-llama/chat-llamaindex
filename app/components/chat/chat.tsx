@@ -58,6 +58,8 @@ function ChatHeader() {
   const botStore = useBotStore();
   const bot = botStore.currentBot();
   const session = botStore.currentSession();
+  const numberOfMessages =
+    (bot.botHello?.length ? 1 : 0) + session.messages.length;
   return (
     <div className="relative">
       <div className="absolute top-4 left-5">
@@ -75,7 +77,7 @@ function ChatHeader() {
       <div className="text-center py-4">
         <Typography.H4>{bot.name}</Typography.H4>
         <div className="text-sm text-muted-foreground">
-          {Locale.Chat.SubTitle(session.messages.length)}
+          {Locale.Chat.SubTitle(numberOfMessages)}
         </div>
       </div>
       <Separator />
