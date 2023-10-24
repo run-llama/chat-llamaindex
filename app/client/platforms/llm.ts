@@ -96,15 +96,19 @@ export class LLMApi {
           }
         },
         onmessage(msg) {
-          const json = JSON.parse(msg.data);
-          if (json.done) {
-            options.onFinish(json.memoryMessage);
-          } else if (json.error) {
-            options.onError?.(new Error(json.error));
-          } else {
-            // received a new token
-            llmResponse += json;
-            options.onUpdate(llmResponse);
+          try {
+            const json = JSON.parse(msg.data);
+            if (json.done) {
+              options.onFinish(json.memoryMessage);
+            } else if (json.error) {
+              options.onError?.(new Error(json.error));
+            } else {
+              // received a new token
+              llmResponse += json;
+              options.onUpdate(llmResponse);
+            }
+          } catch (e) {
+            console.error("[Request] error parsing streaming delta", msg);
           }
         },
         onclose() {

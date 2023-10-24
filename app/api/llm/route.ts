@@ -79,10 +79,16 @@ function createReadableStream(
 ) {
   let responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
+  let aborted = false;
+  writer.closed.catch(() => {
+    // reader aborted the stream
+    aborted = true;
+  });
   const encoder = new TextEncoder();
   const onNext = async () => {
     try {
       const { value, done } = await stream.next();
+      if (aborted) return;
       if (!done) {
         writer.write(encoder.encode(`data: ${JSON.stringify(value)}\n\n`));
         onNext();
