@@ -96,20 +96,15 @@ export class LLMApi {
           }
         },
         onmessage(msg) {
-          const data = msg.data;
-          try {
-            const json = JSON.parse(data);
-            if (json.done) {
-              options.onFinish(json.memoryMessage);
-            } else if (json.error) {
-              options.onError?.(new Error(json.error));
-            }
-          } catch {
-            // not a JSON, so we received a new token
-            if (data) {
-              llmResponse += data;
-              options.onUpdate(llmResponse);
-            }
+          const json = JSON.parse(msg.data);
+          if (json.done) {
+            options.onFinish(json.memoryMessage);
+          } else if (json.error) {
+            options.onError?.(new Error(json.error));
+          } else {
+            // received a new token
+            llmResponse += json;
+            options.onUpdate(llmResponse);
           }
         },
         onclose() {
