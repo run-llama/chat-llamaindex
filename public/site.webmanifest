@@ -1,6 +1,6 @@
 {
   "name": "chat-llamaindex",
-  "short_name": "chat",
+  "short_name": "Llama Chat",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
