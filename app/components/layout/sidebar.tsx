@@ -6,6 +6,7 @@ import { GITHUB_URL, Path } from "../../constant";
 import Locale from "../../locales";
 import { Button } from "../ui/button";
 import Typography from "../ui/typography";
+import { useSidebarContext } from "@/app/components/home";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
@@ -13,6 +14,7 @@ const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
 
 export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
+  const { setShowSidebar } = useSidebarContext();
 
   return (
     <div className="h-full relative group border-r w-full md:w-[300px]">
@@ -36,6 +38,7 @@ export function SideBar(props: { className?: string }) {
             size="icon"
             onClick={() => {
               navigate(Path.Settings);
+              setShowSidebar(false);
             }}
           >
             <Settings className="h-4 w-4" />
