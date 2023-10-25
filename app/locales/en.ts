@@ -11,6 +11,7 @@ const en = {
       Clear: "Clear Context",
     },
     Typing: "Typing…",
+    InputMobile: "Enter to send",
     Input:
       "Enter to send, Shift + Enter to wrap, enter URLs to add a PDF or HTML document to the context",
     Send: "Send",

@@ -470,7 +470,9 @@ export function Chat() {
           <Textarea
             className="ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]"
             ref={inputRef}
-            placeholder={Locale.Chat.Input}
+            placeholder={
+              isMobileScreen ? Locale.Chat.InputMobile : Locale.Chat.Input
+            }
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}
