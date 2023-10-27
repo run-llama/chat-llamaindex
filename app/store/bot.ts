@@ -33,7 +33,10 @@ type BotStore = BotState & {
   currentBot: () => Bot;
   selectBot: (id: string) => void;
   currentSession: () => ChatSession;
-  updateCurrentSession: (updater: (session: ChatSession) => void) => void;
+  updateBotSession: (
+    updater: (session: ChatSession) => void,
+    botId: string,
+  ) => void;
   get: (id: string) => Bot | undefined;
   getByShareId: (shareId: string) => Bot | undefined;
   getAll: () => Bot[];
@@ -65,13 +68,13 @@ export const useBotStore = create<BotStore>()(
       currentSession() {
         return get().currentBot().session;
       },
-      updateCurrentSession(updater) {
+      updateBotSession(updater, botId) {
         const bots = get().bots;
-        updater(bots[get().currentBotId].session);
+        updater(bots[botId].session);
         set(() => ({ bots }));
       },
       get(id) {
-        return get().bots[id];
+        return get().bots[id] || undefined;
       },
       getAll() {
         const list = Object.values(get().bots).map((b) => ({

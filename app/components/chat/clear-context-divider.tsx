@@ -2,15 +2,16 @@ import { useBotStore } from "@/app/store/bot";
 import Locale from "../../locales";
 import { Card, CardContent } from "@/app/components/ui/card";
 
-export function ClearContextDivider() {
+export function ClearContextDivider({ botId }: { botId: string }) {
   const botStore = useBotStore();
 
   return (
     <Card
       className="cursor-pointer hover:border-primary rounded-sm"
       onClick={() =>
-        botStore.updateCurrentSession(
+        botStore.updateBotSession(
           (session) => (session.clearContextIndex = undefined),
+          botId,
         )
       }
     >

@@ -138,10 +138,10 @@ export function Chat() {
       inputContent,
       {
         onUpdateMessages: (messages) => {
-          botStore.updateCurrentSession((session) => {
+          botStore.updateBotSession((session) => {
             // trigger re-render of messages
             session.messages = messages;
-          });
+          }, bot.id);
         },
       },
       input instanceof FileWrap ? input : undefined,
@@ -166,7 +166,7 @@ export function Chat() {
   };
 
   useEffect(() => {
-    botStore.updateCurrentSession((session) => {
+    botStore.updateBotSession((session) => {
       const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
       session.messages.forEach((m) => {
         // check if should stop all stale messages
@@ -184,7 +184,7 @@ export function Chat() {
           }
         }
       });
-    });
+    }, bot.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -199,9 +199,10 @@ export function Chat() {
   };
 
   const deleteMessage = (msgId?: string) => {
-    botStore.updateCurrentSession(
+    botStore.updateBotSession(
       (session) =>
         (session.messages = session.messages.filter((m) => m.id !== msgId)),
+      bot.id,
     );
   };
 
@@ -317,13 +318,13 @@ export function Chat() {
   const autoFocus = !isMobileScreen; // wont auto focus on mobile screen
 
   const clearContext = () => {
-    botStore.updateCurrentSession((session) => {
+    botStore.updateBotSession((session) => {
       if (session.clearContextIndex === session.messages.length) {
         session.clearContextIndex = undefined;
       } else {
         session.clearContextIndex = session.messages.length;
       }
-    });
+    }, bot.id);
   };
   const stop = () => ChatControllerPool.stop(bot.id);
   const isRunning = ChatControllerPool.isRunning(bot.id);
@@ -440,7 +441,9 @@ export function Chat() {
                     )}
                   </HoverCard>
                 </div>
-                {shouldShowClearContextDivider && <ClearContextDivider />}
+                {shouldShowClearContextDivider && (
+                  <ClearContextDivider botId={bot.id} />
+                )}
               </div>
             );
           })}
