@@ -18,7 +18,7 @@ COPY . .
 RUN pnpm build
 
 # ---- Production Stage ----
-FROM node:18-bookworm-slim
+FROM node:18-bookworm-slim AS runtime
 
 # Use a non-root user
 USER node
