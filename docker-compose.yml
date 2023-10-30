@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  chat-llamaindex:
+    build: .
+    container_name: chat-llamaindex
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./cache:/usr/src/app/cache
+      - ./datasources:/usr/src/app/datasources
+    environment:
+      - "OPENAI_API_KEY=${OPENAI_API_KEY:?error}"

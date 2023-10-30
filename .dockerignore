@@ -1,0 +1,7 @@
+.github
+.env
+.env.template
+.env.development.local
+.env.*
+Dockerfile
+docker-compose.yml
