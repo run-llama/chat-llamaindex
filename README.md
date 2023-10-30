@@ -90,7 +90,7 @@ docker run -p 3000:3000 --env-file .env.development.local chat-llamaindex
 For those preferring Docker Compose, we've included a docker-compose.yml file. To run using Docker Compose:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 Go to http://localhost:3000 in your web browser.
 
