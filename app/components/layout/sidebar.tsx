@@ -20,17 +20,17 @@ export function SideBar(props: { className?: string }) {
     <div className="h-full relative group border-r w-full md:w-[300px]">
       <div className="w-full h-full p-5 flex flex-col gap-5">
         <div className="flex flex-col flex-1">
-          <div className="mb-5 flex justify-between gap-5 items-start">
+          <div className="mb-5 flex items-center justify-between gap-5">
             <div>
-              <img
-                src="/favicon-32x32.png"
-                alt="Image"
-                className="mr-2 h-6 w-6"
-              />{" "}
+              {" "}
+              {/* Add a container for the image and title */}
+              <img src="/white_logo.png" alt="Image" />{" "}
               {/* Adjust the image path and size */}
-              <Typography.H2>{Locale.Welcome.Title}</Typography.H2>
-              <div className="text-sm text-muted-foreground">
-                {Locale.Welcome.SubTitle}
+              <div>
+                {/* <Typography.H2>{Locale.Welcome.Title}</Typography.H2> */}
+                <div className="text-sm text-muted-foreground">
+                  {Locale.Welcome.SubTitle}
+                </div>
               </div>
             </div>
             <ThemeToggle />
