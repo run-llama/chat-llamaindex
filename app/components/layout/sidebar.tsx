@@ -22,7 +22,13 @@ export function SideBar(props: { className?: string }) {
         <div className="flex flex-col flex-1">
           <div className="mb-5 flex justify-between gap-5 items-start">
             <div>
-              <Typography.H1>{Locale.Welcome.Title}</Typography.H1>
+              <img
+                src="/favicon-32x32.png"
+                alt="Image"
+                className="mr-2 h-6 w-6"
+              />{" "}
+              {/* Adjust the image path and size */}
+              <Typography.H2>{Locale.Welcome.Title}</Typography.H2>
               <div className="text-sm text-muted-foreground">
                 {Locale.Welcome.SubTitle}
               </div>
