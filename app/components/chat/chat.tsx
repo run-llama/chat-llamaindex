@@ -44,6 +44,13 @@ import Typography from "../ui/typography";
 import { ChatAction } from "./chat-action";
 import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "../ui/dropdown-menu"; // Replace with the correct path to your dropdown component
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -80,6 +87,24 @@ function ChatHeader() {
           {Locale.Chat.SubTitle(numberOfMessages)}
         </div>
       </div>
+      {/* User Dropdown */}
+      <div className="absolute top-4 right-5">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center cursor-pointer">
+              <div className="rounded-full bg-gray-300 w-8 h-8 flex items-center justify-center text-white">
+                U
+              </div>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Log out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       <Separator />
     </div>
   );
