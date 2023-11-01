@@ -7,6 +7,7 @@ import Locale from "../../locales";
 import { Button } from "../ui/button";
 import Typography from "../ui/typography";
 import { useSidebarContext } from "@/app/components/home";
+import { useTheme } from "next-themes";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
@@ -15,6 +16,8 @@ const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
 export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
   const { setShowSidebar } = useSidebarContext();
+  const { theme } = useTheme();
+  const logoSrc = theme === "light" ? "/black_logo.png" : "/white_logo.png";
 
   return (
     <div className="h-full relative group border-r w-full md:w-[300px]">
@@ -23,9 +26,7 @@ export function SideBar(props: { className?: string }) {
           <div className="mb-5 flex items-center justify-between gap-5">
             <div>
               {" "}
-              {/* Add a container for the image and title */}
-              <img src="/white_logo.png" alt="Image" />{" "}
-              {/* Adjust the image path and size */}
+              <img src={logoSrc} alt="Image" />{" "}
               <div>
                 {/* <Typography.H2>{Locale.Welcome.Title}</Typography.H2> */}
                 <div className="text-sm text-muted-foreground">
