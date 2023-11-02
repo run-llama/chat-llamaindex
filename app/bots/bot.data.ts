@@ -7,6 +7,67 @@ import { createEmptySession } from "../store";
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
 
+// {
+//   avatar: "1f5a5-fe0f",
+//   name: "Red Hat Linux Expert",
+//   botHello: "Hello! How can I help you with Red Hat Linux?",
+//   context: [
+//     {
+//       role: "system",
+//       content: TEMPLATE("Red Hat Linux Expert"),
+//     },
+//   ],
+//   modelConfig: {
+//     model: "gpt-3.5-turbo-16k",
+//     temperature: 0.1,
+//     maxTokens: 8000,
+//     sendMemory: true,
+//   },
+//   readOnly: true,
+//   datasource: "redhat",
+//   hideContext: false,
+// },
+// {
+//   avatar: "1f454",
+//   name: "Apple Watch Genius",
+//   botHello: "Hello! How can I help you with Apple Watches?",
+//   context: [
+//     {
+//       role: "system",
+//       content: TEMPLATE("Apple Genius specialized in Apple Watches"),
+//     },
+//   ],
+//   modelConfig: {
+//     model: "gpt-3.5-turbo-16k",
+//     temperature: 0.1,
+//     maxTokens: 8000,
+//     sendMemory: true,
+//   },
+//   readOnly: true,
+//   datasource: "watchos",
+//   hideContext: false,
+// },
+// {
+//   avatar: "1f4da",
+//   name: "German Basic Law Expert",
+//   botHello: "Hello! How can I assist you today?",
+//   context: [
+//     {
+//       role: "system",
+//       content: TEMPLATE("Lawyer specialized in the basic law of Germany"),
+//     },
+//   ],
+//   modelConfig: {
+//     model: "gpt-3.5-turbo-16k",
+//     temperature: 0.1,
+//     maxTokens: 8000,
+//     sendMemory: true,
+//   },
+//   readOnly: true,
+//   datasource: "basic_law_germany",
+//   hideContext: false,
+// },
+
 const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
   {
     avatar: "1f916",
@@ -23,53 +84,15 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     hideContext: false,
   },
   {
-    avatar: "1f5a5-fe0f",
-    name: "Red Hat Linux Expert",
-    botHello: "Hello! How can I help you with Red Hat Linux?",
-    context: [
-      {
-        role: "system",
-        content: TEMPLATE("Red Hat Linux Expert"),
-      },
-    ],
-    modelConfig: {
-      model: "gpt-3.5-turbo-16k",
-      temperature: 0.1,
-      maxTokens: 8000,
-      sendMemory: true,
-    },
-    readOnly: true,
-    datasource: "redhat",
-    hideContext: false,
-  },
-  {
-    avatar: "1f454",
-    name: "Apple Watch Genius",
-    botHello: "Hello! How can I help you with Apple Watches?",
-    context: [
-      {
-        role: "system",
-        content: TEMPLATE("Apple Genius specialized in Apple Watches"),
-      },
-    ],
-    modelConfig: {
-      model: "gpt-3.5-turbo-16k",
-      temperature: 0.1,
-      maxTokens: 8000,
-      sendMemory: true,
-    },
-    readOnly: true,
-    datasource: "watchos",
-    hideContext: false,
-  },
-  {
     avatar: "1f4da",
-    name: "German Basic Law Expert",
+    name: "Crowell and Moring Memo expert",
     botHello: "Hello! How can I assist you today?",
     context: [
       {
         role: "system",
-        content: TEMPLATE("Lawyer specialized in the basic law of Germany"),
+        content: TEMPLATE(
+          "Lawyer specialized the memos available on Crowell and Moring's website",
+        ),
       },
     ],
     modelConfig: {
@@ -79,7 +102,29 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
       sendMemory: true,
     },
     readOnly: true,
-    datasource: "basic_law_germany",
+    datasource: "crowell_moring",
+    hideContext: false,
+  },
+  {
+    avatar: "1f5a5-fe0f",
+    name: "CA Residential Real Estate Law Expert",
+    botHello: "Hello! How can I assist you today?",
+    context: [
+      {
+        role: "system",
+        content: TEMPLATE(
+          "Lawyer specialized in the disclosure requirements for californian residential real estate.",
+        ),
+      },
+    ],
+    modelConfig: {
+      model: "gpt-3.5-turbo-16k",
+      temperature: 0.1,
+      maxTokens: 8000,
+      sendMemory: true,
+    },
+    readOnly: true,
+    datasource: "us_law",
     hideContext: false,
   },
 ];
