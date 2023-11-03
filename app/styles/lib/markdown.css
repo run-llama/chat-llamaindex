@@ -867,3 +867,8 @@
 #dmermaid {
   display: none;
 }
+
+.markdown-body a {
+  color: hsl(var(--primary-foreground));
+  text-decoration: underline;
+}

@@ -237,7 +237,7 @@ export function Chat() {
 
     const getUrlPreviewMessage = () => {
       const lastMessage = session.messages[session.messages.length - 1];
-      const showPreviewUrl = temporaryURLInput && !lastMessage.streaming;
+      const showPreviewUrl = temporaryURLInput && !lastMessage?.streaming;
       let previewUrlMessage: ChatMessage | undefined;
 
       if (showPreviewUrl) {
