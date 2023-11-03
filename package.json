@@ -13,6 +13,7 @@
     "generate": "node ./scripts/generate.mjs"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.7",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -35,6 +36,7 @@
     "clsx": "^2.0.0",
     "emoji-picker-react": "^4.4.12",
     "encoding": "^0.1.13",
+    "graphql": "^16.8.1",
     "llamaindex": "0.0.0-20231018030303",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.3.1",

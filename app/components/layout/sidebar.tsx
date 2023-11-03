@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { GITHUB_URL, Path } from "../../constant";
 import Locale from "../../locales";
 import { Button } from "../ui/button";
-import Typography from "../ui/typography";
 import { useSidebarContext } from "@/app/components/home";
 import { useTheme } from "next-themes";
 
@@ -28,7 +27,6 @@ export function SideBar(props: { className?: string }) {
               {" "}
               <img src={logoSrc} alt="Image" />{" "}
               <div>
-                {/* <Typography.H2>{Locale.Welcome.Title}</Typography.H2> */}
                 <div className="text-sm text-muted-foreground">
                   {Locale.Welcome.SubTitle}
                 </div>
