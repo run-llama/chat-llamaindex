@@ -8,6 +8,8 @@ import { useMobileScreen } from "../utils/mobile";
 import dynamic from "next/dynamic";
 import { Path } from "../constant";
 import { ErrorBoundary } from "./layout/error";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "../client/graphql/apollo";
 
 import {
   Route,
@@ -140,11 +142,13 @@ export function Home({ bot }: { bot?: Bot }) {
   return (
     <ErrorBoundary>
       <Router>
-        <QueryClientProvider client={queryClient}>
-          <SidebarContextProvider>
-            <BotScreen />
-          </SidebarContextProvider>
-        </QueryClientProvider>
+        <ApolloProvider client={apolloClient}>
+          <QueryClientProvider client={queryClient}>
+            <SidebarContextProvider>
+              <BotScreen />
+            </SidebarContextProvider>
+          </QueryClientProvider>
+        </ApolloProvider>
       </Router>
     </ErrorBoundary>
   );
