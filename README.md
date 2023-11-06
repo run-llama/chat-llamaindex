@@ -15,8 +15,7 @@
       />
 </p>
 
-Welcome to [LlamaIndex Chat](https://github.com/run-llama/chat-llamaindex). You can create and share LLM chatbots that
-know your data (PDF or text documents).
+Welcome to [LlamaIndex Chat](https://github.com/run-llama/chat-llamaindex). You can create and share LLM chatbots that know your data (PDF or text documents).
 
 Getting started with LlamaIndex Chat is a breeze. Visit https://chat-llamaindex.vercel.app - a hosted version of LlamaIndex Chat with no user authentication that provides an immediate start.
 
@@ -59,18 +58,18 @@ pnpm dev
 
 ### Vercel Deployment
 
-Deploying to Vercel is simple, just click the button below and follow the instructions:
+Deploying to Vercel is simple; click the button below and follow the instructions:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Frun-llama%2Fchat-llamaindex&env=OPENAI_API_KEY)
 
-In case you're deploying to a [Vercel Hobby](https://vercel.com/docs/accounts/plans#hobby) account, make sure to [change the running time](./app/api/llm/route.ts#L196) to 10 seconds as this is the limit for the free plan.
+If you're deploying to a [Vercel Hobby](https://vercel.com/docs/accounts/plans#hobby) account, [change the running time](./app/api/llm/route.ts#L196) to 10 seconds, as this is the limit for the free plan.
 
 If you want to use the [sharing](#🔄-sharing) functionality, then you need to create a Vercel KV store and connect it to your project.
-Just follow [this step from the quickstart](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database). No further configuration is needed as the app is automatically using a connected KV store.
+Just follow [this step from the quickstart](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database). No further configuration is necessary as the app automatically uses a connected KV store.
 
 ## 🔄 Sharing
 
-LlamaIndex Chat supports sharing of bots via URLs. Demo bots are read-only and can't be shared. But you can create new bots (or clone and modify a demo bot) and call the share functionality in the context menu. It will create a new URL that can be shared with others. Opening the URL, users can directly use the shared bot.
+LlamaIndex Chat supports the sharing of bots via URLs. Demo bots are read-only and can't be shared. But you can create new bots (or clone and modify a demo bot) and call the share functionality in the context menu. It will create a unique URL that you can share with others. Opening the URL, users can directly use the shared bot.
 
 ## 📀 Data Sources
 
@@ -79,10 +78,12 @@ The `cache` folder in the root directory is used as [Storage](https://ts.llamain
 
 Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](./app/bots/bot.data.ts).
 
+> **Note**: To use the changed bots, you have to clear your local storage. Otherwise, the old bots are still used. You can clear your local storage by opening the developer tools and running `localStorage.clear()` in the console and reloading the page.
+
 ### Generate Data Sources
 
-To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g. PDFs) to it.
-Then create the `VectorStoreIndex` for the data source, by running the following command:
+To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g., PDFs).
+Then, create the `VectorStoreIndex`` for the data source by running the following command:
 
 ```bash
 pnpm run generate <datasource-name>

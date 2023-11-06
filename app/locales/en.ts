@@ -46,7 +46,7 @@ const en = {
     Danger: {
       Clear: {
         Title: "Clear All Data",
-        SubTitle: "Clear all messages and settings",
+        SubTitle: "Reset all bots and clear all messages",
         Action: "Clear",
         Confirm: "Confirm to clear all data?",
       },
