@@ -58,6 +58,43 @@ const Markdown = dynamic(
     loading: () => <Loading />,
   },
 );
+import { useAuth } from "../../hooks/useAuth"; // import the useAuth hook
+
+function UserDropdown() {
+  const { isLoggedIn, currentUser, logout } = useAuth();
+
+  if (!isLoggedIn || !currentUser) {
+    return null;
+  }
+
+  const initials =
+    (currentUser.firstName ? currentUser.firstName.charAt(0) : "") +
+    (currentUser.lastName ? currentUser.lastName.charAt(0) : "");
+  const displayInitials = initials || "U"; // Fallback to 'U' if no initials
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <div className="flex items-center cursor-pointer">
+          <div className="rounded-full bg-gray-300 w-8 h-8 flex items-center justify-center text-white">
+            {displayInitials}
+          </div>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onSelect={() => {
+            console.log("Profile selected");
+          }}
+        >
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={logout}>Log out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function ChatHeader() {
   const isMobileScreen = useMobileScreen();
@@ -89,20 +126,7 @@ function ChatHeader() {
       </div>
       {/* User Dropdown */}
       <div className="absolute top-4 right-5">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex items-center cursor-pointer">
-              <div className="rounded-full bg-gray-300 w-8 h-8 flex items-center justify-center text-white">
-                U
-              </div>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <UserDropdown />
       </div>
 
       <Separator />
