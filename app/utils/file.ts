@@ -19,7 +19,7 @@ export class FileWrap {
     return this._file.size;
   }
 
-  get dataURL(): Promise<string> {
+  readData({ asURL }: { asURL?: boolean } = {}): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
@@ -35,7 +35,11 @@ export class FileWrap {
         reject(error);
       };
 
-      reader.readAsDataURL(this.file);
+      if (asURL) {
+        reader.readAsDataURL(this.file);
+      } else {
+        reader.readAsText(this.file);
+      }
     });
   }
 
