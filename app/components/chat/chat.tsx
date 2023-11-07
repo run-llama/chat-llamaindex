@@ -12,7 +12,7 @@ import { useScrollToBottom } from "@/app/hooks/useScroll";
 import { useSubmitHandler } from "@/app/hooks/useSubmit";
 import { cn } from "@/app/lib/utils";
 import { FileWrap } from "@/app/utils/file";
-import { isURL } from "@/app/client/fetch/url";
+import { URLDetail, URLDetailContent, isURL } from "@/app/client/fetch/url";
 import {
   Clipboard,
   Eraser,
@@ -44,6 +44,8 @@ import Typography from "../ui/typography";
 import { ChatAction } from "./chat-action";
 import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
+import { getDetailContentFromFile } from "@/app/client/fetch/file";
+import Image from "next/image";
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -97,6 +99,7 @@ export function Chat() {
   const { shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll, scrollDomToBottom } = useScrollToBottom();
   const isMobileScreen = useMobileScreen();
+  const [imageFile, setImageFile] = useState<URLDetail>();
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -130,12 +133,16 @@ export function Chat() {
     });
   };
 
-  const onUserInput = async (input: string | FileWrap) => {
-    const inputContent = input instanceof FileWrap ? input.name : input;
+  const call = async ({
+    input,
+    fileDetail,
+  }: {
+    input?: string;
+    fileDetail?: URLDetailContent;
+  }) => {
     await callSession(
       bot,
       session,
-      inputContent,
       {
         onUpdateMessages: (messages) => {
           botStore.updateBotSession((session) => {
@@ -144,23 +151,29 @@ export function Chat() {
           }, bot.id);
         },
       },
-      input instanceof FileWrap ? input : undefined,
+      input,
+      fileDetail,
     );
+    setImageFile(undefined);
+    setTemporaryURLInput("");
+    setUserInput("");
   };
 
   const doSubmitFile = async (fileInput: FileWrap) => {
-    await onUserInput(fileInput);
+    const fileDetail = await getDetailContentFromFile(fileInput);
+    if (fileDetail.type === "image/jpeg") {
+      setImageFile(fileDetail);
+    } else {
+      await call({ fileDetail });
+    }
   };
 
-  const doSubmit = (userInput: string) => {
-    if (userInput.trim() === "") return;
-    if (isURL(userInput)) {
-      setTemporaryURLInput(userInput);
+  const doSubmit = async (input: string) => {
+    if (input.trim() === "") return;
+    if (isURL(input)) {
+      setTemporaryURLInput(input);
     }
-    onUserInput(userInput).then(() => {
-      setTemporaryURLInput("");
-    });
-    setUserInput("");
+    await call({ input, fileDetail: imageFile });
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
   };
@@ -470,6 +483,14 @@ export function Chat() {
           )}
         </div>
         <div className="flex flex-1 items-end">
+          {imageFile?.url && (
+            <Image
+              src={imageFile?.url}
+              alt="Uploaded image"
+              width={50}
+              height={50}
+            />
+          )}
           <Textarea
             className="ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]"
             ref={inputRef}

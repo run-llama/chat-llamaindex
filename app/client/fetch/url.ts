@@ -6,7 +6,7 @@ export type Embedding = {
 export type URLDetail = {
   url: string;
   size: number;
-  type: "text/html" | "application/pdf" | "text/plain";
+  type: "text/html" | "application/pdf" | "text/plain" | "image/jpeg";
   embeddings?: Embedding[];
 };
 

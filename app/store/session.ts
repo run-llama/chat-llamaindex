@@ -1,12 +1,15 @@
 import { nanoid } from "nanoid";
 import { ChatControllerPool } from "../client/controller";
-import { LLMApi, RequestMessage } from "../client/platforms/llm";
-import { FileWrap } from "../utils/file";
-import { getDetailContentFromFile } from "../client/fetch/file";
+import {
+  Embedding,
+  URLDetail,
+  URLDetailContent,
+  fetchSiteContent,
+  isURL,
+} from "../client/fetch/url";
+import { Content, LLMApi, RequestMessage } from "../client/platforms/llm";
 import { prettyObject } from "../utils/format";
-import { fetchSiteContent, isURL } from "../client/fetch/url";
 import { Bot } from "./bot";
-import { Embedding, URLDetail } from "../client/fetch/url";
 
 export type ChatMessage = RequestMessage & {
   date?: string;
@@ -37,7 +40,10 @@ export function createEmptySession(): ChatSession {
   };
 }
 
-async function createTextInputMessage(content: string): Promise<ChatMessage> {
+async function createTextInputMessage(
+  content: string,
+  urlDetail?: URLDetailContent,
+): Promise<ChatMessage> {
   if (isURL(content)) {
     const urlDetail = await fetchSiteContent(content);
     const userContent = urlDetail.content;
@@ -51,13 +57,15 @@ async function createTextInputMessage(content: string): Promise<ChatMessage> {
   } else {
     return createMessage({
       role: "user",
-      content: content,
+      content,
+      urlDetail,
     });
   }
 }
 
-async function createFileInputMessage(file: FileWrap): Promise<ChatMessage> {
-  const fileDetail = await getDetailContentFromFile(file);
+async function createFileInputMessage(
+  fileDetail: URLDetailContent,
+): Promise<ChatMessage> {
   const textContent = fileDetail.content;
   delete fileDetail["content"];
   console.log(
@@ -85,14 +93,16 @@ function transformAssistantMessageForSending(
 }
 
 async function createUserMessage(
-  content: string,
-  uploadedFile?: FileWrap,
+  content?: string,
+  urlDetail?: URLDetailContent,
 ): Promise<ChatMessage> {
   let userMessage: ChatMessage;
-  if (uploadedFile) {
-    userMessage = await createFileInputMessage(uploadedFile);
+  if (content) {
+    userMessage = await createTextInputMessage(content, urlDetail);
+  } else if (urlDetail) {
+    userMessage = await createFileInputMessage(urlDetail);
   } else {
-    userMessage = await createTextInputMessage(content);
+    throw new Error("Invalid user message");
   }
   return userMessage;
 }
@@ -100,18 +110,18 @@ async function createUserMessage(
 export async function callSession(
   bot: Bot,
   session: ChatSession,
-  content: string,
   callbacks: {
     onUpdateMessages: (messages: ChatMessage[]) => void;
   },
-  uploadedFile?: FileWrap,
+  content?: string,
+  fileDetail?: URLDetailContent,
 ): Promise<void> {
   const modelConfig = bot.modelConfig;
 
   let userMessage: ChatMessage;
 
   try {
-    userMessage = await createUserMessage(content, uploadedFile);
+    userMessage = await createUserMessage(content, fileDetail);
   } catch (error: any) {
     // an error occurred when creating user message, show error message as bot message and don't call API
     const userMessage = createMessage({
@@ -147,27 +157,38 @@ export async function callSession(
   ];
 
   // save user's and bot's message
-  const savedUserMessage = {
-    ...userMessage,
-    content,
-  };
-  session.messages = session.messages.concat([savedUserMessage, botMessage]);
+  session.messages = session.messages.concat([userMessage, botMessage]);
   callbacks.onUpdateMessages(session.messages);
 
   let embeddings: Embedding[] | undefined;
   let message;
-  if (userMessage.urlDetail) {
+  if (userMessage.urlDetail && userMessage.urlDetail.type !== "image/jpeg") {
     // if the user sends document, let the LLM summarize the content of the URL and just use the document's embeddings
     message = "Summarize the given context briefly in 200 words or less";
     embeddings = userMessage.urlDetail?.embeddings;
     sendMessages = [];
   } else {
     // collect embeddings of all messages
-    message = userMessage.content;
     embeddings = session.messages
       .flatMap((message: ChatMessage) => message.urlDetail?.embeddings)
       .filter((m) => m !== undefined) as Embedding[];
     embeddings = embeddings.length > 0 ? embeddings : undefined;
+    if (userMessage.urlDetail?.type === "image/jpeg") {
+      message = [
+        {
+          type: "text",
+          text: userMessage.content,
+        } as Content,
+        {
+          type: "image_url",
+          image_url: {
+            url: userMessage.urlDetail.url,
+          },
+        } as Content,
+      ];
+    } else {
+      message = userMessage.content;
+    }
   }
 
   // make request

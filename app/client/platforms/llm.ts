@@ -12,9 +12,15 @@ export const MESSAGE_ROLES = [
 ] as const;
 export type MessageRole = (typeof MESSAGE_ROLES)[number];
 
+export interface Content {
+  type: "text" | "image_url";
+  text: string;
+  image_url: { url: string };
+}
+
 export interface RequestMessage {
   role: MessageRole;
-  content: string;
+  content: string | Content[];
 }
 
 export const ALL_MODELS = [
@@ -36,7 +42,7 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  message: string;
+  message: string | Content[];
   chatHistory: RequestMessage[];
   config: LLMConfig;
   datasource?: string;
