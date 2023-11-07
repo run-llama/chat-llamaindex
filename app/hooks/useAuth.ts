@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import axios from "axios";
 
 export const CURRENT_USER_QUERY = gql`
   query CommonQueryCurrentUser {
@@ -29,23 +30,39 @@ export type CurrentUserType = {
   otpEnabled: boolean;
 };
 
-// Use this custom hook to access auth-related information in your React app
+export const validateStatus = (status: number) => status >= 200 && status < 300;
+
+export const client = axios.create({
+  withCredentials: true,
+  validateStatus,
+});
+
 export const useAuth = () => {
-  const navigate = useNavigate();
-  const { data, loading, error, refetch } = useQuery(CURRENT_USER_QUERY);
+  const logout = useCallback(() => {
+    // Perform logout operations, such as clearing tokens
+    const res = client.post<void>(
+      process.env.AUTH_SERVER_DOMAIN ||
+        "http://localhost:3000/api/auth/logout/",
+    );
+
+    const authServerUrl = process.env.AUTH_SERVER_LOGIN_URL;
+    window.location.href =
+      authServerUrl || "http://localhost:3000/en/auth/login";
+  }, []);
+
+  const { data, loading, error, refetch } = useQuery(CURRENT_USER_QUERY, {
+    onError: (apolloError) => {
+      logout();
+    },
+  });
 
   // Simplified check to determine the logged-in status
   const isLoggedIn = Boolean(data?.currentUser) && !loading && !error;
-
-  const logout = useCallback(() => {
-    // wrap navigation logic or API call to perform logout here
-    // make sure to update the client state to reflect the logout
-    navigate("/logout"); // update the path according to your routing setup
-    // Depending on your auth strategy, you might also want to perform additional
-    // actions during logout, like clearing tokens, triggering a logout mutation, etc.
-  }, [navigate]);
-
-  const currentUser: CurrentUserType | null = data?.currentUser || null;
+  console.log();
+  if (!isLoggedIn) {
+    logout();
+  }
+  const currentUser = data?.currentUser || null;
 
   return {
     loading,
