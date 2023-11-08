@@ -12,21 +12,29 @@ export const MESSAGE_ROLES = [
 ] as const;
 export type MessageRole = (typeof MESSAGE_ROLES)[number];
 
-export interface Content {
+export interface MessageContentDetail {
   type: "text" | "image_url";
   text: string;
   image_url: { url: string };
 }
 
+export type MessageContent = string | MessageContentDetail[];
+
 export interface RequestMessage {
   role: MessageRole;
-  content: string | Content[];
+  content: MessageContent;
+}
+
+export interface ResponseMessage {
+  role: MessageRole;
+  content: string;
 }
 
 export const ALL_MODELS = [
   "gpt-4",
   "gpt-4-32k",
   "gpt-4-1106-preview",
+  "gpt-4-vision-preview",
   "gpt-3.5-turbo",
   "gpt-3.5-turbo-16k",
 ] as const;
@@ -42,14 +50,14 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  message: string | Content[];
+  message: MessageContent;
   chatHistory: RequestMessage[];
   config: LLMConfig;
   datasource?: string;
   embeddings?: Embedding[];
   controller: AbortController;
   onUpdate: (message: string) => void;
-  onFinish: (memoryMessage?: RequestMessage) => void;
+  onFinish: (memoryMessage?: ResponseMessage) => void;
   onError?: (err: Error) => void;
 }
 

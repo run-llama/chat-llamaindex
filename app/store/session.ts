@@ -7,11 +7,19 @@ import {
   fetchSiteContent,
   isURL,
 } from "../client/fetch/url";
-import { Content, LLMApi, RequestMessage } from "../client/platforms/llm";
+import {
+  MessageContentDetail,
+  LLMApi,
+  RequestMessage,
+  MessageRole,
+  ResponseMessage,
+} from "../client/platforms/llm";
 import { prettyObject } from "../utils/format";
 import { Bot } from "./bot";
 
-export type ChatMessage = RequestMessage & {
+export type ChatMessage = {
+  role: MessageRole;
+  content: string;
   date?: string;
   streaming?: boolean;
   isError?: boolean;
@@ -178,13 +186,13 @@ export async function callSession(
         {
           type: "text",
           text: userMessage.content,
-        } as Content,
+        } as MessageContentDetail,
         {
           type: "image_url",
           image_url: {
             url: userMessage.urlDetail.url,
           },
-        } as Content,
+        } as MessageContentDetail,
       ];
     } else {
       message = userMessage.content;
@@ -208,7 +216,7 @@ export async function callSession(
         callbacks.onUpdateMessages(session.messages.concat());
       }
     },
-    onFinish(memoryMessage?: RequestMessage) {
+    onFinish(memoryMessage?: ResponseMessage) {
       botMessage.streaming = false;
       if (memoryMessage) {
         // all optional memory message returned by the LLM

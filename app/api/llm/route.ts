@@ -13,7 +13,7 @@ import {
   serviceContextFromDefaults,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
-import { LLMConfig } from "../../client/platforms/llm";
+import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
 import { getDataSource } from "./datasource";
 import {
   DATASOURCES_CHUNK_OVERLAP,
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       config,
       embeddings,
     }: {
-      message: string;
+      message: MessageContent;
       chatHistory: ChatMessage[];
       datasource: string | undefined;
       config: LLMConfig;

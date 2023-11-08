@@ -10,6 +10,20 @@ const TEMPLATE = (PERSONA: string) =>
 const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
   {
     avatar: "1f916",
+    name: "GPT-4 Vision Preview",
+    botHello: "Hello! How can I assist you today?",
+    context: [],
+    modelConfig: {
+      model: "gpt-4-vision-preview",
+      temperature: 0.3,
+      maxTokens: 4096,
+      sendMemory: false,
+    },
+    readOnly: true,
+    hideContext: false,
+  },
+  {
+    avatar: "1f916",
     name: "My Documents",
     botHello: "Hello! How can I assist you today?",
     context: [],

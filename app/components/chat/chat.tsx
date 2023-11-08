@@ -16,10 +16,12 @@ import { URLDetail, URLDetailContent, isURL } from "@/app/client/fetch/url";
 import {
   Clipboard,
   Eraser,
+  Loader2Icon,
   PauseCircle,
   Send,
   Trash,
   Undo2,
+  XCircleIcon,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -46,6 +48,12 @@ import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
 import { getDetailContentFromFile } from "@/app/client/fetch/file";
 import Image from "next/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -99,7 +107,10 @@ export function Chat() {
   const { shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll, scrollDomToBottom } = useScrollToBottom();
   const isMobileScreen = useMobileScreen();
+
   const [imageFile, setImageFile] = useState<URLDetail>();
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [temporaryBlobUrl, setTemporaryBlobUrl] = useState<string>();
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -159,10 +170,22 @@ export function Chat() {
     setUserInput("");
   };
 
+  const showPreviewImage = async (fileInput: FileWrap) => {
+    if (fileInput.file.type === "image/jpeg") {
+      const blobUrl = URL.createObjectURL(fileInput.file);
+      setTemporaryBlobUrl(blobUrl);
+      setIsUploadingImage(true);
+    }
+  };
+
   const doSubmitFile = async (fileInput: FileWrap) => {
+    showPreviewImage(fileInput);
+
     const fileDetail = await getDetailContentFromFile(fileInput);
     if (fileDetail.type === "image/jpeg") {
       setImageFile(fileDetail);
+      setTemporaryBlobUrl(undefined);
+      setIsUploadingImage(false);
     } else {
       await call({ fileDetail });
     }
@@ -238,7 +261,8 @@ export function Chat() {
   const renderMessages = useMemo(() => {
     const getFrontendMessages = (messages: ChatMessage[]) => {
       return messages.map((message) => {
-        if (!message.urlDetail) return message;
+        if (!message.urlDetail || message.urlDetail.type === "image/jpeg")
+          return message;
         const urlTypePrefix = getUrlTypePrefix(message.urlDetail.type);
         const sizeInKB = Math.round(message.urlDetail.size / 1024);
         return {
@@ -342,6 +366,12 @@ export function Chat() {
   const stop = () => ChatControllerPool.stop(bot.id);
   const isRunning = ChatControllerPool.isRunning(bot.id);
 
+  const removeImage = () => {
+    setImageFile(undefined);
+  };
+
+  const previewImage = temporaryBlobUrl || imageFile?.url;
+
   return (
     <div className="flex flex-col relative h-full" key={bot.id}>
       <ChatHeader />
@@ -362,7 +392,7 @@ export function Chat() {
             const isContext = i < context.length;
             const showActions =
               i > 0 && !(message.content.length === 0) && !isContext;
-            const showTyping = message.streaming;
+            const showThinking = message.streaming;
             const shouldShowClearContextDivider = i === clearContextIndex - 1;
 
             return (
@@ -382,13 +412,13 @@ export function Chat() {
                           isUser && "items-end",
                         )}
                       >
-                        {showTyping && (
+                        {showThinking && (
                           <div
                             className={
                               "text-xs text-[#aaa] leading-normal my-1"
                             }
                           >
-                            {Locale.Chat.Typing}
+                            {Locale.Chat.Thinking}
                           </div>
                         )}
                         <div
@@ -401,6 +431,13 @@ export function Chat() {
                               : "bg-muted",
                           )}
                         >
+                          {message.urlDetail?.type === "image/jpeg" && (
+                            <img
+                              src={message.urlDetail.url}
+                              alt="Message image"
+                              className="object-contain w-full h-52 rounded-lg mb-2"
+                            />
+                          )}
                           <Markdown
                             content={message.content}
                             loading={
@@ -482,17 +519,51 @@ export function Chat() {
             />
           )}
         </div>
-        <div className="flex flex-1 items-end">
-          {imageFile?.url && (
-            <Image
-              src={imageFile?.url}
-              alt="Uploaded image"
-              width={50}
-              height={50}
-            />
+        <div className="flex flex-1 items-end relative">
+          {previewImage && (
+            <div className="absolute top-[12px] left-[12px] w-[50px] h-[50px] rounded-xl cursor-pointer">
+              <div className="relative w-full h-full group">
+                <Image
+                  src={previewImage}
+                  alt="Uploaded image"
+                  fill
+                  className="object-cover w-full h-full rounded-xl hover:brightness-75"
+                />
+                <div
+                  className={cn(
+                    "absolute -top-2 -right-2 w-6 h-6 z-10 bg-gray-500 text-white rounded-full",
+                    { "hidden group-hover:block": !isUploadingImage },
+                  )}
+                >
+                  <TooltipProvider>
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger>
+                        {isUploadingImage ? (
+                          <Loader2Icon className="w-6 h-6 bg-gray-500 text-white rounded-full animate-spin p-1" />
+                        ) : (
+                          <XCircleIcon
+                            className="w-6 h-6 bg-gray-500 text-white rounded-full"
+                            onClick={removeImage}
+                          />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        {isUploadingImage ? "Uploading file..." : "Remove file"}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </div>
           )}
+
           <Textarea
-            className="ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]"
+            className={cn(
+              "ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]",
+              {
+                "pt-20": previewImage,
+              },
+            )}
             ref={inputRef}
             placeholder={
               isMobileScreen ? Locale.Chat.InputMobile : Locale.Chat.Input
@@ -505,7 +576,7 @@ export function Chat() {
             rows={inputRows}
             autoFocus={autoFocus}
           />
-          <div className="my-2 flex items-center gap-2.5 absolute right-[35px]">
+          <div className="my-2 flex items-center gap-2.5 absolute right-[15px]">
             <FileUploader
               config={{
                 inputId: "document-uploader",

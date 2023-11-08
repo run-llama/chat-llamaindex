@@ -10,7 +10,7 @@ const en = {
       Stop: "Stop generating",
       Clear: "Clear Context",
     },
-    Typing: "Typing…",
+    Thinking: "Thinking…",
     InputMobile: "Enter to send",
     Input:
       "Enter to send, Shift + Enter to wrap, enter URLs to add a PDF or HTML document to the context",
@@ -24,7 +24,7 @@ const en = {
     SizeExceeded: (limitSize: number) =>
       `File size exceeded. Limit is ${limitSize} MB`,
     ParseDataURLFailed: "Unable to read file: Please check if it's encrypted.",
-    UnknownFileType: "TEXT FILE",
+    UnknownFileType: "Unknown file type",
   },
   Export: {
     Image: {
