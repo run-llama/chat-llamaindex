@@ -84,7 +84,9 @@ function UserDropdown() {
       <DropdownMenuContent>
         <DropdownMenuItem
           onSelect={() => {
-            console.log("Profile selected");
+            const authServerUrl = process.env.AUTH_SERVER_URL;
+            window.location.href =
+              authServerUrl || "http://localhost:3000/en/profile";
           }}
         >
           Profile

@@ -40,18 +40,18 @@ export const client = axios.create({
 export const useAuth = () => {
   const logout = useCallback(() => {
     // Perform logout operations, such as clearing tokens
-    const res = client.post<void>(
-      process.env.AUTH_SERVER_DOMAIN ||
-        "http://localhost:3000/api/auth/logout/",
-    );
-
+    // const res = client.post<void>(
+    //   process.env.AUTH_SERVER_DOMAIN ||
+    //     "http://localhost:3000/api/auth/logout/",
+    // );
     const authServerUrl = process.env.AUTH_SERVER_LOGIN_URL;
-    window.location.href =
-      authServerUrl || "http://localhost:3000/en/auth/login";
+    // window.location.href =
+    //   authServerUrl || "http://localhost:3000/en/auth/login";
   }, []);
 
   const { data, loading, error, refetch } = useQuery(CURRENT_USER_QUERY, {
     onError: (apolloError) => {
+      console.log("logout hit due to error");
       logout();
     },
   });
@@ -60,6 +60,8 @@ export const useAuth = () => {
   const isLoggedIn = Boolean(data?.currentUser) && !loading && !error;
   console.log();
   if (!isLoggedIn) {
+    console.log("logout hit due to no current user", data);
+
     logout();
   }
   const currentUser = data?.currentUser || null;

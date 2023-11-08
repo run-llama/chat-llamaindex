@@ -7,6 +7,7 @@ const createApolloClient = () => {
       uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT, // Replace with your GraphQL endpoint
     }),
     cache: new InMemoryCache(),
+    credentials: "include",
   });
 };
 
