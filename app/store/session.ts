@@ -54,14 +54,7 @@ async function createTextInputMessage(
 ): Promise<ChatMessage> {
   if (isURL(content)) {
     const urlDetail = await fetchSiteContent(content);
-    const userContent = urlDetail.content;
-    delete urlDetail["content"]; // clean content in url detail as we already store it in the message
-    console.log("[User Input] did get url detail: ", urlDetail, userContent);
-    return createMessage({
-      role: "user",
-      content: userContent,
-      urlDetail,
-    });
+    return createFileInputMessage(urlDetail);
   } else {
     return createMessage({
       role: "user",
@@ -74,16 +67,10 @@ async function createTextInputMessage(
 async function createFileInputMessage(
   fileDetail: URLDetailContent,
 ): Promise<ChatMessage> {
-  const textContent = fileDetail.content;
-  delete fileDetail["content"];
-  console.log(
-    "[User Input] did get file upload detail: ",
-    fileDetail,
-    textContent,
-  );
+  console.log("[User Input] did get file detail: ", fileDetail);
+  delete fileDetail["content"]; // clean content in file detail as we are only going to use its embeddings
   return createMessage({
     role: "user",
-    content: textContent,
     urlDetail: fileDetail,
   });
 }
