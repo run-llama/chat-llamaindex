@@ -23,6 +23,7 @@ const en = {
       `Invalid file type. Please select a file with one of these formats: ${acceptTypes}`,
     SizeExceeded: (limitSize: number) =>
       `File size exceeded. Limit is ${limitSize} MB`,
+    Failed: (e: string) => `Error uploading file: ${e}`,
     ParseDataURLFailed: "Unable to read file: Please check if it's encrypted.",
     UnknownFileType: "Unknown file type",
   },

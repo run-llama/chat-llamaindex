@@ -1,4 +1,3 @@
-import { Button } from "@/app/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
@@ -6,54 +5,25 @@ import {
 } from "@/app/components/ui/hover-card";
 import { Loading } from "@/app/components/ui/loading";
 import { ScrollArea } from "@/app/components/ui/scroll-area";
-import { Textarea } from "@/app/components/ui/textarea";
 import { useToast } from "@/app/components/ui/use-toast";
 import { useScrollToBottom } from "@/app/hooks/useScroll";
-import { useSubmitHandler } from "@/app/hooks/useSubmit";
 import { cn } from "@/app/lib/utils";
-import { FileWrap } from "@/app/utils/file";
-import { URLDetail, URLDetailContent, isURL } from "@/app/client/fetch/url";
-import {
-  Clipboard,
-  Eraser,
-  Loader2Icon,
-  PauseCircle,
-  Send,
-  Trash,
-  Undo2,
-  XCircleIcon,
-} from "lucide-react";
-import dynamic from "next/dynamic";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
-import { ChatControllerPool } from "../../client/controller";
-import {
-  ALLOWED_DOCUMENT_EXTENSIONS,
-  CHAT_PAGE_SIZE,
-  DOCUMENT_FILE_SIZE_LIMIT,
-  REQUEST_TIMEOUT_MS,
-} from "../../constant";
-import Locale from "../../locales";
-import { ChatMessage, callSession, createMessage } from "../../store";
-import { useMobileScreen } from "../../utils/mobile";
-import { autoGrowTextArea } from "../../utils/autogrow";
-import { copyToClipboard } from "@/app/utils/clipboard";
-import { prettyObject } from "../../utils/format";
-import { useSidebarContext } from "../home";
-import FileUploader from "../ui/file-uploader";
-import { Separator } from "../ui/separator";
-import Typography from "../ui/typography";
-import { ChatAction } from "./chat-action";
-import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
-import { getDetailContentFromFile } from "@/app/client/fetch/file";
-import Image from "next/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
+import { copyToClipboard } from "@/app/utils/clipboard";
+import { Clipboard, Eraser, PauseCircle, Trash } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChatControllerPool } from "../../client/controller";
+import { CHAT_PAGE_SIZE, REQUEST_TIMEOUT_MS } from "../../constant";
+import Locale from "../../locales";
+import { ChatMessage, createMessage } from "../../store";
+import { prettyObject } from "../../utils/format";
+import { useMobileScreen } from "../../utils/mobile";
+import { Separator } from "../ui/separator";
+import { ChatAction } from "./chat-action";
+import ChatHeader from "./chat-header";
+import ChatInput from "./chat-input";
+import { ClearContextDivider } from "./clear-context-divider";
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -62,41 +32,9 @@ const Markdown = dynamic(
   },
 );
 
-function ChatHeader() {
-  const isMobileScreen = useMobileScreen();
-  const { setShowSidebar } = useSidebarContext();
-  const botStore = useBotStore();
-  const bot = botStore.currentBot();
-  const session = botStore.currentSession();
-  const numberOfMessages =
-    (bot.botHello?.length ? 1 : 0) + session.messages.length;
-  return (
-    <div className="relative">
-      <div className="absolute top-4 left-5">
-        {isMobileScreen && (
-          <Button
-            size="icon"
-            variant="outline"
-            title={Locale.Chat.Actions.ChatList}
-            onClick={() => setShowSidebar(true)}
-          >
-            <Undo2 />
-          </Button>
-        )}
-      </div>
-      <div className="text-center py-4">
-        <Typography.H4>{bot.name}</Typography.H4>
-        <div className="text-sm text-muted-foreground">
-          {Locale.Chat.SubTitle(numberOfMessages)}
-        </div>
-      </div>
-      <Separator />
-    </div>
-  );
-}
-
 export function Chat() {
   const { toast } = useToast();
+  const isMobileScreen = useMobileScreen();
   const botStore = useBotStore();
   const bot = botStore.currentBot();
   const session = botStore.currentSession();
@@ -104,102 +42,7 @@ export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState("");
   const [temporaryURLInput, setTemporaryURLInput] = useState("");
-  const { shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll, scrollDomToBottom } = useScrollToBottom();
-  const isMobileScreen = useMobileScreen();
-
-  const [imageFile, setImageFile] = useState<URLDetail>();
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [temporaryBlobUrl, setTemporaryBlobUrl] = useState<string>();
-
-  // auto grow input
-  const [inputRows, setInputRows] = useState(2);
-  const measure = useDebouncedCallback(
-    () => {
-      const rows = inputRef.current ? autoGrowTextArea(inputRef.current) : 1;
-      const inputRows = Math.min(
-        20,
-        Math.max(1 + Number(!isMobileScreen), rows),
-      );
-      setInputRows(inputRows);
-    },
-    100,
-    {
-      leading: true,
-      trailing: true,
-    },
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(measure, [userInput]);
-
-  const onInput = (text: string) => {
-    setUserInput(text);
-  };
-
-  const showError = (errMsg: string) => {
-    toast({
-      title: errMsg,
-      variant: "destructive",
-    });
-  };
-
-  const call = async ({
-    input,
-    fileDetail,
-  }: {
-    input?: string;
-    fileDetail?: URLDetailContent;
-  }) => {
-    await callSession(
-      bot,
-      session,
-      {
-        onUpdateMessages: (messages) => {
-          botStore.updateBotSession((session) => {
-            // trigger re-render of messages
-            session.messages = messages;
-          }, bot.id);
-        },
-      },
-      input,
-      fileDetail,
-    );
-    setImageFile(undefined);
-    setTemporaryURLInput("");
-    setUserInput("");
-  };
-
-  const showPreviewImage = async (fileInput: FileWrap) => {
-    if (fileInput.file.type === "image/jpeg") {
-      const blobUrl = URL.createObjectURL(fileInput.file);
-      setTemporaryBlobUrl(blobUrl);
-      setIsUploadingImage(true);
-    }
-  };
-
-  const doSubmitFile = async (fileInput: FileWrap) => {
-    showPreviewImage(fileInput);
-
-    const fileDetail = await getDetailContentFromFile(fileInput);
-    if (fileDetail.type === "image/jpeg") {
-      setImageFile(fileDetail);
-      setTemporaryBlobUrl(undefined);
-      setIsUploadingImage(false);
-    } else {
-      await call({ fileDetail });
-    }
-  };
-
-  const doSubmit = async (input: string) => {
-    if (input.trim() === "") return;
-    if (isURL(input)) {
-      setTemporaryURLInput(input);
-    }
-    await call({ input, fileDetail: imageFile });
-    if (!isMobileScreen) inputRef.current?.focus();
-    setAutoScroll(true);
-  };
 
   useEffect(() => {
     botStore.updateBotSession((session) => {
@@ -223,16 +66,6 @@ export function Chat() {
     }, bot.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // check if should send message
-  const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (shouldSubmit(e)) {
-      if (!isRunning) {
-        doSubmit(userInput);
-      }
-      e.preventDefault();
-    }
-  };
 
   const deleteMessage = (msgId?: string) => {
     botStore.updateBotSession(
@@ -352,8 +185,6 @@ export function Chat() {
         msgRenderIndex
       : -1;
 
-  const autoFocus = !isMobileScreen; // wont auto focus on mobile screen
-
   const clearContext = () => {
     botStore.updateBotSession((session) => {
       if (session.clearContextIndex === session.messages.length) {
@@ -365,12 +196,6 @@ export function Chat() {
   };
   const stop = () => ChatControllerPool.stop(bot.id);
   const isRunning = ChatControllerPool.isRunning(bot.id);
-
-  const removeImage = () => {
-    setImageFile(undefined);
-  };
-
-  const previewImage = temporaryBlobUrl || imageFile?.url;
 
   return (
     <div className="flex flex-col relative h-full" key={bot.id}>
@@ -519,90 +344,16 @@ export function Chat() {
             />
           )}
         </div>
-        <div className="flex flex-1 items-end relative">
-          {previewImage && (
-            <div className="absolute top-[12px] left-[12px] w-[50px] h-[50px] rounded-xl cursor-pointer">
-              <div className="relative w-full h-full group">
-                <Image
-                  src={previewImage}
-                  alt="Uploaded image"
-                  fill
-                  className="object-cover w-full h-full rounded-xl hover:brightness-75"
-                />
-                <div
-                  className={cn(
-                    "absolute -top-2 -right-2 w-6 h-6 z-10 bg-gray-500 text-white rounded-full",
-                    { "hidden group-hover:block": !isUploadingImage },
-                  )}
-                >
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger>
-                        {isUploadingImage ? (
-                          <Loader2Icon className="w-6 h-6 bg-gray-500 text-white rounded-full animate-spin p-1" />
-                        ) : (
-                          <XCircleIcon
-                            className="w-6 h-6 bg-gray-500 text-white rounded-full"
-                            onClick={removeImage}
-                          />
-                        )}
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        {isUploadingImage ? "Uploading file..." : "Remove file"}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
-            </div>
-          )}
 
-          <Textarea
-            className={cn(
-              "ring-inset focus-visible:ring-offset-0 pr-28 md:pr-40 min-h-[56px]",
-              {
-                "pt-20": previewImage,
-              },
-            )}
-            ref={inputRef}
-            placeholder={
-              isMobileScreen ? Locale.Chat.InputMobile : Locale.Chat.Input
-            }
-            onInput={(e) => onInput(e.currentTarget.value)}
-            value={userInput}
-            onKeyDown={onInputKeyDown}
-            onFocus={scrollToBottom}
-            onClick={scrollToBottom}
-            rows={inputRows}
-            autoFocus={autoFocus}
-          />
-          <div className="my-2 flex items-center gap-2.5 absolute right-[15px]">
-            <FileUploader
-              config={{
-                inputId: "document-uploader",
-                allowedExtensions: ALLOWED_DOCUMENT_EXTENSIONS,
-                fileSizeLimit: DOCUMENT_FILE_SIZE_LIMIT,
-                disabled: isRunning,
-              }}
-              onUpload={doSubmitFile}
-              onError={showError}
-            />
-            {isMobileScreen ? (
-              <Button
-                size="icon"
-                onClick={() => doSubmit(userInput)}
-                disabled={isRunning}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button onClick={() => doSubmit(userInput)} disabled={isRunning}>
-                <Send className="h-4 w-4 mr-2" />
-                {Locale.Chat.Send}
-              </Button>
-            )}
-          </div>
-        </div>
+        <ChatInput
+          inputRef={inputRef}
+          userInput={userInput}
+          temporaryURLInput={temporaryURLInput}
+          setUserInput={setUserInput}
+          setTemporaryURLInput={setTemporaryURLInput}
+          scrollToBottom={scrollToBottom}
+          setAutoScroll={setAutoScroll}
+        />
       </div>
     </div>
   );
