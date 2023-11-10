@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
 import { ChatSession, ChatMessage, createEmptySession } from "./session";
-import { createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
+import { DEMO_BOTS, createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
 
 export type Share = {
   id: string;
@@ -141,6 +141,31 @@ export const useBotStore = create<BotStore>()(
     }),
     {
       name: "bot-store",
+      version: 1,
+      migrate: (persistedState, version) => {
+        const state = persistedState as BotState;
+        if (version < 1) {
+          DEMO_BOTS.forEach((demoBot) => {
+            // check if there is a bot with the same name as the demo bot
+            const bot = Object.values(state.bots).find(
+              (b) => b.name === demoBot.name,
+            );
+            if (bot) {
+              // if so, update the id of the bot to the demo bot id
+              delete state.bots[bot.id];
+              bot.id = demoBot.id;
+              state.bots[bot.id] = bot;
+            } else {
+              // if not, store the new demo bot
+              const bot: Bot = JSON.parse(JSON.stringify(demoBot));
+              bot.session = createEmptySession();
+              state.bots[bot.id] = bot;
+            }
+          });
+          state.currentBotId = Object.values(state.bots)[0].id;
+        }
+        return state as any;
+      },
     },
   ),
 );
