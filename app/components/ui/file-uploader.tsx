@@ -10,6 +10,7 @@ export interface FileUploaderProps {
     inputId?: string;
     fileSizeLimit?: number;
     allowedExtensions?: string[];
+    checkExtension?: (extension: string) => string | null;
     disabled: boolean;
   };
   onUpload: (file: FileWrap) => Promise<void>;
@@ -29,14 +30,13 @@ export default function FileUploader({
   const inputId = config?.inputId || DEFAULT_INPUT_ID;
   const fileSizeLimit = config?.fileSizeLimit || DEFAULT_FILE_SIZE_LIMIT;
   const allowedExtensions = config?.allowedExtensions;
-
-  const shouldCheckFileExtension =
-    allowedExtensions != null && allowedExtensions.length > 0;
-
-  const isFileExtensionValid = (file: FileWrap) => {
-    if (!shouldCheckFileExtension) return true;
-    return allowedExtensions.includes(file.extension);
+  const defaultCheckExtension = (extension: string) => {
+    if (allowedExtensions && !allowedExtensions.includes(extension)) {
+      return Locale.Upload.Invalid(allowedExtensions!.join(","));
+    }
+    return null;
   };
+  const checkExtension = config?.checkExtension ?? defaultCheckExtension;
 
   const isFileSizeExceeded = (file: FileWrap) => {
     return file.size > fileSizeLimit;
@@ -59,8 +59,9 @@ export default function FileUploader({
   };
 
   const handleUpload = async (file: FileWrap) => {
-    if (!isFileExtensionValid(file)) {
-      return onError(Locale.Upload.Invalid(allowedExtensions!.join(",")));
+    const extensionError = checkExtension(file.extension);
+    if (extensionError) {
+      return onError(extensionError);
     }
 
     if (isFileSizeExceeded(file)) {

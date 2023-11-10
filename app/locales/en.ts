@@ -26,6 +26,8 @@ const en = {
     Failed: (e: string) => `Error uploading file: ${e}`,
     ParseDataURLFailed: "Unable to read file: Please check if it's encrypted.",
     UnknownFileType: "Unknown file type",
+    ModelDoesNotSupportImages: (acceptTypes: string) =>
+      `Image upload is not supported for this model. Upload one of the supported types instead: ${acceptTypes}`,
   },
   Export: {
     Image: {

@@ -63,6 +63,10 @@ export interface ChatOptions {
 
 const CHAT_PATH = "/api/llm";
 
+export function isVisionModel(model: ModelType) {
+  return model === "gpt-4-vision-preview";
+}
+
 export class LLMApi {
   async chat(options: ChatOptions) {
     const requestPayload = {

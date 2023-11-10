@@ -13,6 +13,8 @@ import { useDebouncedCallback } from "use-debounce";
 import { ChatControllerPool } from "../../client/controller";
 import {
   ALLOWED_DOCUMENT_EXTENSIONS,
+  ALLOWED_IMAGE_EXTENSIONS,
+  ALLOWED_TEXT_EXTENSIONS,
   DOCUMENT_FILE_SIZE_LIMIT,
 } from "../../constant";
 import Locale from "../../locales";
@@ -21,6 +23,7 @@ import { autoGrowTextArea } from "../../utils/autogrow";
 import { useMobileScreen } from "../../utils/mobile";
 import FileUploader from "../ui/file-uploader";
 import ImagePreview from "../ui/image-preview";
+import { isVisionModel } from "../../client/platforms/llm";
 
 export interface ChatInputProps {
   inputRef: React.RefObject<HTMLTextAreaElement>;
@@ -175,6 +178,21 @@ export default function ChatInput(props: ChatInputProps) {
   const previewImage = temporaryBlobUrl || imageFile?.url;
   const isUploadingImage = temporaryBlobUrl !== undefined;
 
+  const checkExtension = (extension: string) => {
+    if (!ALLOWED_DOCUMENT_EXTENSIONS.includes(extension)) {
+      return Locale.Upload.Invalid(ALLOWED_DOCUMENT_EXTENSIONS.join(","));
+    }
+    if (
+      !isVisionModel(bot.modelConfig.model) &&
+      ALLOWED_IMAGE_EXTENSIONS.includes(extension)
+    ) {
+      return Locale.Upload.ModelDoesNotSupportImages(
+        ALLOWED_TEXT_EXTENSIONS.join(","),
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="flex flex-1 items-end relative">
       {previewImage && (
@@ -210,6 +228,7 @@ export default function ChatInput(props: ChatInputProps) {
           config={{
             inputId: "document-uploader",
             allowedExtensions: ALLOWED_DOCUMENT_EXTENSIONS,
+            checkExtension,
             fileSizeLimit: DOCUMENT_FILE_SIZE_LIMIT,
             disabled: isRunning || isUploadingImage,
           }}
