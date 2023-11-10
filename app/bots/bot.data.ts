@@ -77,7 +77,7 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     modelConfig: {
       model: "gpt-3.5-turbo-16k",
       temperature: 0.5,
-      maxTokens: 8000,
+      maxTokens: 4000,
       sendMemory: true,
     },
     readOnly: true,
@@ -98,7 +98,7 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     modelConfig: {
       model: "gpt-3.5-turbo-16k",
       temperature: 0.1,
-      maxTokens: 8000,
+      maxTokens: 4000,
       sendMemory: true,
     },
     readOnly: true,
@@ -120,7 +120,7 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     modelConfig: {
       model: "gpt-3.5-turbo-16k",
       temperature: 0.1,
-      maxTokens: 8000,
+      maxTokens: 4000,
       sendMemory: true,
     },
     readOnly: true,
@@ -148,7 +148,7 @@ export const createEmptyBot = (): Bot => ({
   modelConfig: {
     model: "gpt-3.5-turbo-16k" as ModelType,
     temperature: 0.5,
-    maxTokens: 6000,
+    maxTokens: 4000,
     sendMemory: true,
   },
   readOnly: false,
