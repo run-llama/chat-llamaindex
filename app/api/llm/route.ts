@@ -20,6 +20,7 @@ import {
   DATASOURCES_CHUNK_SIZE,
 } from "@/scripts/constants.mjs";
 import { Embedding } from "@/app/client/fetch/url";
+import Locale from "@/app/locales";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
@@ -109,7 +110,7 @@ function createReadableStream(
       console.error("[LlamaIndex]", error);
       writer.write(
         `data: ${JSON.stringify({
-          error: (error as Error).message,
+          error: Locale.Chat.LLMError,
         })}\n\n`,
       );
       writer.close();
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
     console.error("[LlamaIndex]", error);
     return NextResponse.json(
       {
-        error: (error as Error).message,
+        error: Locale.Chat.LLMError,
       },
       {
         status: 500,

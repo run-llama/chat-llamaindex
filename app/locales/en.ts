@@ -17,6 +17,8 @@ const en = {
     Send: "Send",
     IsContext: "Contextual Prompt",
     LoadingURL: "Loading content...",
+    LLMError:
+      "There was an error calling the OpenAI API. Please try again later.",
   },
   Upload: {
     Invalid: (acceptTypes: string) =>
