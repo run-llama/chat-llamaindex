@@ -24,6 +24,7 @@ import { ChatAction } from "./chat-action";
 import ChatHeader from "./chat-header";
 import ChatInput from "./chat-input";
 import { ClearContextDivider } from "./clear-context-divider";
+import { isImageFileType } from "@/app/client/fetch/file";
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -94,7 +95,7 @@ export function Chat() {
   const renderMessages = useMemo(() => {
     const getFrontendMessages = (messages: ChatMessage[]) => {
       return messages.map((message) => {
-        if (!message.urlDetail || message.urlDetail.type === "image/jpeg")
+        if (!message.urlDetail || isImageFileType(message.urlDetail.type))
           return message;
         const urlTypePrefix = getUrlTypePrefix(message.urlDetail.type);
         const sizeInKB = Math.round(message.urlDetail.size / 1024);
@@ -256,13 +257,14 @@ export function Chat() {
                               : "bg-muted",
                           )}
                         >
-                          {message.urlDetail?.type === "image/jpeg" && (
-                            <img
-                              src={message.urlDetail.url}
-                              alt="Message image"
-                              className="object-contain w-full h-52 rounded-lg mb-2"
-                            />
-                          )}
+                          {message.urlDetail?.type &&
+                            isImageFileType(message.urlDetail.type) && (
+                              <img
+                                src={message.urlDetail.url}
+                                alt="Message image"
+                                className="object-contain w-full h-52 rounded-lg mb-2"
+                              />
+                            )}
                           <Markdown
                             content={message.content}
                             loading={

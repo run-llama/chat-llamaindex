@@ -1,24 +1,19 @@
 import { URLDetailContent } from "./url";
 import { FileWrap } from "../../utils/file";
+import {
+  ALLOWED_IMAGE_EXTENSIONS,
+  IMAGE_TYPES,
+  ImageType,
+} from "@/app/constant";
 
 export async function getDetailContentFromFile(
   file: FileWrap,
 ): Promise<URLDetailContent> {
-  switch (file.extension) {
-    case "pdf": {
-      return await getPDFFileDetail(file);
-    }
-    case "txt": {
-      return await getTextFileDetail(file);
-    }
-    case "jpg":
-    case "jpeg": {
-      return await getImageFileDetail(file);
-    }
-    default: {
-      throw new Error("Not supported file type");
-    }
-  }
+  if (file.extension === "pdf") return await getPDFFileDetail(file);
+  if (file.extension === "txt") return await getTextFileDetail(file);
+  if (ALLOWED_IMAGE_EXTENSIONS.includes(file.extension))
+    return await getImageFileDetail(file);
+  throw new Error("Not supported file type");
 }
 
 async function getPDFFileDetail(file: FileWrap): Promise<URLDetailContent> {
@@ -70,3 +65,6 @@ async function getImageFileDetail(file: FileWrap) {
   console.log(data);
   return data as URLDetailContent;
 }
+
+export const isImageFileType = (type: string) =>
+  IMAGE_TYPES.includes(type as ImageType);

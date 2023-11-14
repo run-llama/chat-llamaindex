@@ -16,6 +16,7 @@ import {
 } from "../client/platforms/llm";
 import { prettyObject } from "../utils/format";
 import { Bot } from "./bot";
+import { isImageFileType } from "../client/fetch/file";
 
 export type ChatMessage = {
   role: MessageRole;
@@ -157,7 +158,7 @@ export async function callSession(
 
   let embeddings: Embedding[] | undefined;
   let message;
-  if (userMessage.urlDetail && userMessage.urlDetail.type !== "image/jpeg") {
+  if (userMessage.urlDetail && !isImageFileType(userMessage.urlDetail.type)) {
     // if the user sends document, let the LLM summarize the content of the URL and just use the document's embeddings
     message = "Summarize the given context briefly in 200 words or less";
     embeddings = userMessage.urlDetail?.embeddings;
@@ -168,7 +169,10 @@ export async function callSession(
       .flatMap((message: ChatMessage) => message.urlDetail?.embeddings)
       .filter((m) => m !== undefined) as Embedding[];
     embeddings = embeddings.length > 0 ? embeddings : undefined;
-    if (userMessage.urlDetail?.type === "image/jpeg") {
+    if (
+      userMessage.urlDetail?.type &&
+      isImageFileType(userMessage.urlDetail?.type)
+    ) {
       message = [
         {
           type: "text",

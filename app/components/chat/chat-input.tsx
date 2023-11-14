@@ -1,4 +1,7 @@
-import { getDetailContentFromFile } from "@/app/client/fetch/file";
+import {
+  getDetailContentFromFile,
+  isImageFileType,
+} from "@/app/client/fetch/file";
 import { URLDetail, URLDetailContent, isURL } from "@/app/client/fetch/url";
 import { Button } from "@/app/components/ui/button";
 import { Textarea } from "@/app/components/ui/textarea";
@@ -119,13 +122,13 @@ export default function ChatInput(props: ChatInputProps) {
     action: () => Promise<void>,
   ): Promise<void> => {
     let tempUrl: string;
-    if (file.type === "image/jpeg") {
+    if (isImageFileType(file.type)) {
       tempUrl = URL.createObjectURL(file);
       setTemporaryBlobUrl(tempUrl);
     }
 
     return action().finally(() => {
-      if (file.type === "image/jpeg") {
+      if (isImageFileType(file.type)) {
         URL.revokeObjectURL(tempUrl);
         setTemporaryBlobUrl(undefined);
       }
@@ -136,7 +139,7 @@ export default function ChatInput(props: ChatInputProps) {
     try {
       await manageTemporaryBlobUrl(fileInput.file, async () => {
         const fileDetail = await getDetailContentFromFile(fileInput);
-        if (fileInput.file.type === "image/jpeg") {
+        if (isImageFileType(fileInput.file.type)) {
           setImageFile(fileDetail);
         } else {
           callLLM({ fileDetail });
