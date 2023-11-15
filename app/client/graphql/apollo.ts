@@ -5,9 +5,9 @@ const createApolloClient = () => {
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
       uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT, // Replace with your GraphQL endpoint
+      credentials: "include",
     }),
     cache: new InMemoryCache(),
-    credentials: "include",
   });
 };
 
