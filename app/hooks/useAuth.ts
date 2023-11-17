@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useQuery } from "@apollo/client";
 import axios from "axios";
 import { useEffect } from "react";
@@ -44,27 +44,40 @@ export const useAuth = () => {
     },
   });
 
+  const [hasCheckedUser, setHasCheckedUser] = useState(false);
   const isLoggedIn = Boolean(data?.currentUser);
   const currentUser = data?.currentUser || null;
 
   // Logout logic
   const logout = useCallback(() => {
+    // Common paths
+    const logoutPath = "/api/auth/logout/";
+    const loginPath = "/en/auth/login";
+
+    // Construct URLs using the root URL from the environment variable
+    const logoutUrl = `${
+      process.env.AUTH_SERVER_DOMAIN || "https://app.localtest.local:3000"
+    }${logoutPath}`;
+    const loginUrl = `${
+      process.env.DJANGO_WEBAPP_URL || "https://app.localtest.local:3000"
+    }${loginPath}`;
+
     // Perform logout operations
-    client.post<void>(
-      process.env.AUTH_SERVER_DOMAIN ||
-        "https://app.localtest.local:3000/api/auth/logout/",
-    );
-    window.location.href =
-      process.env.AUTH_SERVER_LOGIN_URL ||
-      "https://app.localtest.local:3000/en/auth/login";
+    client.post<void>(logoutUrl);
+    window.location.href = loginUrl;
   }, []);
 
-  // Effect for handling authentication status
   useEffect(() => {
-    if (!loading && !isLoggedIn) {
+    if (!loading) {
+      setHasCheckedUser(true);
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (hasCheckedUser && !isLoggedIn) {
       logout();
     }
-  }, [loading, isLoggedIn, logout]);
+  }, [hasCheckedUser, isLoggedIn, logout]);
 
   return {
     loading,

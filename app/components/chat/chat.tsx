@@ -84,9 +84,17 @@ function UserDropdown() {
       <DropdownMenuContent>
         <DropdownMenuItem
           onSelect={() => {
-            const authServerUrl = process.env.AUTH_SERVER_URL;
-            window.location.href =
-              authServerUrl || "https://app.localtest.local:3000/en/profile";
+            // Common path for the profile page
+            const profilePath = "/en/profile";
+
+            // Construct the URL using the root URL from the environment variable
+            const profileUrl = `${
+              process.env.DJANGO_WEBAPP_URL ||
+              "https://app.localtest.local:3000"
+            }${profilePath}`;
+
+            // Redirect to the profile page
+            window.location.href = profileUrl;
           }}
         >
           Profile
