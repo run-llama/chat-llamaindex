@@ -60,8 +60,7 @@ export const useAuth = () => {
       "https://app.localtest.local:3000"
     }${logoutPath}`;
     const loginUrl = `${
-      process.env.NEXT_PUBLIC_DJANGO_WEBAPP_URL ||
-      "https://app.localtest.local:3000"
+      process.env.NEXT_PUBLIC_WEBAPP_URL || "https://app.localtest.local:3000"
     }${loginPath}`;
 
     // Perform logout operations

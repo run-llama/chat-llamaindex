@@ -89,7 +89,7 @@ function UserDropdown() {
 
             // Construct the URL using the root URL from the environment variable
             const profileUrl = `${
-              process.env.NEXT_PUBLIC_DJANGO_WEBAPP_URL ||
+              process.env.NEXT_PUBLIC_WEBAPP_URL ||
               "https://app.localtest.local:3000"
             }${profilePath}`;
 
