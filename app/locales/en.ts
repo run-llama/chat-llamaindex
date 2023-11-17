@@ -132,7 +132,7 @@ const en = {
   },
 
   Welcome: {
-    Title: "LlamaIndex Chat",
+    Title: "ChatOpenSource",
     SubTitle: "Create chat bots that know your data",
     Quote:
       "“This tool has saved me countless hours of work and helped me apply AI features to my work faster than ever before.”",

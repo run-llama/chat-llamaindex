@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { GITHUB_URL, Path } from "../../constant";
 import Locale from "../../locales";
 import { Button } from "../ui/button";
-import Typography from "../ui/typography";
 import { useSidebarContext } from "@/app/components/home";
+import { useTheme } from "next-themes";
 
 const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
   loading: () => null,
@@ -15,16 +15,21 @@ const BotList = dynamic(async () => (await import("../bot/bot-list")).default, {
 export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
   const { setShowSidebar } = useSidebarContext();
+  const { theme } = useTheme();
+  const logoSrc = theme === "light" ? "/black_logo.png" : "/white_logo.png";
 
   return (
     <div className="h-full relative group border-r w-full md:w-[300px]">
       <div className="w-full h-full p-5 flex flex-col gap-5">
         <div className="flex flex-col flex-1">
-          <div className="mb-5 flex justify-between gap-5 items-start">
+          <div className="mb-5 flex items-center justify-between gap-5">
             <div>
-              <Typography.H1>{Locale.Welcome.Title}</Typography.H1>
-              <div className="text-sm text-muted-foreground">
-                {Locale.Welcome.SubTitle}
+              {" "}
+              <img src={logoSrc} alt="Image" />{" "}
+              <div>
+                <div className="text-sm text-muted-foreground">
+                  {Locale.Welcome.SubTitle}
+                </div>
               </div>
             </div>
             <ThemeToggle />

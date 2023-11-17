@@ -44,6 +44,13 @@ import Typography from "../ui/typography";
 import { ChatAction } from "./chat-action";
 import { ClearContextDivider } from "./clear-context-divider";
 import { useBotStore } from "@/app/store/bot";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "../ui/dropdown-menu"; // Replace with the correct path to your dropdown component
 
 const Markdown = dynamic(
   async () => (await import("../ui/markdown")).Markdown,
@@ -51,6 +58,53 @@ const Markdown = dynamic(
     loading: () => <Loading />,
   },
 );
+import { useAuth } from "../../hooks/useAuth"; // import the useAuth hook
+
+function UserDropdown() {
+  const { isLoggedIn, currentUser, logout } = useAuth();
+
+  if (!isLoggedIn || !currentUser) {
+    return null;
+  }
+
+  const initials =
+    (currentUser.firstName ? currentUser.firstName.charAt(0) : "") +
+    (currentUser.lastName ? currentUser.lastName.charAt(0) : "");
+  const displayInitials = initials || "U"; // Fallback to 'U' if no initials
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <div className="flex items-center cursor-pointer">
+          <div className="rounded-full bg-gray-300 w-8 h-8 flex items-center justify-center text-white">
+            {displayInitials}
+          </div>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onSelect={() => {
+            // Common path for the profile page
+            const profilePath = "/en/profile";
+
+            // Construct the URL using the root URL from the environment variable
+            const profileUrl = `${
+              process.env.NEXT_PUBLIC_WEBAPP_URL ||
+              "https://app.localtest.local:3000"
+            }${profilePath}`;
+
+            // Redirect to the profile page
+            window.location.href = profileUrl;
+          }}
+        >
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={logout}>Log out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function ChatHeader() {
   const isMobileScreen = useMobileScreen();
@@ -80,6 +134,11 @@ function ChatHeader() {
           {Locale.Chat.SubTitle(numberOfMessages)}
         </div>
       </div>
+      {/* User Dropdown */}
+      <div className="absolute top-4 right-5">
+        <UserDropdown />
+      </div>
+
       <Separator />
     </div>
   );

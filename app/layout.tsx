@@ -35,6 +35,13 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/site.webmanifest"></link>
         <script src="/serviceWorkerRegister.js" defer></script>
+        <style>
+          {`
+          h1 {
+            font-size: 20px;
+          }
+          `}
+        </style>
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
