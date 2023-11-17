@@ -56,10 +56,12 @@ export const useAuth = () => {
 
     // Construct URLs using the root URL from the environment variable
     const logoutUrl = `${
-      process.env.AUTH_SERVER_DOMAIN || "https://app.localtest.local:3000"
+      process.env.NEXT_PUBLIC_AUTH_SERVER_DOMAIN ||
+      "https://app.localtest.local:3000"
     }${logoutPath}`;
     const loginUrl = `${
-      process.env.DJANGO_WEBAPP_URL || "https://app.localtest.local:3000"
+      process.env.NEXT_PUBLIC_DJANGO_WEBAPP_URL ||
+      "https://app.localtest.local:3000"
     }${loginPath}`;
 
     // Perform logout operations
