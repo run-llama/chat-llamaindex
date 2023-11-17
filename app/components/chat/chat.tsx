@@ -86,7 +86,7 @@ function UserDropdown() {
           onSelect={() => {
             const authServerUrl = process.env.AUTH_SERVER_URL;
             window.location.href =
-              authServerUrl || "http://localhost:3000/en/profile";
+              authServerUrl || "https://app.localtest.local:3000/en/profile";
           }}
         >
           Profile

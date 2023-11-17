@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import React, { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import axios from "axios";
+import { useEffect } from "react";
 
 export const CURRENT_USER_QUERY = gql`
   query CommonQueryCurrentUser {
@@ -38,33 +38,33 @@ export const client = axios.create({
 });
 
 export const useAuth = () => {
-  const logout = useCallback(() => {
-    // Perform logout operations, such as clearing tokens
-    // const res = client.post<void>(
-    //   process.env.AUTH_SERVER_DOMAIN ||
-    //     "http://localhost:3000/api/auth/logout/",
-    // );
-    const authServerUrl = process.env.AUTH_SERVER_LOGIN_URL;
-    // window.location.href =
-    //   authServerUrl || "http://localhost:3000/en/auth/login";
-  }, []);
-
   const { data, loading, error, refetch } = useQuery(CURRENT_USER_QUERY, {
     onError: (apolloError) => {
-      console.log("logout hit due to error");
-      logout();
+      // Handle error
     },
   });
 
-  // Simplified check to determine the logged-in status
-  const isLoggedIn = Boolean(data?.currentUser) && !loading && !error;
-  console.log();
-  if (!isLoggedIn) {
-    console.log("logout hit due to no current user", data);
-
-    logout();
-  }
+  const isLoggedIn = Boolean(data?.currentUser);
   const currentUser = data?.currentUser || null;
+
+  // Logout logic
+  const logout = useCallback(() => {
+    // Perform logout operations
+    client.post<void>(
+      process.env.AUTH_SERVER_DOMAIN ||
+        "https://app.localtest.local:3000/api/auth/logout/",
+    );
+    window.location.href =
+      process.env.AUTH_SERVER_LOGIN_URL ||
+      "https://app.localtest.local:3000/en/auth/login";
+  }, []);
+
+  // Effect for handling authentication status
+  useEffect(() => {
+    if (!loading && !isLoggedIn) {
+      logout();
+    }
+  }, [loading, isLoggedIn, logout]);
 
   return {
     loading,

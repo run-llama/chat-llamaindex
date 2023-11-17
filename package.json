@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev -p 3001",
+    "ssldev": "node nodeserver.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -37,6 +38,7 @@
     "emoji-picker-react": "^4.4.12",
     "encoding": "^0.1.13",
     "graphql": "^16.8.1",
+    "katex": "^0.16.9",
     "llamaindex": "0.0.0-20231110031459",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.3.1",

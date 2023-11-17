@@ -77,6 +77,9 @@ dependencies:
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
+  katex:
+    specifier: ^0.16.9
+    version: 0.16.9
   llamaindex:
     specifier: 0.0.0-20231110031459
     version: 0.0.0-20231110031459(encoding@0.1.13)
