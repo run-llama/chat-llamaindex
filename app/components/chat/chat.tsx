@@ -99,6 +99,21 @@ function UserDropdown() {
         >
           Profile
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() => {
+            // Common path for the profile page
+
+            // Construct the URL using the root URL from the environment variable
+            const profileUrl =
+              process.env.NEXT_PUBLIC_WEBAPP_URL ||
+              "https://app.localtest.local:3000";
+
+            // Redirect to the profile page
+            window.location.href = profileUrl;
+          }}
+        >
+          Dashboard
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={logout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
