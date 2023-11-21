@@ -25,7 +25,9 @@ export function SideBar(props: { className?: string }) {
           <div className="mb-5 flex items-center justify-between gap-5">
             <div>
               {" "}
-              <img src={logoSrc} alt="Image" />{" "}
+              <a href={process.env.NEXT_PUBLIC_WEBAPP_URL}>
+                <img src={logoSrc} alt="Image" />
+              </a>
               <div>
                 <div className="text-sm text-muted-foreground">
                   {Locale.Welcome.SubTitle}
