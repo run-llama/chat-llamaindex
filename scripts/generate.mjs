@@ -11,6 +11,7 @@ import {
   DATASOURCES_CHUNK_SIZE,
   DATASOURCES_CHUNK_OVERLAP,
 } from "./constants.mjs";
+import { fileURLToPath } from 'url';
 import { exit } from "process";
 import dotenv from "dotenv";
 import path from "path";
@@ -47,10 +48,10 @@ async function generateDatasource(serviceContext, datasource) {
 
 async function ensureEnv(fileName) {
   try {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
-    const envFileContent = await fs.promises.readFile(
-      path.join(__dirname, "..", fileName),
-    );
+    // Correctly determine the directory name
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const envFilePath = path.join(__dirname, "..", fileName);
+    const envFileContent = await fs.promises.readFile(envFilePath);
     const envConfig = dotenv.parse(envFileContent);
     if (envConfig && envConfig.OPENAI_API_KEY) {
       process.env.OPENAI_API_KEY = envConfig.OPENAI_API_KEY;
