@@ -84,32 +84,21 @@ function UserDropdown() {
       <DropdownMenuContent>
         <DropdownMenuItem
           onSelect={() => {
-            // Common path for the profile page
-            const profilePath = "/en/profile";
-
-            // Construct the URL using the root URL from the environment variable
-            const profileUrl = `${
+            // Redirect to the profile page
+            window.location.href = `${
               process.env.NEXT_PUBLIC_WEBAPP_URL ||
               "https://app.localtest.local:3000"
-            }${profilePath}`;
-
-            // Redirect to the profile page
-            window.location.href = profileUrl;
+            }/en/profile`;
           }}
         >
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
-            // Common path for the profile page
-
-            // Construct the URL using the root URL from the environment variable
-            const profileUrl =
+            // Redirect to the dashboard/home page
+            window.location.href =
               process.env.NEXT_PUBLIC_WEBAPP_URL ||
               "https://app.localtest.local:3000";
-
-            // Redirect to the profile page
-            window.location.href = profileUrl;
           }}
         >
           Dashboard

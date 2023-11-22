@@ -37,10 +37,19 @@ export const client = axios.create({
   validateStatus,
 });
 
+export const refreshToken = async () => {
+  const refreshUrl = `${
+    process.env.NEXT_PUBLIC_AUTH_SERVER_DOMAIN ||
+    "https://app.localtest.local:3000"
+  }/api/auth/token-refresh/`;
+  const res = await client.post<void>(refreshUrl);
+  return res.data;
+};
+
 export const useAuth = () => {
   const { data, loading, error, refetch } = useQuery(CURRENT_USER_QUERY, {
     onError: (apolloError) => {
-      // Handle error
+      refreshToken();
     },
   });
 
@@ -50,18 +59,15 @@ export const useAuth = () => {
 
   // Logout logic
   const logout = useCallback(() => {
-    // Common paths
-    const logoutPath = "/api/auth/logout/";
-    const loginPath = "/en/auth/login";
-
     // Construct URLs using the root URL from the environment variable
     const logoutUrl = `${
       process.env.NEXT_PUBLIC_AUTH_SERVER_DOMAIN ||
       "https://app.localtest.local:3000"
-    }${logoutPath}`;
+    }/api/auth/logout/`;
+
     const loginUrl = `${
       process.env.NEXT_PUBLIC_WEBAPP_URL || "https://app.localtest.local:3000"
-    }${loginPath}`;
+    }/en/auth/login`;
 
     // Perform logout operations
     client.post<void>(logoutUrl);
