@@ -37,7 +37,7 @@ import { useMobileScreen } from "../../utils/mobile";
 import { autoGrowTextArea } from "../../utils/autogrow";
 import { copyToClipboard } from "@/app/utils/clipboard";
 import { prettyObject } from "../../utils/format";
-import { useSidebarContext } from "../home";
+import { useAuthContext, useSidebarContext } from "../home";
 import FileUploader from "../ui/file-uploader";
 import { Separator } from "../ui/separator";
 import Typography from "../ui/typography";
@@ -58,10 +58,11 @@ const Markdown = dynamic(
     loading: () => <Loading />,
   },
 );
-import { useAuth } from "../../hooks/useAuth"; // import the useAuth hook
+
+import { webappUrl } from "@/app/utils/urls";
 
 function UserDropdown() {
-  const { isLoggedIn, currentUser, logout } = useAuth();
+  const { isLoggedIn, currentUser, logout } = useAuthContext();
 
   if (!isLoggedIn || !currentUser) {
     return null;
@@ -84,21 +85,16 @@ function UserDropdown() {
       <DropdownMenuContent>
         <DropdownMenuItem
           onSelect={() => {
-            // Redirect to the profile page
-            window.location.href = `${
-              process.env.NEXT_PUBLIC_WEBAPP_URL ||
-              "https://app.localtest.local:3000"
-            }/en/profile`;
+            // Redirect to the profile page using the utility function
+            window.location.href = webappUrl("/en/profile");
           }}
         >
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
-            // Redirect to the dashboard/home page
-            window.location.href =
-              process.env.NEXT_PUBLIC_WEBAPP_URL ||
-              "https://app.localtest.local:3000";
+            // Redirect to the dashboard/home page using the utility function
+            window.location.href = webappUrl("/");
           }}
         >
           Dashboard

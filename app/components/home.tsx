@@ -20,7 +20,9 @@ import {
 import { Bot, useBotStore } from "../store/bot";
 import { SideBar } from "./layout/sidebar";
 import { LoadingPage } from "@/app/components/ui/loading";
-
+import { usePaidSubscription } from "../hooks/usePaidSubscription";
+import { RedirectLoadingPage } from "./ui/redirect-loading";
+import { useAuth } from "../hooks/useAuth";
 const SettingsPage = dynamic(
   async () => (await import("./settings")).Settings,
   {
@@ -106,15 +108,70 @@ export const useSidebarContext = () => {
   return context;
 };
 
+// Define the shape of the context data
+export interface AuthContextType {
+  loading: boolean;
+  error: any; // Specify a more precise type if possible
+  isLoggedIn: boolean;
+  currentUser: any; // Specify the type of currentUser
+  logout: () => void;
+  refetch: () => void;
+}
+
+// Create the context with an initial empty value
+export const AuthContext = React.createContext<AuthContextType | null>(null);
+
+// AuthProvider component
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const auth = useAuth();
+
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+// Hook to use the Auth Context
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};
+
 function Screen() {
   const isMobileScreen = useMobileScreen();
   const { showSidebar } = useSidebarContext();
+  const { hasPaidSubscription, loading: loadingSubscription } =
+    usePaidSubscription();
+  const [checkCompleted, setCheckCompleted] = useState(false);
 
-  const showSidebarOnMobile = showSidebar || !isMobileScreen;
+  useEffect(() => {
+    if (!loadingSubscription) {
+      setCheckCompleted(true);
+    }
+  }, [loadingSubscription]);
 
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
+
+  if (!checkCompleted) {
+    return <LoadingPage />;
+  }
+
+  const subscriptionUrl = `${
+    process.env.NEXT_PUBLIC_WEBAPP_URL || "https://app.localtest.local:3000"
+  }/en/subscriptions/current-subscription/edit`;
+
+  if (!hasPaidSubscription) {
+    return (
+      <RedirectLoadingPage
+        url={subscriptionUrl}
+        message="Requires a paid subscription to use, redirecting to subscription page."
+      />
+    );
+  }
+
+  const showSidebarOnMobile = showSidebar || !isMobileScreen;
 
   return (
     <main className="flex overflow-hidden h-screen w-screen box-border">
@@ -132,7 +189,9 @@ function Screen() {
 }
 
 export function Home({ bot }: { bot?: Bot }) {
-  if (!useHasHydrated()) {
+  const isHydrated = useHasHydrated();
+
+  if (!isHydrated) {
     return <LoadingPage />;
   }
 
@@ -143,11 +202,13 @@ export function Home({ bot }: { bot?: Bot }) {
     <ErrorBoundary>
       <Router>
         <ApolloProvider client={apolloClient}>
-          <QueryClientProvider client={queryClient}>
-            <SidebarContextProvider>
-              <BotScreen />
-            </SidebarContextProvider>
-          </QueryClientProvider>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <SidebarContextProvider>
+                <BotScreen />
+              </SidebarContextProvider>
+            </QueryClientProvider>
+          </AuthProvider>
         </ApolloProvider>
       </Router>
     </ErrorBoundary>
