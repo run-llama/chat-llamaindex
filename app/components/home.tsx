@@ -23,6 +23,7 @@ import { LoadingPage } from "@/app/components/ui/loading";
 import { usePaidSubscription } from "../hooks/usePaidSubscription";
 import { RedirectLoadingPage } from "./ui/redirect-loading";
 import { useAuth } from "../hooks/useAuth";
+import { webappUrl } from "../utils/urls";
 const SettingsPage = dynamic(
   async () => (await import("./settings")).Settings,
   {
@@ -158,11 +159,12 @@ function Screen() {
     return <LoadingPage />;
   }
 
-  const subscriptionUrl = `${
-    process.env.NEXT_PUBLIC_WEBAPP_URL || "https://app.localtest.local:3000"
-  }/en/subscriptions/current-subscription/edit`;
+  const subscriptionUrl = webappUrl(
+    "/en/subscriptions/current-subscription/edit",
+  );
 
   if (!hasPaidSubscription) {
+    console.log("Redirecting to subscription page");
     return (
       <RedirectLoadingPage
         url={subscriptionUrl}

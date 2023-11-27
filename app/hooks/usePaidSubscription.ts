@@ -1,11 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
 import axios, { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { apiUrl } from "../utils/urls";
+
+interface PaidSubscriptionResponse {
+  hasPaidSubscription: boolean;
+}
 
 interface UsePaidSubscriptionHook {
   hasPaidSubscription: boolean | null;
   loading: boolean;
-  error: Error | null;
+  error: AxiosError | null;
   refetch: () => Promise<void>;
 }
 
@@ -14,16 +18,19 @@ export const usePaidSubscription = (): UsePaidSubscriptionHook => {
     boolean | null
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
   const paidSubscriptionUrl = apiUrl("/api/finances/stripe/paid-subscription/");
 
   const fetchPaidSubscription = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get<boolean>(paidSubscriptionUrl, {
-        withCredentials: true,
-      });
-      setHasPaidSubscription(response.data);
+      const response = await axios.get<PaidSubscriptionResponse>(
+        paidSubscriptionUrl,
+        {
+          withCredentials: true,
+        },
+      );
+      setHasPaidSubscription(response.data.hasPaidSubscription);
     } catch (err) {
       setError(err as AxiosError);
     } finally {
