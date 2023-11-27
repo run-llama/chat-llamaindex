@@ -41,10 +41,21 @@ The API allows CORS for all origins to simplify development. You can change this
 ENVIRONMENT=prod uvicorn main:app
 ```
 
-## Learn More
+## 📀 Data Sources
 
-To learn more about LlamaIndex, take a look at the following resources:
+The app is using a `ChatEngine` for each bot with a `VectorStoreIndex` attached.
+The `cache` folder is used as `Storage` for each `VectorStoreIndex`.
 
-- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex.
+Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](../frontend/app/bots/bot.data.ts).
 
-You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/llama_index) - your feedback and contributions are welcome!
+> **Note**: To use the changed bots, you have to clear your local storage. Otherwise, the old bots are still used. You can clear your local storage by opening the developer tools and running `localStorage.clear()` in the console and reloading the page
+
+### Generate a datasource
+
+To generate a datasource, you can use the `generate.py` script:
+
+```
+python generate.py {datasource_name}
+```
+
+This will read all files in the `datasources/{datasource_name}` folder, split them, create their embeddings and store the new datasource in the `cache/{datasource_name}` folder.

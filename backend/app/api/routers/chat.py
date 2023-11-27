@@ -2,10 +2,11 @@ import json
 from typing import Optional, Sequence
 
 from app.utils.index import get_index
-from fastapi import APIRouter, Depends, Request 
+from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
-from llama_index import VectorStoreIndex
+from llama_index import ServiceContext
 from llama_index.llms.base import ChatMessage, MessageRole
+from llama_index.llms.openai import OpenAI
 from pydantic import BaseModel
 
 chat_router = r = APIRouter()
@@ -41,12 +42,29 @@ def convert_sse(obj: any):
     return "data: {}\n\n".format(json.dumps(obj))
 
 
+def llm_from_config(config: Optional[_LLMConfig]):
+    if config:
+        return OpenAI(
+            model=config.model,
+            temperature=config.temperature,
+            max_tokens=config.maxTokens,
+        )
+    else:
+        return OpenAI(model="gpt-3.5-turbo")
+
+
 @r.post("")
-async def chat(
-    request: Request,
-    data: _ChatData,
-    index: VectorStoreIndex = Depends(get_index),
-):
+async def chat(request: Request, data: _ChatData):
+    service_context = ServiceContext.from_defaults(llm=llm_from_config(data.config))
+    if not data.datasource:
+        # TODO: add support for simple chat without datasource
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No datasource provided",
+        )
+
+    index = get_index(service_context, data.datasource)
+
     # convert messages coming from the request to type ChatMessage
     messages = (
         [ChatMessage(role=m.role, content=m.content) for m in data.messages]

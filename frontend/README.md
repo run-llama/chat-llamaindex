@@ -32,22 +32,8 @@ You can:
 
 ### Local Development
 
-Requirement: [NodeJS](https://nodejs.org) 18
-
-- Clone the repository
-
-```bash
-git clone https://github.com/run-llama/chat-llamaindex
-cd chat-llamaindex
-```
-
-- Set the environment variables
-
-```bash
-cp .env.template .env.development.local
-```
-
-Edit environment variables in `.env.development.local`.
+Make sure the backend is running first.
+Frontend Requirement: [NodeJS](https://nodejs.org) 18
 
 - Run the dev server
 
@@ -70,26 +56,6 @@ Just follow [this step from the quickstart](https://vercel.com/docs/storage/verc
 ## 🔄 Sharing
 
 LlamaIndex Chat supports the sharing of bots via URLs. Demo bots are read-only and can't be shared. But you can create new bots (or clone and modify a demo bot) and call the share functionality in the context menu. It will create a unique URL that you can share with others. Opening the URL, users can directly use the shared bot.
-
-## 📀 Data Sources
-
-The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
-The `cache` folder in the root directory is used as [Storage](https://ts.llamaindex.ai/modules/low_level/storage) for each `VectorStoreIndex`.
-
-Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](./app/bots/bot.data.ts).
-
-> **Note**: To use the changed bots, you have to clear your local storage. Otherwise, the old bots are still used. You can clear your local storage by opening the developer tools and running `localStorage.clear()` in the console and reloading the page.
-
-### Generate Data Sources
-
-To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g., PDFs).
-Then, create the `VectorStoreIndex`` for the data source by running the following command:
-
-```bash
-pnpm run generate <datasource-name>
-```
-
-Where `<datasource-name>` is the name of the subfolder with your data files.
 
 ## 🙏 Thanks
 
