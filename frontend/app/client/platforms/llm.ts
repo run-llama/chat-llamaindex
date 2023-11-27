@@ -60,7 +60,7 @@ export interface ChatOptions {
   onError?: (err: Error) => void;
 }
 
-const CHAT_PATH = "/api/llm";
+const CHAT_PATH = "http://localhost:8000/api/chat";
 
 export function isVisionModel(model: ModelType) {
   return model === "gpt-4-vision-preview";

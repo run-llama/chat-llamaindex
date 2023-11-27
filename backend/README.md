@@ -28,7 +28,7 @@ Then call the API endpoint `/api/chat` to see the result:
 ```
 curl --location 'localhost:8000/api/chat' \
 --header 'Content-Type: application/json' \
---data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
+--data '{ "message": "Hello" }] }'
 ```
 
 You can start editing the API by modifying `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.

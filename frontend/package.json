@@ -1,5 +1,5 @@
 {
-  "name": "chat-llamaindex",
+  "name": "chat-llamaindex-frontend",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,6 @@
     "lint": "next lint",
     "format:check": "prettier --check --ignore-path .gitignore app",
     "format": "prettier --write --ignore-path .gitignore app",
-    "prepare": "husky install",
     "generate": "node ./scripts/generate.mjs"
   },
   "dependencies": {
@@ -77,7 +76,6 @@
     "eslint-config-next": "13.4.13",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "husky": "^8.0.0",
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.3",
     "typescript": "5.1.6"

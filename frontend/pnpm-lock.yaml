@@ -193,9 +193,6 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^5.0.0
     version: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.44.0)(prettier@3.0.3)
-  husky:
-    specifier: ^8.0.0
-    version: 8.0.0
   lint-staged:
     specifier: ^13.2.3
     version: 13.2.3
@@ -3911,12 +3908,6 @@ packages:
     dependencies:
       ms: 2.1.3
     dev: false
-
-  /husky@8.0.0:
-    resolution: {integrity: sha512-4qbE/5dzNDNxFEkX9MNRPKl5+omTXQzdILCUWiqG/lWIAioiM5vln265/l6I2Zx8gpW8l1ukZwGQeCFbBZ6+6w==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: true
 
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
