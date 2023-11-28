@@ -109,8 +109,9 @@ export class LLMApi {
         async onopen(res) {
           clearTimeout(requestTimeoutId);
           if (!res.ok) {
-            const json = await res.json();
-            handleError(new Error(json.message));
+            handleError(
+              new Error(`Error calling API with status: ${res.status}`),
+            );
           }
         },
         onmessage(msg) {
