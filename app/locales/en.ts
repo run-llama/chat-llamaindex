@@ -10,21 +10,26 @@ const en = {
       Stop: "Stop generating",
       Clear: "Clear Context",
     },
-    Typing: "Typing…",
+    Thinking: "Thinking…",
     InputMobile: "Enter to send",
     Input:
       "Enter to send, Shift + Enter to wrap, enter URLs to add a PDF or HTML document to the context",
     Send: "Send",
     IsContext: "Contextual Prompt",
     LoadingURL: "Loading content...",
+    LLMError:
+      "There was an error calling the OpenAI API. Please try again later.",
   },
   Upload: {
     Invalid: (acceptTypes: string) =>
       `Invalid file type. Please select a file with one of these formats: ${acceptTypes}`,
     SizeExceeded: (limitSize: number) =>
       `File size exceeded. Limit is ${limitSize} MB`,
+    Failed: (e: string) => `Error uploading file: ${e}`,
     ParseDataURLFailed: "Unable to read file: Please check if it's encrypted.",
-    UnknownFileType: "TEXT FILE",
+    UnknownFileType: "Unknown file type",
+    ModelDoesNotSupportImages: (acceptTypes: string) =>
+      `Image upload is not supported for this model. Upload one of the supported types instead: ${acceptTypes}`,
   },
   Export: {
     Image: {
@@ -46,7 +51,7 @@ const en = {
     Danger: {
       Clear: {
         Title: "Clear All Data",
-        SubTitle: "Clear all messages and settings",
+        SubTitle: "Reset all bots and clear all messages",
         Action: "Clear",
         Confirm: "Confirm to clear all data?",
       },
@@ -132,7 +137,7 @@ const en = {
   },
 
   Welcome: {
-    Title: "LlamaIndex Chat",
+    Title: "Chat LlamaIndex",
     SubTitle: "Create chat bots that know your data",
     Quote:
       "“This tool has saved me countless hours of work and helped me apply AI features to my work faster than ever before.”",

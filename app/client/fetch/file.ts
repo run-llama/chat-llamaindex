@@ -1,86 +1,70 @@
 import { URLDetailContent } from "./url";
 import { FileWrap } from "../../utils/file";
+import {
+  ALLOWED_IMAGE_EXTENSIONS,
+  IMAGE_TYPES,
+  ImageType,
+} from "@/app/constant";
 
 export async function getDetailContentFromFile(
   file: FileWrap,
 ): Promise<URLDetailContent> {
-  switch (file.extension) {
-    case "pdf": {
-      const pdfFile = new PDFFile(file);
-      return await pdfFile.getFileDetail();
-    }
-    case "txt": {
-      const plainTextFile = new PlainTextFile(file);
-      return await plainTextFile.getFileDetail();
-    }
-    default: {
-      throw new Error("Not supported file type");
-    }
-  }
+  if (file.extension === "pdf") return await getPDFFileDetail(file);
+  if (file.extension === "txt") return await getTextFileDetail(file);
+  if (ALLOWED_IMAGE_EXTENSIONS.includes(file.extension))
+    return await getImageFileDetail(file);
+  throw new Error("Not supported file type");
 }
 
-abstract class TextFile {
-  protected file: FileWrap;
-  abstract getFileDetail(): Promise<URLDetailContent>;
-  constructor(file: FileWrap) {
-    this.file = file;
-  }
+async function getPDFFileDetail(file: FileWrap): Promise<URLDetailContent> {
+  const fileDataUrl = await file.readData({ asURL: true });
+  const pdfBase64 = fileDataUrl.split(",")[1];
+
+  const response = await fetch("/api/fetch", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      pdf: pdfBase64,
+      fileName: file.name,
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data as URLDetailContent;
 }
 
-class PDFFile extends TextFile {
-  async getFileDetail() {
-    const fileDataUrl = await this.file.dataURL;
-    const pdfBase64 = fileDataUrl.split(",")[1];
-
-    const response = await fetch("/api/fetch", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pdf: pdfBase64,
-        fileName: this.file.name,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    return data as URLDetailContent;
-  }
+async function getTextFileDetail(file: FileWrap): Promise<URLDetailContent> {
+  const textContent = await file.readData();
+  const response = await fetch("/api/fetch", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text: textContent,
+      fileName: file.name,
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data as URLDetailContent;
 }
 
-class PlainTextFile extends TextFile {
-  readFileAsText(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        if (event.target) {
-          resolve(event.target.result as string);
-        }
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsText(this.file.file);
-    });
-  }
-
-  async getFileDetail(): Promise<URLDetailContent> {
-    const textContent = await this.readFileAsText();
-    const response = await fetch("/api/fetch", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: textContent,
-        fileName: this.file.name,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    return data as URLDetailContent;
-  }
+async function getImageFileDetail(file: FileWrap) {
+  const response = await fetch(`/api/upload?filename=${file.name}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: file.file,
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  console.log(data);
+  return data as URLDetailContent;
 }
+
+export const isImageFileType = (type: string) =>
+  IMAGE_TYPES.includes(type as ImageType);

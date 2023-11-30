@@ -13,13 +13,14 @@ import {
   serviceContextFromDefaults,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
-import { LLMConfig } from "../../client/platforms/llm";
+import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
 import { getDataSource } from "./datasource";
 import {
   DATASOURCES_CHUNK_OVERLAP,
   DATASOURCES_CHUNK_SIZE,
 } from "@/scripts/constants.mjs";
 import { Embedding } from "@/app/client/fetch/url";
+import Locale from "@/app/locales";
 
 async function createChatEngine(
   serviceContext: ServiceContext,
@@ -109,7 +110,7 @@ function createReadableStream(
       console.error("[LlamaIndex]", error);
       writer.write(
         `data: ${JSON.stringify({
-          error: (error as Error).message,
+          error: Locale.Chat.LLMError,
         })}\n\n`,
       );
       writer.close();
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
       config,
       embeddings,
     }: {
-      message: string;
+      message: MessageContent;
       chatHistory: ChatMessage[];
       datasource: string | undefined;
       config: LLMConfig;
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
     console.error("[LlamaIndex]", error);
     return NextResponse.json(
       {
-        error: (error as Error).message,
+        error: Locale.Chat.LLMError,
       },
       {
         status: 500,

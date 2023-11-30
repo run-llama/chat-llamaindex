@@ -1,12 +1,16 @@
+import { DocumentType, ImageType } from "@/app/constant";
+
 export type Embedding = {
   text: string;
   embedding: number[];
 };
 
+export type UrlDetailType = DocumentType | ImageType;
+
 export type URLDetail = {
   url: string;
   size: number;
-  type: "text/html" | "application/pdf" | "text/plain";
+  type: UrlDetailType;
   embeddings?: Embedding[];
 };
 

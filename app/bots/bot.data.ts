@@ -7,22 +7,41 @@ import { createEmptySession } from "../store";
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
 
-const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
+type DemoBot = Omit<Bot, "session">;
+
+export const DEMO_BOTS: DemoBot[] = [
   {
+    id: "1",
+    avatar: "1f916",
+    name: "GPT-4 Vision Preview",
+    botHello: "Hello! How can I assist you today?",
+    context: [],
+    modelConfig: {
+      model: "gpt-4-vision-preview",
+      temperature: 0.3,
+      maxTokens: 4096,
+      sendMemory: false,
+    },
+    readOnly: true,
+    hideContext: false,
+  },
+  {
+    id: "2",
     avatar: "1f916",
     name: "My Documents",
     botHello: "Hello! How can I assist you today?",
     context: [],
     modelConfig: {
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-4-1106-preview",
       temperature: 0.5,
-      maxTokens: 8000,
+      maxTokens: 4096,
       sendMemory: true,
     },
     readOnly: true,
     hideContext: false,
   },
   {
+    id: "3",
     avatar: "1f5a5-fe0f",
     name: "Red Hat Linux Expert",
     botHello: "Hello! How can I help you with Red Hat Linux?",
@@ -33,9 +52,9 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-4-1106-preview",
       temperature: 0.1,
-      maxTokens: 8000,
+      maxTokens: 4096,
       sendMemory: true,
     },
     readOnly: true,
@@ -43,6 +62,7 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     hideContext: false,
   },
   {
+    id: "4",
     avatar: "1f454",
     name: "Apple Watch Genius",
     botHello: "Hello! How can I help you with Apple Watches?",
@@ -53,9 +73,9 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-4-1106-preview",
       temperature: 0.1,
-      maxTokens: 8000,
+      maxTokens: 4096,
       sendMemory: true,
     },
     readOnly: true,
@@ -63,6 +83,7 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
     hideContext: false,
   },
   {
+    id: "5",
     avatar: "1f4da",
     name: "German Basic Law Expert",
     botHello: "Hello! How can I assist you today?",
@@ -73,9 +94,9 @@ const DEMO_BOTS: Omit<Bot, "id" | "session">[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-4-1106-preview",
       temperature: 0.1,
-      maxTokens: 8000,
+      maxTokens: 4096,
       sendMemory: true,
     },
     readOnly: true,
@@ -88,7 +109,6 @@ export const createDemoBots = (): Record<string, Bot> => {
   const map: Record<string, Bot> = {};
   DEMO_BOTS.forEach((demoBot) => {
     const bot: Bot = JSON.parse(JSON.stringify(demoBot));
-    bot.id = nanoid();
     bot.session = createEmptySession();
     map[bot.id] = bot;
   });
@@ -101,9 +121,9 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-3.5-turbo-16k" as ModelType,
+    model: "gpt-4-1106-preview" as ModelType,
     temperature: 0.5,
-    maxTokens: 6000,
+    maxTokens: 4096,
     sendMemory: true,
   },
   readOnly: false,
