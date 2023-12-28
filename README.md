@@ -56,6 +56,45 @@ pnpm install
 pnpm dev
 ```
 
+### 🐳 Docker
+
+You can use Docker for development and deployment of LlamaIndex Chat.
+
+- Clone the repository
+
+```bash
+git clone https://github.com/run-llama/chat-llamaindex
+cd chat-llamaindex
+```
+
+- Set the environment variables
+
+```bash
+cp .env.template .env.development.local
+```
+
+Edit environment variables in `.env.development.local`.
+
+#### Building the Docker Image
+```bash
+docker build -t chat-llamaindex .
+```
+
+#### Running in a Docker Container
+```bash
+docker run -p 3000:3000 --env-file .env.development.local chat-llamaindex
+```
+
+#### Docker Compose
+For those preferring Docker Compose, we've included a docker-compose.yml file. To run using Docker Compose:
+
+```bash
+docker compose up
+```
+Go to http://localhost:3000 in your web browser.
+
+__Note__: By default, the Docker Compose setup maps the `cache` and `datasources` directories from your host machine to the Docker container, ensuring data persistence and accessibility between container restarts.
+
 ### Vercel Deployment
 
 Deploying to Vercel is simple; click the button below and follow the instructions:
