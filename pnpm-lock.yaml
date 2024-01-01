@@ -81,8 +81,8 @@ dependencies:
     specifier: 0.0.35
     version: 0.0.35(encoding@0.1.13)
   lucide-react:
-    specifier: ^0.277.0
-    version: 0.277.0(react@18.2.0)
+    specifier: ^0.303.0
+    version: 0.303.0(react@18.2.0)
   mermaid:
     specifier: ^10.6.1
     version: 10.6.1
@@ -4594,8 +4594,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-react@0.277.0(react@18.2.0):
-    resolution: {integrity: sha512-9epmznme+vW14V9d2rsMeLr3fMnf59lYDUOVUg6s7oVN22Zq8h4B30+3CIdFFV9UXCjPG5ZNKHfO/hf96cl46A==}
+  /lucide-react@0.303.0(react@18.2.0):
+    resolution: {integrity: sha512-B0B9T3dLEFBYPCUlnUS1mvAhW1craSbF9HO+JfBjAtpFUJ7gMIqmEwNSclikY3RiN2OnCkj/V1ReAQpaHae8Bg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
