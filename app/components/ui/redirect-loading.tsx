@@ -13,15 +13,22 @@ export function RedirectLoadingPage({
   useEffect(() => {
     const timer = setTimeout(() => {
       window.location.href = url;
-    }, 3000);
+    }, 10000);
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, [url]);
 
+  // Define a style object for the message
+  const messageStyle = {
+    fontSize: "2em", // Adjust the size as needed
+    // Add any other styles you want for the message here
+  };
+
   return (
     <div className="w-full h-screen max-h-full flex items-center justify-center text-sm text-muted-foreground">
       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      {message}
+      {/* Apply the style to the message */}
+      <div style={messageStyle}>{message}</div>
     </div>
   );
 }

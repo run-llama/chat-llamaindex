@@ -159,16 +159,14 @@ function Screen() {
     return <LoadingPage />;
   }
 
-  const subscriptionUrl = webappUrl(
-    "/en/subscriptions/current-subscription/edit",
-  );
+  const subscriptionUrl = webappUrl("/en/");
 
   if (!hasPaidSubscription) {
     console.log("Redirecting to subscription page");
     return (
       <RedirectLoadingPage
         url={subscriptionUrl}
-        message="Requires a paid subscription to use, redirecting to subscription page."
+        message="Requires a paid subscription to use, please contact support at ryan@chatopensource.com ."
       />
     );
   }

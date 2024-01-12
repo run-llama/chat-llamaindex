@@ -5,6 +5,7 @@ import {
   HistoryChatEngine,
   IndexDict,
   OpenAI,
+  Anyscale,
   ServiceContext,
   SimpleChatHistory,
   SummaryChatHistory,
@@ -146,6 +147,12 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
+      model: config.model,
+      temperature: config.temperature,
+      topP: config.topP,
+      maxTokens: config.maxTokens,
+    });
+    const llm = new Anyscale({
       model: config.model,
       temperature: config.temperature,
       topP: config.topP,

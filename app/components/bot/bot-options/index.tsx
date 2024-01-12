@@ -62,15 +62,7 @@ export default function BotOptions() {
                 <span>{Locale.Bot.Item.Delete}</span>
               </DropdownMenuItem>
             </AlertDialogTrigger>
-            <DialogTrigger asChild>
-              <DropdownMenuItem
-                disabled={isReadOnly}
-                onClick={() => setDialogContent(<ShareBotDialogContent />)}
-              >
-                <Share2 className="mr-2 w-4 h-4" />
-                <span>{Locale.Bot.Item.Share}</span>
-              </DropdownMenuItem>
-            </DialogTrigger>
+            <DialogTrigger asChild></DialogTrigger>
           </DropdownMenuContent>
         </DropdownMenu>
         {dialogContent}
