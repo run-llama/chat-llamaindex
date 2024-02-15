@@ -4,7 +4,7 @@ import {
   SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";
-
+import { fileURLToPath } from "url";
 import {
   DATASOURCES_CACHE_DIR,
   DATASOURCES_DIR,
@@ -47,7 +47,8 @@ async function generateDatasource(serviceContext, datasource) {
 
 async function ensureEnv(fileName) {
   try {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
     const envFileContent = await fs.promises.readFile(
       path.join(__dirname, "..", fileName),
     );
