@@ -1,16 +1,17 @@
 import {
   ChatHistory,
   ChatMessage,
-  DefaultContextGenerator,
-  HistoryChatEngine,
+  ContextChatEngine,
   IndexDict,
   OpenAI,
   ServiceContext,
+  SimpleChatEngine,
   SimpleChatHistory,
   SummaryChatHistory,
   TextNode,
   VectorStoreIndex,
   serviceContextFromDefaults,
+  Response,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
@@ -27,7 +28,6 @@ async function createChatEngine(
   datasource?: string,
   embeddings?: Embedding[],
 ) {
-  let contextGenerator;
   if (datasource || embeddings) {
     let index;
     if (embeddings) {
@@ -39,12 +39,14 @@ async function createChatEngine(
     const retriever = index!.asRetriever();
     retriever.similarityTopK = 5;
 
-    contextGenerator = new DefaultContextGenerator({ retriever });
+    return new ContextChatEngine({
+      chatModel: serviceContext.llm,
+      retriever,
+    });
   }
 
-  return new HistoryChatEngine({
+  return new SimpleChatEngine({
     llm: serviceContext.llm,
-    contextGenerator,
   });
 }
 
@@ -75,9 +77,10 @@ async function createIndex(
 }
 
 function createReadableStream(
-  stream: AsyncGenerator<string, void, unknown>,
+  stream: AsyncIterable<Response>,
   chatHistory: ChatHistory,
 ) {
+  const it = stream[Symbol.asyncIterator]();
   let responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
   let aborted = false;
@@ -88,10 +91,12 @@ function createReadableStream(
   const encoder = new TextEncoder();
   const onNext = async () => {
     try {
-      const { value, done } = await stream.next();
+      const { value, done } = await it.next();
       if (aborted) return;
       if (!done) {
-        writer.write(encoder.encode(`data: ${JSON.stringify(value)}\n\n`));
+        writer.write(
+          encoder.encode(`data: ${JSON.stringify(value.response)}\n\n`),
+        );
         onNext();
       } else {
         writer.write(
@@ -168,7 +173,11 @@ export async function POST(request: NextRequest) {
       ? new SummaryChatHistory({ llm, messages })
       : new SimpleChatHistory({ messages });
 
-    const stream = await chatEngine.chat(message, chatHistory, true);
+    const stream = await chatEngine.chat({
+      message,
+      chatHistory,
+      stream: true,
+    });
     const readableStream = createReadableStream(stream, chatHistory);
 
     return new NextResponse(readableStream, {
