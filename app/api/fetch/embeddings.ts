@@ -7,27 +7,27 @@ import {
   Document,
   MetadataMode,
   SentenceSplitter,
+  SimpleNodeParser,
   VectorStoreIndex,
-  getNodesFromDocument,
   serviceContextFromDefaults,
 } from "llamaindex";
 
 export default async function splitAndEmbed(
   document: string,
 ): Promise<Embedding[]> {
-  const nodes = getNodesFromDocument(
-    new Document({ text: document }),
-    new SentenceSplitter({
+  const nodeParser = new SimpleNodeParser({
+    textSplitter: new SentenceSplitter({
       chunkSize: DATASOURCES_CHUNK_SIZE,
       chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
     }),
-  );
-
-  const nodesWithEmbeddings = await VectorStoreIndex.getNodeEmbeddingResults(
-    nodes,
-    serviceContextFromDefaults(),
-    true,
-  );
+  });
+  const nodes = nodeParser.getNodesFromDocuments([
+    new Document({ text: document }),
+  ]);
+  const index = await VectorStoreIndex.fromDocuments(nodes, {
+    serviceContext: serviceContextFromDefaults(),
+  });
+  const nodesWithEmbeddings = await index.getNodeEmbeddingResults(nodes);
 
   return nodesWithEmbeddings.map((nodeWithEmbedding) => ({
     text: nodeWithEmbedding.getContent(MetadataMode.NONE),
