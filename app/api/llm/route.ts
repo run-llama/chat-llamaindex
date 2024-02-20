@@ -3,7 +3,6 @@ import {
   ChatMessage,
   ContextChatEngine,
   IndexDict,
-  OpenAI,
   ServiceContext,
   SimpleChatEngine,
   SimpleChatHistory,
@@ -12,6 +11,7 @@ import {
   VectorStoreIndex,
   serviceContextFromDefaults,
   Response,
+  Ollama,
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
@@ -151,15 +151,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const llm = new OpenAI({
-      model: config.model,
+    const llm = new Ollama({
+      model: "llama2",
       temperature: config.temperature,
       topP: config.topP,
-      maxTokens: config.maxTokens,
     });
 
     const serviceContext = serviceContextFromDefaults({
       llm,
+      embedModel: llm,
       chunkSize: DATASOURCES_CHUNK_SIZE,
       chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
     });
@@ -202,5 +202,3 @@ export async function POST(request: NextRequest) {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// Set max running time of function, for Vercel Hobby use 10 seconds, see https://vercel.com/docs/functions/serverless-functions/runtimes#maxduration
-export const maxDuration = 120;
