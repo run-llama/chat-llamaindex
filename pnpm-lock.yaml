@@ -8,6 +8,9 @@ dependencies:
   '@fortaine/fetch-event-source':
     specifier: ^3.0.6
     version: 3.0.6
+  '@google/generative-ai':
+    specifier: ^0.1.3
+    version: 0.1.3
   '@radix-ui/react-alert-dialog':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
@@ -82,7 +85,7 @@ dependencies:
     version: 0.1.13
   llamaindex:
     specifier: ^0.1.18
-    version: 0.1.18(encoding@0.1.13)(typescript@5.1.6)
+    version: 0.1.18(@google/generative-ai@0.1.3)(encoding@0.1.13)(typescript@5.1.6)
   lucide-react:
     specifier: ^0.277.0
     version: 0.277.0(react@18.2.0)
@@ -393,6 +396,11 @@ packages:
   /@fortaine/fetch-event-source@3.0.6:
     resolution: {integrity: sha512-621GAuLMvKtyZQ3IA6nlDWhV1V/7PGOTNIGLUifxt0KzM+dZIweJ6F3XvQF3QnqeNfS1N7WQ0Kil1Di/lhChEw==}
     engines: {node: '>=16.15'}
+    dev: false
+
+  /@google/generative-ai@0.1.3:
+    resolution: {integrity: sha512-Cm4uJX1sKarpm1mje/MiOIinM7zdUUrQp/5/qGPAgznbdd/B9zup5ehT6c1qGqycFcSopTA1J1HpqHS5kJR8hQ==}
+    engines: {node: '>=18.0.0'}
     dev: false
 
   /@huggingface/jinja@0.1.3:
@@ -2760,7 +2768,7 @@ packages:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
     dev: false
 
-  /chromadb@1.7.3(cohere-ai@7.7.5)(encoding@0.1.13)(openai@4.28.0):
+  /chromadb@1.7.3(@google/generative-ai@0.1.3)(cohere-ai@7.7.5)(encoding@0.1.13)(openai@4.28.0):
     resolution: {integrity: sha512-3GgvQjpqgk5C89x5EuTDaXKbfrdqYDJ5UVyLQ3ZmwxnpetNc+HhRDGjkvXa5KSvpQ3lmKoyDoqnN4tZepfFkbw==}
     engines: {node: '>=14.17.0'}
     peerDependencies:
@@ -2775,6 +2783,7 @@ packages:
       openai:
         optional: true
     dependencies:
+      '@google/generative-ai': 0.1.3
       cliui: 8.0.1
       cohere-ai: 7.7.5(encoding@0.1.13)
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
@@ -5258,7 +5267,7 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /llamaindex@0.1.18(encoding@0.1.13)(typescript@5.1.6):
+  /llamaindex@0.1.18(@google/generative-ai@0.1.3)(encoding@0.1.13)(typescript@5.1.6):
     resolution: {integrity: sha512-Rh7kPqHaOLrQI1TxaHxJhlW+yYKHUpbUr8RV0mZM4Bbyl+nMHz63A0hNRhmzihvsyrVHrmuNawzDpiYVqp4Yeg==}
     engines: {node: '>=18.0.0'}
     dependencies:
@@ -5277,7 +5286,7 @@ packages:
       '@types/pg': 8.11.2
       '@xenova/transformers': 2.15.0
       assemblyai: 4.3.0
-      chromadb: 1.7.3(cohere-ai@7.7.5)(encoding@0.1.13)(openai@4.28.0)
+      chromadb: 1.7.3(@google/generative-ai@0.1.3)(cohere-ai@7.7.5)(encoding@0.1.13)(openai@4.28.0)
       cohere-ai: 7.7.5(encoding@0.1.13)
       file-type: 18.7.0
       js-tiktoken: 1.0.10
