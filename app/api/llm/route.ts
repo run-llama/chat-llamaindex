@@ -2,17 +2,17 @@ import {
   ChatHistory,
   ChatMessage,
   ContextChatEngine,
-  IndexDict,
   OpenAI,
   ServiceContext,
   SimpleChatEngine,
   SimpleChatHistory,
   SummaryChatHistory,
   TextNode,
-  VectorStoreIndex,
   serviceContextFromDefaults,
   Response,
+  VectorStoreIndex,
 } from "llamaindex";
+import { IndexDict } from "llamaindex/indices/json-to-index-struct";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
 import { getDataSource } from "./datasource";

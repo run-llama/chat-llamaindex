@@ -6,6 +6,7 @@ import {
 import {
   Document,
   MetadataMode,
+  OpenAIEmbedding,
   SentenceSplitter,
   SimpleNodeParser,
   VectorStoreIndex,
@@ -15,22 +16,19 @@ import {
 export default async function splitAndEmbed(
   document: string,
 ): Promise<Embedding[]> {
+  const embedModel = new OpenAIEmbedding();
   const nodeParser = new SimpleNodeParser({
-    textSplitter: new SentenceSplitter({
-      chunkSize: DATASOURCES_CHUNK_SIZE,
-      chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
-    }),
+    chunkSize: DATASOURCES_CHUNK_SIZE,
+    chunkOverlap: DATASOURCES_CHUNK_OVERLAP,
   });
   const nodes = nodeParser.getNodesFromDocuments([
     new Document({ text: document }),
   ]);
-  const index = await VectorStoreIndex.fromDocuments(nodes, {
-    serviceContext: serviceContextFromDefaults(),
-  });
-  const nodesWithEmbeddings = await index.getNodeEmbeddingResults(nodes);
+  const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
+  const embeddings = await embedModel.getTextEmbeddingsBatch(texts);
 
-  return nodesWithEmbeddings.map((nodeWithEmbedding) => ({
-    text: nodeWithEmbedding.getContent(MetadataMode.NONE),
-    embedding: nodeWithEmbedding.getEmbedding(),
+  return nodes.map((node, i) => ({
+    text: node.getContent(MetadataMode.NONE),
+    embedding: embeddings[i],
   }));
 }
