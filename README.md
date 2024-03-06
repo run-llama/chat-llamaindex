@@ -73,8 +73,8 @@ LlamaIndex Chat supports the sharing of bots via URLs. Demo bots are read-only a
 
 ## 📀 Data Sources
 
-The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/high_level/chat_engine) for each bot with a [`VectorStoreIndex`](https://ts.llamaindex.ai/modules/high_level/data_index) attached.
-The `cache` folder in the root directory is used as [Storage](https://ts.llamaindex.ai/modules/low_level/storage) for each `VectorStoreIndex`.
+The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/chat_engine) for each bot with a [`VectorStoreIndex`](https://ts.llamaindex.ai/examples/vector_index) attached.
+The `cache` folder in the root directory is used as [Storage](https://ts.llamaindex.ai/modules/storage) for each `VectorStoreIndex`.
 
 Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](./app/bots/bot.data.ts).
 
