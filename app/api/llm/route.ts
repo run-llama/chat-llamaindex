@@ -11,8 +11,8 @@ import {
   serviceContextFromDefaults,
   Response,
   VectorStoreIndex,
-  IndexDict,
-} from "@llamaindex/edge";
+} from "llamaindex";
+import { IndexDict } from "llamaindex/indices/json-to-index-struct";
 import { NextRequest, NextResponse } from "next/server";
 import { LLMConfig, MessageContent } from "@/app/client/platforms/llm";
 import { getDataSource } from "./datasource";
@@ -200,5 +200,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Set max running time of function, for Vercel Hobby use 10 seconds, see https://vercel.com/docs/functions/serverless-functions/runtimes#maxduration
+export const maxDuration = 120;

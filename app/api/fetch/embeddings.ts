@@ -7,8 +7,11 @@ import {
   Document,
   MetadataMode,
   OpenAIEmbedding,
+  SentenceSplitter,
   SimpleNodeParser,
-} from "@llamaindex/edge";
+  VectorStoreIndex,
+  serviceContextFromDefaults,
+} from "llamaindex";
 
 export default async function splitAndEmbed(
   document: string,

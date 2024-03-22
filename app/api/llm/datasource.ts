@@ -1,7 +1,10 @@
 import { DATASOURCES_CACHE_DIR } from "@/scripts/constants.mjs";
-import { VectorStoreIndex, ServiceContext } from "@llamaindex/edge";
-import { storageContextFromDefaults } from "@llamaindex/edge/storage/StorageContext";
-import { SimpleDocumentStore } from "@llamaindex/edge/storage/docStore/SimpleDocumentStore";
+import {
+  VectorStoreIndex,
+  storageContextFromDefaults,
+  ServiceContext,
+  SimpleDocumentStore,
+} from "llamaindex";
 
 export async function getDataSource(
   serviceContext: ServiceContext,
