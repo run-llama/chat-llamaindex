@@ -114,7 +114,6 @@ export default function ChatInput(props: ChatInputProps) {
     );
     setImageFile(undefined);
     setTemporaryURLInput("");
-    setUserInput("");
   };
 
   const manageTemporaryBlobUrl = (
@@ -155,6 +154,7 @@ export default function ChatInput(props: ChatInputProps) {
     if (isURL(input)) {
       setTemporaryURLInput(input);
     }
+    setUserInput("");
     await callLLM({ input, fileDetail: imageFile });
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
