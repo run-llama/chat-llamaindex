@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  chat-llamaindex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: chat-llamaindex
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./cache:/usr/src/app/cache
+      - ./datasources:/usr/src/app/datasources
+    env_file:
+      - .env.development.local
