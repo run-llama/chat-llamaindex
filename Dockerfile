@@ -1,6 +1,10 @@
 # ---- Build Stage ----
 FROM node:18-bookworm-slim AS build
 
+# Install ca-certificates. Issue: #89
+RUN apt-get update
+RUN apt-get install -y ca-certificates
+
 # Set the working directory
 WORKDIR /usr/src/app
 
