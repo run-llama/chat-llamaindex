@@ -30,13 +30,7 @@ export interface ResponseMessage {
   content: string;
 }
 
-export const ALL_MODELS = [
-  "gpt-4",
-  "gpt-4-1106-preview",
-  "gpt-4-vision-preview",
-  "gpt-3.5-turbo",
-  "gpt-3.5-turbo-16k",
-] as const;
+export const ALL_MODELS = ["gpt-4-turbo", "gpt-3.5-turbo"] as const;
 
 export type ModelType = (typeof ALL_MODELS)[number];
 
@@ -63,7 +57,7 @@ export interface ChatOptions {
 const CHAT_PATH = "/api/llm";
 
 export function isVisionModel(model: ModelType) {
-  return model === "gpt-4-vision-preview";
+  return model === "gpt-4-turbo";
 }
 
 export class LLMApi {
@@ -81,14 +75,20 @@ export class LLMApi {
 
     console.log("[Request] payload: ", requestPayload);
 
-    const requestTimeoutId = setTimeout(
-      () => options.controller?.abort(),
-      REQUEST_TIMEOUT_MS,
-    );
+    const forceAbort = () => {
+      options.controller.signal.onabort = null;
+      options.controller.abort();
+    };
 
-    options.controller.signal.onabort = () => options.onFinish();
+    const requestTimeoutId = setTimeout(forceAbort, REQUEST_TIMEOUT_MS);
+
+    options.controller.signal.onabort = () => {
+      options.onFinish();
+    };
+
     const handleError = (e: any) => {
       clearTimeout(requestTimeoutId);
+      forceAbort();
       console.log("[Request] failed to make a chat request", e);
       options.onError?.(e as Error);
     };
@@ -97,7 +97,7 @@ export class LLMApi {
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
-        signal: options.controller?.signal,
+        signal: options.controller.signal,
         headers: {
           "Content-Type": "application/json",
         },
@@ -110,7 +110,7 @@ export class LLMApi {
           clearTimeout(requestTimeoutId);
           if (!res.ok) {
             const json = await res.json();
-            handleError(new Error(json.message));
+            handleError(new Error(json.error));
           }
         },
         onmessage(msg) {
@@ -119,7 +119,7 @@ export class LLMApi {
             if (json.done) {
               options.onFinish(json.memoryMessage);
             } else if (json.error) {
-              options.onError?.(new Error(json.error));
+              handleError(new Error(json.error));
             } else {
               // received a new token
               llmResponse += json;
@@ -128,9 +128,6 @@ export class LLMApi {
           } catch (e) {
             console.error("[Request] error parsing streaming delta", msg);
           }
-        },
-        onclose() {
-          options.onFinish();
         },
         onerror: handleError,
         openWhenHidden: true,
