@@ -151,6 +151,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const allowAllModels = JSON.parse(process.env.ALLOW_ALL_MODELS || "false");
+    if (!allowAllModels && config.model !== "gpt-3.5-turbo") {
+      return NextResponse.json(
+        {
+          error:
+            "Only configured to use GPT 3.5. Change model used by the bot or set 'ALLOW_ALL_MODELS' env variable to 'true'.",
+        },
+        { status: 400 },
+      );
+    }
+
     const llm = new OpenAI({
       model: config.model,
       temperature: config.temperature,

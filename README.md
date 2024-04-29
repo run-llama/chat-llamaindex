@@ -17,7 +17,7 @@
 
 Welcome to [LlamaIndex Chat](https://github.com/run-llama/chat-llamaindex). You can create and share LLM chatbots that know your data (PDF or text documents).
 
-Getting started with LlamaIndex Chat is a breeze. Visit https://chat-llamaindex.vercel.app - a hosted version of LlamaIndex Chat with no user authentication that provides an immediate start.
+Getting started with LlamaIndex Chat is a breeze. Visit https://chat.llamaindex.ai - a hosted version of LlamaIndex Chat with no user authentication that provides an immediate start.
 
 ## 🚀 Features
 
@@ -76,24 +76,28 @@ cp .env.template .env.development.local
 Edit environment variables in `.env.development.local`.
 
 #### Building the Docker Image
+
 ```bash
 docker build -t chat-llamaindex .
 ```
 
 #### Running in a Docker Container
+
 ```bash
 docker run -p 3000:3000 --env-file .env.development.local chat-llamaindex
 ```
 
 #### Docker Compose
+
 For those preferring Docker Compose, we've included a docker-compose.yml file. To run using Docker Compose:
 
 ```bash
 docker compose up
 ```
+
 Go to http://localhost:3000 in your web browser.
 
-__Note__: By default, the Docker Compose setup maps the `cache` and `datasources` directories from your host machine to the Docker container, ensuring data persistence and accessibility between container restarts.
+**Note**: By default, the Docker Compose setup maps the `cache` and `datasources` directories from your host machine to the Docker container, ensuring data persistence and accessibility between container restarts.
 
 ### Vercel Deployment
 
