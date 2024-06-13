@@ -36,7 +36,11 @@ mkdir -p ../config
 cp -r create_llama/app/components/* components/chat/chat-session
 cp -r create_llama/app/api/* api
 cp -r create_llama/app/observability/* observability
+
+# copy configs, env
 cp -r create_llama/config/* ../config
+rm -rf ../.env.development.local
+cp create_llama/.env ../.env.development.local
 
 # Clean up unnecessary files
 rm -rf create_llama

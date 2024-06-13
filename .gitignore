@@ -53,3 +53,4 @@ app/api/chat/
 app/api/files/
 app/observability/
 config/
+cache/vector_store.json
