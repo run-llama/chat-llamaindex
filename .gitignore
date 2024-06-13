@@ -47,4 +47,9 @@ dev
 # Sentry Config File
 .sentryclirc
 
+# create-llama copies
 app/components/chat/chat-session/
+app/api/chat/
+app/api/files/
+app/observability/
+config/

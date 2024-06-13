@@ -39,7 +39,7 @@
     "dotenv": "^16.4.5",
     "emoji-picker-react": "^4.9.2",
     "encoding": "^0.1.13",
-    "llamaindex": "^0.2.8",
+    "llamaindex": "^0.3.16",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.9.0",
     "nanoid": "^5.0.7",
@@ -73,7 +73,11 @@
     "@llamaindex/pdf-viewer": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.3",
     "vaul": "^0.9.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "@e2b/code-interpreter": "^0.0.5",
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "got": "10.7.0",
+    "ajv": "^8.12.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
