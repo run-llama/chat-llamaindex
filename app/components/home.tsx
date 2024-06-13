@@ -26,9 +26,13 @@ const SettingsPage = dynamic(
   },
 );
 
-const ChatPage = dynamic(async () => (await import("./chat/chat")).Chat, {
-  loading: () => <LoadingPage />,
-});
+const ChatPage = dynamic(
+  async () =>
+    (await import("@/app/components/chat/chat-session/chat-section")).default,
+  {
+    loading: () => <LoadingPage />,
+  },
+);
 
 const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -120,7 +124,14 @@ function Screen() {
         {showSidebarOnMobile && <SideBar />}
         <div className="flex-1 overflow-hidden">
           <Routes>
-            <Route path={Path.Chat} element={<ChatPage />} />
+            <Route
+              path={Path.Chat}
+              element={
+                <div className="p-4 w-full h-full">
+                  <ChatPage />
+                </div>
+              }
+            />
             <Route path={Path.Settings} element={<SettingsPage />} />
           </Routes>
         </div>
