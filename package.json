@@ -72,7 +72,8 @@
     "react-syntax-highlighter": "^15.5.0",
     "@llamaindex/pdf-viewer": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.3",
-    "vaul": "^0.9.1"
+    "vaul": "^0.9.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
@@ -88,6 +89,7 @@
     "lint-staged": "^13.3.0",
     "prettier": "^3.2.5",
     "typescript": "5.1.6",
-    "@types/react-syntax-highlighter": "^15.5.11"
+    "@types/react-syntax-highlighter": "^15.5.11",
+    "@types/uuid": "^9.0.8"
   }
 }

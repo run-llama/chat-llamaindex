@@ -31,4 +31,4 @@ mkdir -p components/chat/chat-session
 cp -r create_llama/app/components/* components/chat/chat-session
 
 # Remove the create_llama directory
-# rm -rf create_llama
+rm -rf create_llama
