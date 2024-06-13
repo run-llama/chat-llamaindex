@@ -30,5 +30,6 @@ npx -y create-llama@0.1.10 \
 mkdir -p components/chat/chat-session
 cp -r create_llama/app/components/* components/chat/chat-session
 
-# Remove the create_llama directory
+# Clean up unnecessary files
 rm -rf create_llama
+rm -rf components/chat/chat-session/header.tsx
