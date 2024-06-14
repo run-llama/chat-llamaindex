@@ -2,8 +2,17 @@ import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LLMConfig } from "../client/platforms/llm";
-import { ChatSession, ChatMessage, createEmptySession } from "./session";
-import { DEMO_BOTS, createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
+import {
+  DEMO_BOTS,
+  createDemoBots,
+  createEmptyBot,
+  createEmptySession,
+} from "./bot.data";
+import { Message } from "ai";
+
+export interface ChatSession {
+  messages: Message[];
+}
 
 export type Share = {
   id: string;
@@ -14,7 +23,7 @@ export type Bot = {
   avatar: string;
   name: string;
   hideContext: boolean;
-  context: ChatMessage[];
+  context: Message[];
   modelConfig: LLMConfig;
   readOnly: boolean;
   botHello: string | null;

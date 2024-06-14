@@ -1,8 +1,7 @@
-import { Bot } from "@/app/store/bot";
+import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 import { ModelType } from "@/app/client/platforms/llm";
-import { createEmptySession } from "../store";
 
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
@@ -34,6 +33,7 @@ export const DEMO_BOTS: DemoBot[] = [
       {
         role: "system",
         content: TEMPLATE("Red Hat Linux Expert"),
+        id: "demo-bot-3-system-message",
       },
     ],
     modelConfig: {
@@ -55,6 +55,7 @@ export const DEMO_BOTS: DemoBot[] = [
       {
         role: "system",
         content: TEMPLATE("Apple Genius specialized in Apple Watches"),
+        id: "demo-bot-4-system-message",
       },
     ],
     modelConfig: {
@@ -76,6 +77,7 @@ export const DEMO_BOTS: DemoBot[] = [
       {
         role: "system",
         content: TEMPLATE("Lawyer specialized in the basic law of Germany"),
+        id: "demo-bot-5-system-message",
       },
     ],
     modelConfig: {
@@ -117,3 +119,9 @@ export const createEmptyBot = (): Bot => ({
   hideContext: false,
   session: createEmptySession(),
 });
+
+export function createEmptySession(): ChatSession {
+  return {
+    messages: [],
+  };
+}
