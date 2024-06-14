@@ -1,4 +1,4 @@
-import ChatSection from "./chat-session/chat-section";
+import ChatSection from "./chat-session";
 import ChatHeader from "./chat-header";
 
 export default function ChatPage() {
