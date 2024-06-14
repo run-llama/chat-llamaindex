@@ -1,9 +1,13 @@
 import ChatSection from "./chat-session/chat-section";
+import ChatHeader from "./chat-header";
 
 export default function ChatPage() {
   return (
-    <div className="p-4 w-full h-full">
-      <ChatSection />
+    <div className="flex flex-col gap-4 h-full w-full p-4">
+      <ChatHeader />
+      <div className="flex-1">
+        <ChatSection />
+      </div>
     </div>
   );
 }
