@@ -45,3 +45,4 @@ cp create_llama/.env ../.env.development.local
 # Clean up unnecessary files
 rm -rf create_llama
 rm -rf components/chat/chat-session/header.tsx
+rm -rf components/chat/chat-session/chat-section.tsx
