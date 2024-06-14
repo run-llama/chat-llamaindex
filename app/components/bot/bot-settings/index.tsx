@@ -1,6 +1,8 @@
+import { ContextPrompts } from "@/app/components/bot/bot-settings/context-prompt";
 import { useBot } from "@/app/components/bot/use-bot";
 import BotConfig from "./bot-config";
 import { ModelConfigList } from "./model-config";
+import { Separator } from "@/app/components/ui/separator";
 import { LLMConfig } from "@/app/store/bot";
 
 export default function BotSettings(props: { extraConfigs?: JSX.Element }) {
@@ -15,8 +17,7 @@ export default function BotSettings(props: { extraConfigs?: JSX.Element }) {
   };
   return (
     <div className="space-y-5 pb-5">
-      {/* TODO: Handle context prompts later */}
-      {/* <ContextPrompts
+      <ContextPrompts
         context={bot.context}
         updateContext={(updater) => {
           const context = bot.context.slice();
@@ -24,7 +25,7 @@ export default function BotSettings(props: { extraConfigs?: JSX.Element }) {
           updateBot((bot) => (bot.context = context));
         }}
       />
-      <Separator /> */}
+      <Separator />
       <BotConfig />
       <ModelConfigList
         modelConfig={{ ...bot.modelConfig }}

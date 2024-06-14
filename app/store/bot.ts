@@ -9,6 +9,15 @@ import {
 } from "./bot.data";
 import { Message } from "ai";
 
+export const MESSAGE_ROLES: Message["role"][] = [
+  "system",
+  "user",
+  "assistant",
+  "function",
+  "data",
+  "tool",
+];
+
 export const ALL_MODELS = ["gpt-4-turbo", "gpt-3.5-turbo"] as const;
 
 export type ModelType = (typeof ALL_MODELS)[number];
