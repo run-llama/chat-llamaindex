@@ -1,7 +1,6 @@
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { LLMConfig } from "../client/platforms/llm";
 import {
   DEMO_BOTS,
   createDemoBots,
@@ -9,6 +8,18 @@ import {
   createEmptySession,
 } from "./bot.data";
 import { Message } from "ai";
+
+export const ALL_MODELS = ["gpt-4-turbo", "gpt-3.5-turbo"] as const;
+
+export type ModelType = (typeof ALL_MODELS)[number];
+
+export interface LLMConfig {
+  model: ModelType;
+  temperature?: number;
+  topP?: number;
+  sendMemory?: boolean;
+  maxTokens?: number;
+}
 
 export interface ChatSession {
   messages: Message[];
