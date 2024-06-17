@@ -9,6 +9,7 @@ import { createCallbackManager, createStreamTimeout } from "./stream-helper";
 import { LLMConfig } from "@/app/store/bot";
 
 initObservability();
+initSettings();
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,9 +40,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
-    initSettings(modelConfig);
-    const chatEngine = await createChatEngine({ datasource });
+    const chatEngine = await createChatEngine({ datasource, modelConfig });
 
     let annotations = userMessage.annotations;
     if (!annotations) {
