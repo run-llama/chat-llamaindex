@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { messages, context, modelConfig } = body as ChatRequestBody;
+    const { messages, context, modelConfig, datasource } =
+      body as ChatRequestBody;
     const userMessage = messages.pop();
     if (!messages || !userMessage || userMessage.role !== "user") {
       return NextResponse.json(
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     initSettings(modelConfig);
-    const chatEngine = await createChatEngine();
+    const chatEngine = await createChatEngine({ datasource });
 
     let annotations = userMessage.annotations;
     if (!annotations) {
