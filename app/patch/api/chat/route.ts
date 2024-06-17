@@ -1,6 +1,6 @@
 import { initObservability } from "@/app/observability";
 import { Message, StreamData, StreamingTextResponse } from "ai";
-import { ChatMessage, Settings } from "llamaindex";
+import { ChatMessage, OpenAI, Settings } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
@@ -40,7 +40,14 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const chatEngine = await createChatEngine({ datasource, modelConfig });
+
+    // Create chat engine instance with llm config from request
+    const chatEngine = await Settings.withLLM(
+      new OpenAI(modelConfig),
+      async () => {
+        return await createChatEngine({ datasource });
+      },
+    );
 
     let annotations = userMessage.annotations;
     if (!annotations) {

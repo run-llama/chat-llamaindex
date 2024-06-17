@@ -1,25 +1,15 @@
-import {
-  BaseToolWithCall,
-  OpenAI,
-  OpenAIAgent,
-  QueryEngineTool,
-} from "llamaindex";
+import { BaseToolWithCall, OpenAIAgent, QueryEngineTool } from "llamaindex";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { getDataSource } from "./index";
 import { STORAGE_CACHE_DIR } from "./shared";
 import { createTools } from "./tools";
-import { LLMConfig } from "@/app/store/bot";
 
 interface ChatEngineOptions {
   datasource?: string;
-  modelConfig: LLMConfig;
 }
 
-export async function createChatEngine({
-  datasource,
-  modelConfig,
-}: ChatEngineOptions) {
+export async function createChatEngine({ datasource }: ChatEngineOptions) {
   const tools: BaseToolWithCall[] = [];
 
   if (datasource) {
@@ -53,10 +43,8 @@ export async function createChatEngine({
     tools.push(...(await createTools(toolConfig)));
   }
 
-  const llm = new OpenAI(modelConfig);
   return new OpenAIAgent({
     tools,
     systemPrompt: process.env.SYSTEM_PROMPT,
-    llm,
   });
 }
