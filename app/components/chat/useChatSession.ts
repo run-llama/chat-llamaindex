@@ -30,6 +30,11 @@ export function useChatSession() {
     headers: {
       "Content-Type": "application/json", // using JSON because of vercel/ai 2.2.26
     },
+    body: {
+      context: bot.context,
+      modelConfig: bot.modelConfig,
+      datasource: bot.datasource,
+    },
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
       const message = JSON.parse(error.message);
