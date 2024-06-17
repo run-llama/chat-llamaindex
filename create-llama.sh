@@ -24,7 +24,7 @@ npx -y create-llama@0.1.10 \
     --tools none \
     --post-install-action none \
     --no-llama-parse \
-    --no-files \
+    --example-file \
     --vector-db none \
     --use-pnpm \
     -- create_llama
@@ -40,8 +40,7 @@ cp -r create_llama/app/observability/* observability
 # patch files
 cp -r ../patch/* ./
 
-# copy configs, env
-cp -r create_llama/config/* ../config
+# copy env
 rm -rf ../.env.development.local
 cp create_llama/.env ../.env.development.local
 
