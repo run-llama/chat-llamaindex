@@ -38,7 +38,7 @@ cp -r create_llama/app/api/* api
 cp -r create_llama/app/observability/* observability
 
 # patch files
-cp -r patch/api/* api
+cp -r ../patch/* ./
 
 # copy configs, env
 cp -r create_llama/config/* ../config
