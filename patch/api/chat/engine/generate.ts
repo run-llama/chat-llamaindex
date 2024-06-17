@@ -7,8 +7,8 @@ import { getDocuments } from "./loader";
 import { initSettings } from "./settings";
 import { STORAGE_CACHE_DIR } from "./shared";
 
-// Load environment variables from local .env file
-dotenv.config();
+// Load environment variables from local .env.development.local file
+dotenv.config({ path: ".env.development.local" });
 
 async function getRuntime(func: any) {
   const start = Date.now();

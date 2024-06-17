@@ -29,20 +29,16 @@ npx -y create-llama@0.1.10 \
     --use-pnpm \
     -- create_llama
 
-# copy components and apis
+# copy components, apis, env
 mkdir -p components/chat/chat-session
 mkdir -p observability
-mkdir -p ../config
 cp -r create_llama/app/components/* components/chat/chat-session
 cp -r create_llama/app/api/* api
 cp -r create_llama/app/observability/* observability
+cp create_llama/.env ../.env.development.local
 
 # patch files
 cp -r ../patch/* ./
-
-# copy env
-rm -rf ../.env.development.local
-cp create_llama/.env ../.env.development.local
 
 # Clean up unnecessary files
 rm -rf create_llama
