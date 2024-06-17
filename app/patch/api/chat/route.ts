@@ -2,20 +2,22 @@ import { initObservability } from "@/app/observability";
 import { Message, StreamData, StreamingTextResponse } from "ai";
 import { ChatMessage, Settings } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
-import { ChatConfig, createChatEngine } from "./engine/chat";
+import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
 import { LlamaIndexStream, convertMessageContent } from "./llamaindex-stream";
 import { createCallbackManager, createStreamTimeout } from "./stream-helper";
+import { LLMConfig } from "@/app/store/bot";
 
 initObservability();
-initSettings();
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-interface ChatRequestBody extends ChatConfig {
+interface ChatRequestBody {
   messages: Message[];
   context: Message[];
+  modelConfig: LLMConfig;
+  datasource?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { messages, context, ...chatConfig } = body as ChatRequestBody;
+    const { messages, context, modelConfig } = body as ChatRequestBody;
     const userMessage = messages.pop();
     if (!messages || !userMessage || userMessage.role !== "user") {
       return NextResponse.json(
@@ -37,7 +39,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const chatEngine = await createChatEngine(chatConfig);
+    initSettings(modelConfig);
+    const chatEngine = await createChatEngine();
 
     let annotations = userMessage.annotations;
     if (!annotations) {
