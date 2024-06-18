@@ -4,13 +4,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "create-llama.sh && next build",
+    "create-llama": "bash create-llama.sh",
+    "build": "npm run create-llama && next build",
     "start": "next start",
     "lint": "next lint",
     "format:check": "prettier --check --ignore-path .gitignore app",
     "format": "prettier --write --ignore-path .gitignore app",
     "prepare": "husky install",
-    "generate": "tsx app\\api\\chat\\engine\\generate.ts"
+    "generate:win": "tsx app\\api\\chat\\engine\\generate.ts",
+    "generate": "tsx app/api/chat/engine/generate.ts"
   },
   "dependencies": {
     "@fortaine/fetch-event-source": "^3.0.6",

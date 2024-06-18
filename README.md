@@ -41,18 +41,22 @@ git clone https://github.com/run-llama/chat-llamaindex
 cd chat-llamaindex
 ```
 
-- Set the environment variables
+- Prepare the project
 
 ```bash
-cp .env.template .env.development.local
+pnpm install
+pnpm run create-llama
 ```
 
-Edit environment variables in `.env.development.local`.
+> **Note**: The last step copies the necessary files from the create-llama project
+
+- Set the environment variables
+
+Edit environment variables in `.env.development.local`. Especially check your `OPenAI_API_KEY`.
 
 - Run the dev server
 
 ```bash
-pnpm install
 pnpm dev
 ```
 
@@ -133,6 +137,8 @@ pnpm run generate <datasource-name>
 ```
 
 Where `<datasource-name>` is the name of the subfolder with your data files.
+
+> **Note**: On Windows, use `pnpm run generate:win <datasource-name>` instead.
 
 ## 🙏 Thanks
 

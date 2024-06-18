@@ -52,3 +52,4 @@ app/components/chat/chat-session/
 app/api/chat/
 app/api/files/
 app/observability/
+app/create_llama/
