@@ -48,6 +48,6 @@ dev
 .sentryclirc
 
 # create-llama copies
-app/api/chat/
+app/api/chat/config/
 app/api/files/
 cl/

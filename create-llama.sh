@@ -3,7 +3,7 @@
 echo -e "\nAdding sources from create-llama..."
 
 # Remove any existing copy
-rm -rf app/api/chat
+rm -rf app/api/chat/config
 rm -rf app/api/files
 rm -rf config
 rm -rf cl
@@ -25,12 +25,13 @@ npx -y create-llama@0.1.10 \
     --use-pnpm \
     -- cl >/dev/null
 
-# copy components, apis, env
-cp -r cl/app/api/* app/api
-cp cl/.env .env.development.local
+# copy routes from create-llama to app
+# Note: if changes on these routes are needed, copy them to the project's app folder
+cp -r cl/app/api/files app/api/files
+cp -r cl/app/api/chat/config app/api/chat/config
 
-# patch files
-cp -r patch/* ./app
+# copy example .env file
+cp cl/.env .env.development.local
 
 # remove page.tsx and route.ts files from create-llama (otherwise they are included in the build)
 # XXX: Is there a Vercel config to disable this?
