@@ -33,6 +33,3 @@ cp -r cl/app/api/chat/config app/api/chat/config
 # copy example .env file
 cp cl/.env .env.development.local
 
-# remove page.tsx and route.ts files from create-llama (otherwise they are included in the build)
-# XXX: Is there a Vercel config to disable this?
-find cl/ -type f \( -name "page.tsx" -o -name "route.ts" \) -exec rm -f {} \;
