@@ -3,7 +3,7 @@
 import { useBotStore } from "@/app/store/bot";
 import { useChat } from "ai/react";
 import { useCallback, useEffect, useState } from "react";
-import { useClientConfig } from "./chat-session/ui/chat/hooks/use-config";
+import { useClientConfig } from "@/cl/app/components/ui/chat/hooks/use-config";
 
 // Combine useChat and useBotStore to manage chat session
 export function useChatSession() {

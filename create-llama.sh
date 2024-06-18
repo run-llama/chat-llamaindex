@@ -2,16 +2,11 @@
 
 echo -e "\nAdding sources from create-llama..."
 
-# Go to the app directory
-cd app
-
 # Remove any existing copy
-rm -rf components/chat/chat-session
-rm -rf api/chat
-rm -rf api/files
-rm -rf observability
-rm -rf ../config
-rm -rf create_llama
+rm -rf app/api/chat
+rm -rf app/api/files
+rm -rf config
+rm -rf cl
 
 # Run the node command with specified options
 npx -y create-llama@0.1.10 \
@@ -28,19 +23,15 @@ npx -y create-llama@0.1.10 \
     --example-file \
     --vector-db none \
     --use-pnpm \
-    -- create_llama >/dev/null
+    -- cl >/dev/null
 
 # copy components, apis, env
-mkdir -p components/chat/chat-session
-mkdir -p observability
-cp -r create_llama/app/components/* components/chat/chat-session
-cp -r create_llama/app/api/* api
-cp -r create_llama/app/observability/* observability
-cp create_llama/.env ../.env.development.local
+cp -r cl/app/api/* app/api
+cp cl/.env .env.development.local
 
 # patch files
-cp -r ../patch/* ./
+cp -r patch/* ./app
 
-# Clean up unnecessary files
-rm -rf components/chat/chat-session/header.tsx
-rm -rf components/chat/chat-session/chat-section.tsx
+# remove page.tsx and route.ts files from create-llama (otherwise they are included in the build)
+# XXX: Is there a Vercel config to disable this?
+find cl/ -type f \( -name "page.tsx" -o -name "route.ts" \) -exec rm -f {} \;

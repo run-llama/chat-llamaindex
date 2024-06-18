@@ -1,7 +1,7 @@
 "use client";
 
 import { useChatSession } from "./useChatSession";
-import { ChatInput, ChatMessages } from "./chat-session/ui/chat";
+import { ChatInput, ChatMessages } from "@/cl/app/components/ui/chat";
 
 // Custom ChatSection for ChatLlamaindex
 export default function ChatSection() {

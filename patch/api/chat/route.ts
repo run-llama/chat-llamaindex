@@ -1,4 +1,3 @@
-import { initObservability } from "@/app/observability";
 import { Message, StreamData, StreamingTextResponse } from "ai";
 import { ChatMessage, OpenAI, Settings } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,7 +7,6 @@ import { LlamaIndexStream, convertMessageContent } from "./llamaindex-stream";
 import { createCallbackManager, createStreamTimeout } from "./stream-helper";
 import { LLMConfig } from "@/app/store/bot";
 
-initObservability();
 initSettings();
 
 export const runtime = "nodejs";
