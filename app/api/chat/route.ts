@@ -3,8 +3,14 @@ import { ChatMessage, OpenAI, Settings } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
-import { LlamaIndexStream, convertMessageContent } from "./llamaindex-stream";
-import { createCallbackManager, createStreamTimeout } from "./stream-helper";
+import {
+  LlamaIndexStream,
+  convertMessageContent,
+} from "@/cl/app/api/chat/llamaindex-stream";
+import {
+  createCallbackManager,
+  createStreamTimeout,
+} from "@/cl/app/api/chat/stream-helper";
 import { LLMConfig } from "@/app/store/bot";
 
 initSettings();
