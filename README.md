@@ -48,11 +48,11 @@ pnpm install
 pnpm run create-llama
 ```
 
-> **Note**: The last step copies the necessary files from the create-llama project
+> **Note**: The last step copies the chat UI component and file server route from the [create-llama](https://github.com/run-llama/create-llama) project, see [./create-llama.sh](./create-llama.sh).
 
 - Set the environment variables
 
-Edit environment variables in `.env.development.local`. Especially check your `OPenAI_API_KEY`.
+Edit environment variables in `.env.development.local`. Especially check your `OPENAI_API_KEY`.
 
 - Run the dev server
 
@@ -63,21 +63,6 @@ pnpm dev
 ### 🐳 Docker
 
 You can use Docker for development and deployment of LlamaIndex Chat.
-
-- Clone the repository
-
-```bash
-git clone https://github.com/run-llama/chat-llamaindex
-cd chat-llamaindex
-```
-
-- Set the environment variables
-
-```bash
-cp .env.template .env.development.local
-```
-
-Edit environment variables in `.env.development.local`.
 
 #### Building the Docker Image
 
