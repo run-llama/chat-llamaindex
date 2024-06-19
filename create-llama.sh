@@ -2,10 +2,7 @@
 
 echo -e "\nAdding sources from create-llama..."
 
-# Remove any existing copy
-rm -rf app/api/chat/config
-rm -rf app/api/files
-rm -rf config
+# Remove current create-llama folder
 rm -rf cl
 
 # Run the node command with specified options
