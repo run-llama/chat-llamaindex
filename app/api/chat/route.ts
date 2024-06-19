@@ -1,5 +1,11 @@
 import { Message, StreamData, StreamingTextResponse } from "ai";
-import { ChatMessage, OpenAI, Settings } from "llamaindex";
+import {
+  ChatMessage,
+  OpenAI,
+  Settings,
+  SimpleChatHistory,
+  SummaryChatHistory,
+} from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
@@ -46,12 +52,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create chat engine instance with llm config from request
-    const chatEngine = await Settings.withLLM(
-      new OpenAI(modelConfig),
-      async () => {
-        return await createChatEngine({ datasource });
-      },
-    );
+    const llm = new OpenAI(modelConfig);
+    const chatEngine = await Settings.withLLM(llm, async () => {
+      return await createChatEngine({ datasource });
+    });
 
     let annotations = userMessage.annotations;
     if (!annotations) {
@@ -76,7 +80,10 @@ export async function POST(request: NextRequest) {
     const callbackManager = createCallbackManager(vercelStreamData);
 
     // Append context messages to the top of the chat history
-    const chatHistory = context.concat(messages) as ChatMessage[];
+    const chatMessages = context.concat(messages) as ChatMessage[];
+    const chatHistory = modelConfig.sendMemory
+      ? new SummaryChatHistory({ messages: chatMessages, llm })
+      : new SimpleChatHistory({ messages: chatMessages });
 
     // Calling LlamaIndex's ChatEngine to get a streamed response
     const response = await Settings.withCallbackManager(callbackManager, () => {
