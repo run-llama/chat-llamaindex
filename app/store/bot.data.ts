@@ -1,4 +1,4 @@
-import { Bot, ChatSession, ModelType } from "@/app/store/bot";
+import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 
@@ -107,7 +107,7 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-4-1106-preview" as ModelType,
+    model: "gpt-4-1106-preview",
     temperature: 0.5,
     maxTokens: 4096,
     sendMemory: false,
