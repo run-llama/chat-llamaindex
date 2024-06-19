@@ -103,7 +103,7 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-4-1106-preview",
+    model: "gpt-3.5-turbo",
     temperature: 0.5,
     maxTokens: 4096,
     sendMemory: false,
