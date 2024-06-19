@@ -19,7 +19,7 @@ export default function BotConfig() {
       <div className="font-semibold mb-2">{Locale.Bot.Config.Title}</div>
       <Card>
         <CardContent className="divide-y p-5">
-          <ConfigItem title={Locale.Bot.Config.Datasource}>
+          <ConfigItem title={Locale.Bot.Config.Name}>
             <Input
               type="text"
               value={bot.name}
@@ -30,7 +30,7 @@ export default function BotConfig() {
               }
             />
           </ConfigItem>
-          <ConfigItem title={Locale.Settings.Model}>
+          <ConfigItem title={Locale.Bot.Config.Datasource}>
             <Select
               value={bot.datasource}
               onValueChange={(value) => {
