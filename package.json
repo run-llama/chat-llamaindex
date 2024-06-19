@@ -4,13 +4,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "create-llama": "bash create-llama.sh",
+    "build": "npm run create-llama && next build",
     "start": "next start",
     "lint": "next lint",
     "format:check": "prettier --check --ignore-path .gitignore app",
     "format": "prettier --write --ignore-path .gitignore app",
     "prepare": "husky install",
-    "generate": "node ./scripts/generate.mjs"
+    "generate:win": "tsx app\\api\\chat\\engine\\generate.ts",
+    "generate": "tsx app/api/chat/engine/generate.ts"
   },
   "dependencies": {
     "@fortaine/fetch-event-source": "^3.0.6",
@@ -39,7 +41,7 @@
     "dotenv": "^16.4.5",
     "emoji-picker-react": "^4.9.2",
     "encoding": "^0.1.13",
-    "llamaindex": "^0.2.8",
+    "llamaindex": "^0.3.16",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.9.0",
     "nanoid": "^5.0.7",
@@ -67,7 +69,17 @@
     "unified": "^10.1.2",
     "unist-util-remove": "^4.0.0",
     "use-debounce": "^9.0.4",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "ai": "^3.0.21",
+    "react-syntax-highlighter": "^15.5.0",
+    "@llamaindex/pdf-viewer": "^1.1.1",
+    "@radix-ui/react-collapsible": "^1.0.3",
+    "vaul": "^0.9.1",
+    "uuid": "^9.0.1",
+    "@e2b/code-interpreter": "^0.0.5",
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "got": "10.7.0",
+    "ajv": "^8.12.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
@@ -82,6 +94,9 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
     "prettier": "^3.2.5",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "@types/react-syntax-highlighter": "^15.5.11",
+    "@types/uuid": "^9.0.8",
+    "tsx": "^4.7.2"
   }
 }

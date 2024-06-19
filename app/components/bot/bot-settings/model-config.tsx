@@ -10,11 +10,7 @@ import {
 import Locale from "../../../locales";
 import { Card, CardContent } from "../../ui/card";
 import ConfigItem from "./config-item";
-import {
-  ALL_MODELS,
-  ModelType,
-  LLMConfig,
-} from "../../../client/platforms/llm";
+import { ALL_MODELS, ModelType, LLMConfig } from "@/app/store/bot";
 
 function limitNumber(
   x: number,

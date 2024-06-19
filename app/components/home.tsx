@@ -26,7 +26,7 @@ const SettingsPage = dynamic(
   },
 );
 
-const ChatPage = dynamic(async () => (await import("./chat/chat")).Chat, {
+const ChatPage = dynamic(async () => (await import("./chat/index")).default, {
   loading: () => <LoadingPage />,
 });
 

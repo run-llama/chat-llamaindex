@@ -3,26 +3,27 @@ import "./styles/lib/markdown.css";
 import "./styles/lib/highlight.css";
 
 import Locale from "./locales";
-import { type Metadata } from "next";
+import { Viewport, type Metadata } from "next";
 import { Toaster } from "@/app/components/ui/toaster";
 import { ThemeProvider } from "@/app/components/layout/theme-provider";
 
 export const metadata: Metadata = {
   title: Locale.Welcome.Title,
   description: Locale.Welcome.SubTitle,
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
   appleWebApp: {
     title: Locale.Welcome.Title,
     statusBarStyle: "default",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

@@ -13,10 +13,9 @@ export default function ChatHeader() {
   const botStore = useBotStore();
   const bot = botStore.currentBot();
   const session = botStore.currentSession();
-  const numberOfMessages =
-    (bot.botHello?.length ? 1 : 0) + session.messages.length;
+  const numberOfMessages = session.messages.length;
   return (
-    <div className="relative">
+    <div className="relative shadow-md rounded-xl shrink-0">
       <div className="absolute top-4 left-5">
         {isMobileScreen && (
           <Button
@@ -29,7 +28,7 @@ export default function ChatHeader() {
           </Button>
         )}
       </div>
-      <div className="text-center py-4">
+      <div className="text-center py-2">
         <Typography.H4>{bot.name}</Typography.H4>
         <div className="text-sm text-muted-foreground">
           {Locale.Chat.SubTitle(numberOfMessages)}

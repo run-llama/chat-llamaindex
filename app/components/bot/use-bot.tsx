@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Path } from "../../constant";
 import { Bot, useBotStore } from "../../store/bot";
 import { useSidebarContext } from "../home";
-import { Updater } from "@/app/typing";
+
+type Updater<T> = (updater: (value: T) => void) => void;
 
 const BotItemContext = createContext<{
   bot: Bot;

@@ -3,7 +3,7 @@ import { useBot } from "@/app/components/bot/use-bot";
 import BotConfig from "./bot-config";
 import { ModelConfigList } from "./model-config";
 import { Separator } from "@/app/components/ui/separator";
-import { LLMConfig } from "@/app/client/platforms/llm";
+import { LLMConfig } from "@/app/store/bot";
 
 export default function BotSettings(props: { extraConfigs?: JSX.Element }) {
   const { bot, updateBot } = useBot();

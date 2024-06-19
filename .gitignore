@@ -46,3 +46,8 @@ dev
 *.key.pub
 # Sentry Config File
 .sentryclirc
+
+# create-llama copies
+app/api/chat/config/
+app/api/files/
+cl/

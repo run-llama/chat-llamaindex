@@ -1,9 +1,44 @@
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { LLMConfig } from "../client/platforms/llm";
-import { ChatSession, ChatMessage, createEmptySession } from "./session";
-import { DEMO_BOTS, createDemoBots, createEmptyBot } from "@/app/bots/bot.data";
+import {
+  DEMO_BOTS,
+  createDemoBots,
+  createEmptyBot,
+  createEmptySession,
+} from "./bot.data";
+import { Message } from "ai";
+
+export const MESSAGE_ROLES: Message["role"][] = [
+  "system",
+  "user",
+  "assistant",
+  "function",
+  "data",
+  "tool",
+];
+
+export const ALL_MODELS = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] as const;
+
+export const AVAILABLE_DATASOURCES = [
+  "redhat",
+  "watchos",
+  "basic_law_germany",
+] as const;
+
+export type ModelType = (typeof ALL_MODELS)[number];
+
+export interface LLMConfig {
+  model: ModelType;
+  temperature?: number;
+  topP?: number;
+  sendMemory?: boolean;
+  maxTokens?: number;
+}
+
+export interface ChatSession {
+  messages: Message[];
+}
 
 export type Share = {
   id: string;
@@ -13,8 +48,7 @@ export type Bot = {
   id: string;
   avatar: string;
   name: string;
-  hideContext: boolean;
-  context: ChatMessage[];
+  context: Message[];
   modelConfig: LLMConfig;
   readOnly: boolean;
   botHello: string | null;

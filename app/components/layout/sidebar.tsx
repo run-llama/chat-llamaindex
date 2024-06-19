@@ -17,8 +17,8 @@ export function SideBar(props: { className?: string }) {
   const { setShowSidebar } = useSidebarContext();
 
   return (
-    <div className="h-full relative group border-r w-full md:w-[300px]">
-      <div className="w-full h-full p-5 flex flex-col gap-5">
+    <div className="h-full relative group w-full md:w-[360px] p-4">
+      <div className="w-full h-full p-5 flex flex-col gap-5 shadow-2xl rounded-xl">
         <div className="flex flex-col flex-1">
           <div className="mb-5 flex justify-between gap-5 items-start">
             <div>

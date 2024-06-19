@@ -8,28 +8,10 @@ import {
 } from "@/app/components/ui/select";
 import { Textarea } from "@/app/components/ui/textarea";
 import { ArrowDownLeftSquare, PlusCircle, XCircle } from "lucide-react";
-import { useQuery } from "react-query";
-import { MESSAGE_ROLES } from "../../../client/platforms/llm";
 import Locale from "../../../locales";
-import { ChatMessage } from "../../../store";
-import { fetchSiteContent, isURL } from "../../../client/fetch/url";
-
-interface PromptInputStatusProps {
-  status: "loading" | "success" | "error";
-  detail: string;
-}
-
-const promptInputStatusStyle = {
-  loading: "text-yellow-500",
-  success: "text-primary",
-  error: "text-destructive",
-};
-
-function ContextPromptInputStatus(props: PromptInputStatusProps) {
-  return (
-    <div className={promptInputStatusStyle[props.status]}>{props.detail}</div>
-  );
-}
+import { Message as ChatMessage } from "ai";
+import { v4 as uuidv4 } from "uuid";
+import { MESSAGE_ROLES } from "@/app/store/bot";
 
 function ContextPromptItem(props: {
   index: number;
@@ -38,77 +20,15 @@ function ContextPromptItem(props: {
   remove: () => void;
   insert: () => void;
 }) {
-  const requiredUrlInput = props.prompt.role === "URL";
-  const currentInputValue = props.prompt.urlDetail
-    ? props.prompt.urlDetail.url
-    : props.prompt.content;
-  const invalidUrlInput =
-    !!currentInputValue && requiredUrlInput && !isURL(currentInputValue);
-  const isFetchContentSuccess = requiredUrlInput && !!props.prompt.urlDetail;
-
-  const { isLoading, error } = useQuery(
-    ["content", currentInputValue],
-    () => fetchSiteContent(currentInputValue),
-    {
-      enabled: requiredUrlInput && isURL(currentInputValue),
-      refetchOnWindowFocus: false,
-      retry: false,
-      onSuccess: (urlDetail) => {
-        props.update({
-          ...props.prompt,
-          content: urlDetail.content!,
-          urlDetail,
-        });
-      },
-    },
-  );
-
   const handleUpdatePrompt = async (input: string) => {
     props.update({
       ...props.prompt,
       content: input,
-      urlDetail: undefined,
     });
   };
 
-  const getPromptInputStatus = (): PromptInputStatusProps | undefined => {
-    if (invalidUrlInput) {
-      return {
-        status: "error",
-        detail: "Please enter a valid URL",
-      };
-    }
-
-    const errorMsg = (error as any)?.message;
-    if (errorMsg) {
-      return {
-        status: "error",
-        detail: errorMsg,
-      };
-    }
-
-    if (isLoading) {
-      return {
-        status: "loading",
-        detail: "Fetching site content...",
-      };
-    }
-
-    if (isFetchContentSuccess) {
-      return {
-        status: "success",
-        detail: "The URL has been successfully retrieved.",
-      };
-    }
-
-    return undefined;
-  };
-
-  const promptInputStatus = getPromptInputStatus();
-
   return (
     <>
-      {promptInputStatus && <ContextPromptInputStatus {...promptInputStatus} />}
       <div className="flex justify-center gap-2 w-full group items-start py-2">
         <div className="flex gap-2 items-center">
           <Select
@@ -134,7 +54,7 @@ function ContextPromptItem(props: {
         </div>
 
         <Textarea
-          value={currentInputValue}
+          value={props.prompt.content}
           className={
             "flex-1 max-w-full text-left min-h-0 ring-inset focus-visible:ring-offset-0"
           }
@@ -179,13 +99,14 @@ export function ContextPrompts(props: {
     props.updateContext((context) => context.splice(i, 0, prompt));
   };
 
-  const createNewEmptyPrompt = () => {
+  const createNewPrompt = (index = props.context.length) => {
     addContextPrompt(
       {
         role: "user",
         content: "",
+        id: uuidv4(),
       },
-      props.context.length,
+      index,
     );
   };
 
@@ -202,7 +123,7 @@ export function ContextPrompts(props: {
       <div className="mb-5">
         <div className="font-semibold mb-2 flex items-center justify-between">
           <span>{Locale.Context.Title}</span>
-          <Button variant="secondary" onClick={createNewEmptyPrompt}>
+          <Button variant="secondary" onClick={() => createNewPrompt()}>
             <PlusCircle className="mr-2 h-4 w-4" /> {Locale.Context.Add}
           </Button>
         </div>
@@ -213,15 +134,7 @@ export function ContextPrompts(props: {
               prompt={c}
               update={(prompt) => updateContextPrompt(i, prompt)}
               remove={() => removeContextPrompt(i)}
-              insert={() => {
-                addContextPrompt(
-                  {
-                    role: "user",
-                    content: "",
-                  },
-                  i + 1,
-                );
-              }}
+              insert={() => createNewPrompt(i + 1)}
             />
           </div>
         ))}
