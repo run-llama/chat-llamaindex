@@ -122,17 +122,9 @@ const en = {
       Clone: "Clone",
     },
     Config: {
-      Avatar: "Bot Avatar",
       Name: "Bot Name",
-      HideContext: {
-        Title: "Hide Context Prompts",
-        SubTitle: "Do not show in-context prompts in chat",
-      },
-      BotHello: {
-        Title: "Welcome Message",
-        SubTitle: "Welcome message sent when starting a new chat",
-      },
       Title: "Bot Settings",
+      Datasource: "Data Source",
     },
   },
 
