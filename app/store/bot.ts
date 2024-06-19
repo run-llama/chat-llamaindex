@@ -48,7 +48,6 @@ export type Bot = {
   id: string;
   avatar: string;
   name: string;
-  hideContext: boolean;
   context: Message[];
   modelConfig: LLMConfig;
   readOnly: boolean;

@@ -21,7 +21,6 @@ export const DEMO_BOTS: DemoBot[] = [
       sendMemory: false,
     },
     readOnly: true,
-    hideContext: false,
   },
   {
     id: "3",
@@ -43,7 +42,6 @@ export const DEMO_BOTS: DemoBot[] = [
     },
     readOnly: true,
     datasource: "redhat",
-    hideContext: false,
   },
   {
     id: "4",
@@ -65,7 +63,6 @@ export const DEMO_BOTS: DemoBot[] = [
     },
     readOnly: true,
     datasource: "watchos",
-    hideContext: false,
   },
   {
     id: "5",
@@ -87,7 +84,6 @@ export const DEMO_BOTS: DemoBot[] = [
     },
     readOnly: true,
     datasource: "basic_law_germany",
-    hideContext: false,
   },
 ];
 
@@ -115,7 +111,6 @@ export const createEmptyBot = (): Bot => ({
   readOnly: false,
   createdAt: Date.now(),
   botHello: Locale.Store.BotHello,
-  hideContext: false,
   session: createEmptySession(),
 });
 
