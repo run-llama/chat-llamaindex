@@ -5,8 +5,11 @@ const nextConfig = {
     serverComponentsExternalPackages: ["pdf-parse"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
-      "/api/files/[...slug]": ["./data/**/*", "./tool-output/**/*", "./cache/**/*"],
+      "/api/files/*": ["./data/**/*", "./tool-output/**/*", "./cache/**/*"],
     },
+    // outputFileTracingExcludes: {
+    //   "/api/files/*": ["./un-necessary-folder/**/*"],
+    // },
   },
   webpack: (config) => {
     // See https://webpack.js.org/configuration/resolve/#resolvealias
@@ -16,7 +19,7 @@ const nextConfig = {
       "onnxruntime-node$": false,
     };
     config.resolve.fallback = {
-      "aws4": false
+      aws4: false,
     };
     return config;
   },
