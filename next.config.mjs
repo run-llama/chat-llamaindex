@@ -6,6 +6,9 @@ const nextConfig = {
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
     },
+    outputFileTracingExcludes: {
+      "/api/files/*": [".next/**/*", "node_modules/**/*", "public/**/*", "app/**/*"],
+    },
   },
   webpack: (config) => {
     // See https://webpack.js.org/configuration/resolve/#resolvealias
@@ -15,7 +18,7 @@ const nextConfig = {
       "onnxruntime-node$": false,
     };
     config.resolve.fallback = {
-      "aws4": false
+      aws4: false,
     };
     return config;
   },
