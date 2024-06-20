@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/files/[...slug].js": {
+    "api/files/**/*.js": {
       "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
     }
   }
