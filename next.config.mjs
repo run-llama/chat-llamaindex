@@ -5,7 +5,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ["pdf-parse"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
-      "/api/files/[...slug].js": ["./data/**/*", "./tool-output/**/*"],
+      "/api/files/[...slug]": ["./data/**/*", "./tool-output/**/*", "./cache/**/*"],
     },
   },
   webpack: (config) => {
