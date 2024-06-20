@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/files/[...slug].js": {
-      "includeFiles": ["data/**/*", "tool-output/**/*"]
-    }
-  }
-}
