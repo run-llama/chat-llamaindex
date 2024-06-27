@@ -5,6 +5,11 @@ FROM node:18-bookworm-slim AS build
 RUN apt-get update
 RUN apt-get install -y ca-certificates
 
+# Install Python, g++, and make for building native dependencies
+# Issue: https://github.com/docker/getting-started/issues/124
+RUN apt-get install -y python3 g++ make && \
+    apt-get clean
+
 # Set the working directory
 WORKDIR /usr/src/app
 
