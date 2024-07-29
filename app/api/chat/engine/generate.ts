@@ -20,18 +20,6 @@ async function getRuntime(func: any) {
   return end - start;
 }
 
-// async function loadDocuments(datasource: string) {
-//   try {
-//     const documents = await getDocuments(datasource);
-//     return documents;
-//   } catch (error) {
-//     console.log(
-//       `Not found documents in folder "${datasource}". Create collection with empty documents.`,
-//     );
-//     return [];
-//   }
-// }
-
 async function generateDatasource() {
   const datasource = process.argv[2];
   if (!datasource) {
