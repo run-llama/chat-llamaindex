@@ -79,7 +79,8 @@
     "@e2b/code-interpreter": "^0.0.5",
     "@apidevtools/swagger-parser": "^10.1.0",
     "got": "10.7.0",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "tiktoken": "^1.0.15"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
