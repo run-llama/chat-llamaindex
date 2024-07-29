@@ -4,9 +4,13 @@ import { STORAGE_CACHE_DIR } from "./shared";
 
 interface ChatEngineOptions {
   datasource?: string;
+  documentIds?: string[];
 }
 
-export async function createChatEngine({ datasource }: ChatEngineOptions) {
+export async function createChatEngine({
+  datasource,
+  documentIds,
+}: ChatEngineOptions) {
   if (datasource) {
     const index = await getDataSource(datasource);
     if (!index) {

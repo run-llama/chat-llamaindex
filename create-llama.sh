@@ -8,7 +8,7 @@ rm -rf app/api/files
 rm -rf cl
 
 # Run the node command with specified options
-npx -y create-llama@0.1.10 \
+npx -y create-llama@0.1.23 \
     --framework nextjs \
     --template streaming \
     --engine context \
@@ -22,7 +22,7 @@ npx -y create-llama@0.1.10 \
     --example-file \
     --vector-db none \
     --use-pnpm \
-    -- cl >/dev/null
+    -- cl
 
 # copy routes from create-llama to app
 # Note: if changes on these routes are needed, copy them to the project's app folder
