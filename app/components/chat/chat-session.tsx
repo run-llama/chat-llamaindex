@@ -1,7 +1,8 @@
 "use client";
 
+import ChatInput from "./chat-input";
 import { useChatSession } from "./useChatSession";
-import { ChatInput, ChatMessages } from "@/cl/app/components/ui/chat";
+import { ChatMessages } from "@/cl/app/components/ui/chat";
 
 // Custom ChatSection for ChatLlamaindex
 export default function ChatSection() {
@@ -15,6 +16,8 @@ export default function ChatSection() {
     stop,
     append,
     setInput,
+    bot,
+    updateBot,
   } = useChatSession();
   return (
     <div className="space-y-4 w-full h-full flex flex-col">
@@ -33,6 +36,8 @@ export default function ChatSection() {
         messages={messages}
         append={append}
         setInput={setInput}
+        bot={bot}
+        updateBot={updateBot}
       />
     </div>
   );

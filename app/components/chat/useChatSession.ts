@@ -75,5 +75,7 @@ export function useChatSession() {
     stop,
     append,
     setInput,
+    bot,
+    updateBot: botStore.update,
   };
 }
