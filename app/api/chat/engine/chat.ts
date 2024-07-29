@@ -1,8 +1,14 @@
-import { BaseToolWithCall, OpenAIAgent, QueryEngineTool } from "llamaindex";
+import {
+  BaseToolWithCall,
+  OpenAIAgent,
+  QueryEngineTool,
+  Settings,
+  SimpleChatEngine,
+} from "llamaindex";
 import { getDataSource } from "./index";
 
 interface ChatEngineOptions {
-  datasource: string;
+  datasource?: string;
   documentIds?: string[];
 }
 
@@ -10,7 +16,12 @@ export async function createChatEngine({
   datasource,
   documentIds,
 }: ChatEngineOptions) {
-  console.log({ datasource });
+  if (!datasource) {
+    return new SimpleChatEngine({
+      llm: Settings.llm,
+    });
+  }
+
   const index = await getDataSource(datasource);
   const tools: BaseToolWithCall[] = [
     new QueryEngineTool({
