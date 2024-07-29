@@ -54,7 +54,7 @@ export function useFile(
 
   const uploadContent = async (base64: string): Promise<string[]> => {
     const uploadAPI = `${backend}/api/chat/upload`;
-    const datasource = bot.datasource ?? `bot_${bot.id}`;
+    const datasource = bot.datasource ?? `bot_${bot.id.replace(/-/g, "")}`; // sanitize bot id
     const response = await fetch(uploadAPI, {
       method: "POST",
       headers: {

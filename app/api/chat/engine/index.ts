@@ -19,7 +19,8 @@ export async function getDataSource(
   });
   if (!isCollectionExist.value) {
     if (createIfNotExists) {
-      // TODO: make ensureCollection inside MilvusVectorStore public and use it here to create the collection
+      // FIXME: make ensureCollection inside MilvusVectorStore public and use it here to create the collection
+      store.add([]); // cheat to create the collection
     } else {
       throw new Error(
         `Collection "${datasource}" not found. Run "pnpm run generate ${datasource}" to create it.`,

@@ -16,7 +16,7 @@ export async function runPipeline(
   filename: string,
   datasource: string,
 ) {
-  const currentIndex = await getDataSource(datasource);
+  const currentIndex = await getDataSource(datasource, true);
 
   // Update documents with metadata
   for (const document of documents) {
