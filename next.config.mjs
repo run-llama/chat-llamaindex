@@ -2,7 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse", "@zilliz/milvus2-sdk-node"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
     },

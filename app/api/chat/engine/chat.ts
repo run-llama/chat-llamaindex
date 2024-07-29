@@ -1,9 +1,8 @@
-import { ContextChatEngine, Settings, SimpleChatEngine } from "llamaindex";
+import { BaseToolWithCall, OpenAIAgent, QueryEngineTool } from "llamaindex";
 import { getDataSource } from "./index";
-import { STORAGE_CACHE_DIR } from "./shared";
 
 interface ChatEngineOptions {
-  datasource?: string;
+  datasource: string;
   documentIds?: string[];
 }
 
@@ -11,24 +10,46 @@ export async function createChatEngine({
   datasource,
   documentIds,
 }: ChatEngineOptions) {
-  if (datasource) {
-    const index = await getDataSource(datasource);
-    if (!index) {
-      throw new Error(
-        `No datasources found in storage cache folder: ${STORAGE_CACHE_DIR}/${datasource}. Run generate it first.`,
-      );
-    }
-    const retriever = index.asRetriever({
-      similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
-    });
-    return new ContextChatEngine({
-      chatModel: Settings.llm,
-      retriever,
-      systemPrompt: process.env.SYSTEM_PROMPT,
-    });
-  }
+  console.log({ datasource });
+  const index = await getDataSource(datasource);
+  const tools: BaseToolWithCall[] = [
+    new QueryEngineTool({
+      queryEngine: index.asQueryEngine({
+        preFilters: undefined,
+      }),
+      metadata: {
+        name: "data_query_engine",
+        description: `A query engine for documents from your data source.`,
+      },
+    }),
+  ];
 
-  return new SimpleChatEngine({
-    llm: Settings.llm,
+  return new OpenAIAgent({
+    tools,
+    systemPrompt: process.env.SYSTEM_PROMPT,
   });
 }
+
+// function generateFilters(documentIds: string[]): MetadataFilters | undefined {
+//   // public documents don't have the "private" field or it's set to "false"
+//   const publicDocumentsFilter: MetadataFilter = {
+//     key: "private",
+//     value: ["true"],
+//     operator: "nin",
+//   };
+
+//   // if no documentIds are provided, only retrieve information from public documents
+//   if (!documentIds.length) return { filters: [publicDocumentsFilter] };
+
+//   const privateDocumentsFilter: MetadataFilter = {
+//     key: "doc_id",
+//     value: documentIds,
+//     operator: "in",
+//   };
+
+//   // if documentIds are provided, retrieve information from public and private documents
+//   return {
+//     filters: [publicDocumentsFilter, privateDocumentsFilter],
+//     condition: "or",
+//   };
+// }
