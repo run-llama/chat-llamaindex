@@ -12,7 +12,11 @@ export async function getDataSource(datasource: string) {
     (storageContext.docStore as SimpleDocumentStore).toDict(),
   ).length;
   if (numberOfDocs === 0) {
-    return null;
+    // create a new index with empty nodes if no datasource found
+    return await VectorStoreIndex.init({
+      storageContext,
+      nodes: [],
+    });
   }
   return await VectorStoreIndex.init({
     storageContext,
