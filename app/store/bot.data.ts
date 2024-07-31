@@ -2,7 +2,7 @@ import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 
-const BOT_DATASOURCE = (botId: string) => `bot_${botId}`;
+const BOT_DATASOURCE = (botId: string) => `bot_${botId.replace(/-/g, "_")}`;
 
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
