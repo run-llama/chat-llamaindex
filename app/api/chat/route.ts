@@ -75,7 +75,6 @@ export async function POST(request: NextRequest) {
     const ids = retrieveDocumentIds(allAnnotations);
 
     // Create chat engine instance with llm config from request
-    // TODO: use Milvus
     const llm = new OpenAI(modelConfig);
     const chatEngine = await Settings.withLLM(llm, async () => {
       return await createChatEngine({ datasource, documentIds: ids });

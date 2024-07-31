@@ -51,3 +51,6 @@ dev
 app/api/chat/config/
 app/api/files/
 cl/
+
+# uploaded files
+output/
