@@ -30,7 +30,11 @@ async function generateDatasource() {
     const storageContext = await storageContextFromDefaults({
       persistDir: `${STORAGE_CACHE_DIR}/${datasource}`,
     });
-    const documents = await getDocuments();
+    const documents = await getDocuments(datasource);
+    //  Set private=false to mark the document as public (required for filtering)
+    documents.forEach((doc) => {
+      doc.metadata["private"] = "false";
+    });
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
     });
