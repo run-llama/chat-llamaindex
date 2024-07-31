@@ -2,6 +2,8 @@ import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 
+const BOT_DATASOURCE = (botId: string) => `bot_${botId}`;
+
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
 
@@ -21,6 +23,7 @@ export const DEMO_BOTS: DemoBot[] = [
       sendMemory: false,
     },
     readOnly: true,
+    datasource: BOT_DATASOURCE("2"),
   },
   {
     id: "3",
@@ -97,22 +100,26 @@ export const createDemoBots = (): Record<string, Bot> => {
   return map;
 };
 
-export const createEmptyBot = (): Bot => ({
-  id: nanoid(),
-  avatar: "1f916",
-  name: Locale.Store.DefaultBotName,
-  context: [],
-  modelConfig: {
-    model: "gpt-3.5-turbo",
-    temperature: 0.5,
-    maxTokens: 4096,
-    sendMemory: false,
-  },
-  readOnly: false,
-  createdAt: Date.now(),
-  botHello: Locale.Store.BotHello,
-  session: createEmptySession(),
-});
+export const createEmptyBot = (): Bot => {
+  const id = nanoid();
+  return {
+    id,
+    avatar: "1f916",
+    name: Locale.Store.DefaultBotName,
+    context: [],
+    modelConfig: {
+      model: "gpt-3.5-turbo",
+      temperature: 0.5,
+      maxTokens: 4096,
+      sendMemory: false,
+    },
+    readOnly: false,
+    createdAt: Date.now(),
+    botHello: Locale.Store.BotHello,
+    session: createEmptySession(),
+    datasource: BOT_DATASOURCE(id),
+  };
+};
 
 export function createEmptySession(): ChatSession {
   return {
