@@ -10,7 +10,6 @@ import {
   MessageAnnotationType,
 } from "@/cl/app/components/ui/chat";
 import { useClientConfig } from "@/cl/app/components/ui/chat/hooks/use-config";
-import { useBotStore } from "@/app/store/bot";
 
 const docMineTypeMap: Record<string, DocumentFileType> = {
   "text/csv": "csv",
@@ -21,10 +20,6 @@ const docMineTypeMap: Record<string, DocumentFileType> = {
 };
 
 export function useFile() {
-  // Custom useFile to get bot datasource
-  const botStore = useBotStore();
-  const bot = botStore.currentBot();
-
   const { backend } = useClientConfig();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [files, setFiles] = useState<DocumentFile[]>([]);
@@ -53,7 +48,12 @@ export function useFile() {
     files.length && setFiles([]);
   };
 
-  const uploadContent = async (base64: string): Promise<string[]> => {
+  const uploadContent = async (
+    base64: string,
+    requestParams: {
+      datasource?: string;
+    } = {},
+  ): Promise<string[]> => {
     const uploadAPI = `${backend}/api/chat/upload`;
     const response = await fetch(uploadAPI, {
       method: "POST",
@@ -62,7 +62,7 @@ export function useFile() {
       },
       body: JSON.stringify({
         base64,
-        datasource: bot.datasource,
+        ...requestParams,
       }),
     });
     if (!response.ok) throw new Error("Failed to upload document.");
@@ -104,7 +104,12 @@ export function useFile() {
     return content;
   };
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (
+    file: File,
+    requestParams: {
+      datasource?: string;
+    } = {},
+  ) => {
     if (file.type.startsWith("image/")) {
       const base64 = await readContent({ file, asUrl: true });
       return setImageUrl(base64);
@@ -131,7 +136,7 @@ export function useFile() {
       }
       default: {
         const base64 = await readContent({ file, asUrl: true });
-        const ids = await uploadContent(base64);
+        const ids = await uploadContent(base64, requestParams);
         return addDoc({
           ...newDoc,
           content: {

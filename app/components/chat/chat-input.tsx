@@ -6,6 +6,7 @@ import { Input } from "@/cl/app/components/ui/input";
 import UploadImagePreview from "@/cl/app/components/ui/upload-image-preview";
 import { ChatHandler } from "@/cl/app/components/ui/chat/chat.interface";
 import { useFile } from "./use-file"; // import custom useFile
+import { useBotStore } from "@/app/store/bot";
 
 const ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "csv", "pdf", "txt", "docx"];
 
@@ -32,6 +33,8 @@ export default function ChatInput(
     reset,
     getAnnotations,
   } = useFile();
+  const botStore = useBotStore();
+  const bot = botStore.currentBot();
 
   // default submit function does not handle including annotations in the message
   // so we need to use append function to submit new message with annotations
@@ -64,7 +67,9 @@ export default function ChatInput(
       return;
     }
     try {
-      await uploadFile(file);
+      await uploadFile(file, {
+        datasource: bot.datasource,
+      });
       props.onFileUpload?.(file);
     } catch (error: any) {
       props.onFileError?.(error.message);
