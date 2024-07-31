@@ -8,7 +8,7 @@ import {
 import { LlamaCloudIndex } from "llamaindex/cloud/LlamaCloudIndex";
 
 export async function runPipeline(
-  currentIndex: VectorStoreIndex,
+  currentIndex: VectorStoreIndex | LlamaCloudIndex,
   documents: Document[],
   filename: string,
 ) {

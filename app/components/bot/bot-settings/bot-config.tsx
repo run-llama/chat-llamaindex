@@ -15,7 +15,7 @@ import {
 export default function BotConfig() {
   const { bot, updateBot } = useBot();
   const botStore = useBotStore();
-  const datasoureOptions = Array.from(
+  const dataSourceOptions = Array.from(
     new Set(botStore.getAll().map((bot) => bot.datasource)),
   );
   return (
@@ -47,7 +47,7 @@ export default function BotConfig() {
                 <SelectValue placeholder="Select data source" />
               </SelectTrigger>
               <SelectContent>
-                {datasoureOptions.map((datasource) => (
+                {dataSourceOptions.map((datasource) => (
                   <SelectItem value={datasource} key={datasource}>
                     {datasource}
                   </SelectItem>
