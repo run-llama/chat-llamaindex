@@ -12,11 +12,9 @@ export async function getDataSource(datasource: string) {
     (storageContext.docStore as SimpleDocumentStore).toDict(),
   ).length;
   if (numberOfDocs === 0) {
-    // create a new index with empty nodes if no datasource found
-    return await VectorStoreIndex.init({
-      storageContext,
-      nodes: [],
-    });
+    throw new Error(
+      `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
+    );
   }
   return await VectorStoreIndex.init({
     storageContext,
