@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initSettings } from "../engine/settings";
-import { uploadDocument } from "./upload";
+import { uploadDocument } from "@/cl/app/api/chat/llamaindex/documents/upload";
+import { getDataSource } from "../engine";
 
 initSettings();
 
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    return NextResponse.json(await uploadDocument(base64, datasource));
+    const index = await getDataSource(datasource);
+    return NextResponse.json(await uploadDocument(index, base64));
   } catch (error) {
     console.error("[Upload API]", error);
     return NextResponse.json(

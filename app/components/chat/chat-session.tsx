@@ -1,8 +1,8 @@
 "use client";
 
-import ChatInput from "./chat-input";
+import { useBotStore } from "@/app/store/bot";
 import { useChatSession } from "./useChatSession";
-import { ChatMessages } from "@/cl/app/components/ui/chat";
+import { ChatMessages, ChatInput } from "@/cl/app/components/ui/chat";
 
 // Custom ChatSection for ChatLlamaindex
 export default function ChatSection() {
@@ -17,6 +17,8 @@ export default function ChatSection() {
     append,
     setInput,
   } = useChatSession();
+  const botStore = useBotStore();
+  const bot = botStore.currentBot();
   return (
     <div className="space-y-4 w-full h-full flex flex-col">
       <ChatMessages
@@ -34,6 +36,7 @@ export default function ChatSection() {
         messages={messages}
         append={append}
         setInput={setInput}
+        requestParams={{ datasource: bot.datasource }}
       />
     </div>
   );
