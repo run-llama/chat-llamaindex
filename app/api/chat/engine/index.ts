@@ -1,6 +1,6 @@
 import { SimpleDocumentStore, VectorStoreIndex } from "llamaindex";
 import { storageContextFromDefaults } from "llamaindex/storage/StorageContext";
-import { STORAGE_CACHE_DIR } from "./shared";
+import { STORAGE_CACHE_DIR } from "@/cl/app/api/chat/engine/shared";
 
 export async function getDataSource(datasource: string) {
   console.log(`Using datasource: ${datasource}`);
