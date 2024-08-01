@@ -42,11 +42,16 @@ export async function POST(request: NextRequest) {
     const { messages, context, modelConfig, datasource } =
       body as ChatRequestBody;
     const userMessage = messages.pop();
-    if (!messages || !userMessage || userMessage.role !== "user") {
+    if (
+      !messages ||
+      !userMessage ||
+      userMessage.role !== "user" ||
+      !datasource
+    ) {
       return NextResponse.json(
         {
           error:
-            "messages are required in the request body and the last message must be from the user",
+            "datasource and messages are required in the request body and the last message must be from the user",
         },
         { status: 400 },
       );

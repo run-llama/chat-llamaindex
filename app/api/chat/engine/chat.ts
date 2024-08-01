@@ -3,7 +3,7 @@ import { getDataSource } from "./index";
 import { generateFilters } from "@/cl/app/api/chat/engine/chat";
 
 interface ChatEngineOptions {
-  datasource?: string;
+  datasource: string;
   documentIds?: string[];
 }
 
@@ -11,12 +11,6 @@ export async function createChatEngine({
   datasource,
   documentIds,
 }: ChatEngineOptions) {
-  if (!datasource) {
-    throw new Error(
-      "Datasource is required to create a chat engine. Please provide a datasource name.",
-    );
-  }
-
   const index = await getDataSource(datasource);
   const retriever = index.asRetriever({
     similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
