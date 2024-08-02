@@ -5,7 +5,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ["pdf-parse"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
-      "/api/**/*": ["./node_modules/**/*.wasm"]
+      "/api/**/*": ["node_modules/tiktoken/tiktoken_bg.wasm"]
     },
     outputFileTracingExcludes: {
       "/api/files/*": [".next/**/*", "node_modules/**/*", "public/**/*", "app/**/*"],
