@@ -5,6 +5,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ["pdf-parse"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
+      "/api/**/*": ["./node_modules/**/*.wasm"]
     },
     outputFileTracingExcludes: {
       "/api/files/*": [".next/**/*", "node_modules/**/*", "public/**/*", "app/**/*"],
