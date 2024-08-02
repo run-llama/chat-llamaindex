@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
       );
     }
     const index = await getDataSource(datasource);
+    if (!index) {
+      throw new Error(
+        `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
+      );
+    }
     return NextResponse.json(await uploadDocument(index, base64));
   } catch (error) {
     console.error("[Upload API]", error);
