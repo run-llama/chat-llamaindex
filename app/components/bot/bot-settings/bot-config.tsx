@@ -3,7 +3,7 @@ import Locale from "../../../locales";
 import { Card, CardContent } from "../../ui/card";
 import { Input } from "../../ui/input";
 import ConfigItem from "./config-item";
-import { useBotStore } from "@/app/store/bot";
+import { AVAILABLE_DATASOURCES } from "@/app/store/bot";
 import {
   Select,
   SelectContent,
@@ -14,10 +14,6 @@ import {
 
 export default function BotConfig() {
   const { bot, updateBot } = useBot();
-  const botStore = useBotStore();
-  const dataSourceOptions = Array.from(
-    new Set(botStore.getAll().map((bot) => bot.datasource)),
-  );
   return (
     <>
       <div className="font-semibold mb-2">{Locale.Bot.Config.Title}</div>
@@ -43,11 +39,11 @@ export default function BotConfig() {
                 });
               }}
             >
-              <SelectTrigger className="w-[250px]">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select data source" />
               </SelectTrigger>
               <SelectContent>
-                {dataSourceOptions.map((datasource) => (
+                {AVAILABLE_DATASOURCES.map((datasource) => (
                   <SelectItem value={datasource} key={datasource}>
                     {datasource}
                   </SelectItem>
