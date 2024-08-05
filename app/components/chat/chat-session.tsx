@@ -37,6 +37,7 @@ export default function ChatSection() {
         append={append}
         setInput={setInput}
         requestParams={{ datasource: bot.datasource }}
+        onFileError={(errMsg) => alert(errMsg)}
       />
     </div>
   );
