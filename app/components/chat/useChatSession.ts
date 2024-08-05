@@ -13,7 +13,7 @@ export function useChatSession() {
   const { updateBotSession } = botStore;
 
   const [isFinished, setIsFinished] = useState(false);
-  const { chatAPI } = useClientConfig();
+  const { backend } = useClientConfig();
   const {
     messages,
     setMessages,
@@ -26,7 +26,7 @@ export function useChatSession() {
     append,
     setInput,
   } = useChat({
-    api: chatAPI,
+    api: `${backend}/api/chat`,
     headers: {
       "Content-Type": "application/json", // using JSON because of vercel/ai 2.2.26
     },

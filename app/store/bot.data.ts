@@ -21,6 +21,7 @@ export const DEMO_BOTS: DemoBot[] = [
       sendMemory: false,
     },
     readOnly: true,
+    datasource: "documents",
   },
   {
     id: "3",
@@ -112,6 +113,7 @@ export const createEmptyBot = (): Bot => ({
   createdAt: Date.now(),
   botHello: Locale.Store.BotHello,
   session: createEmptySession(),
+  datasource: "documents",
 });
 
 export function createEmptySession(): ChatSession {

@@ -18,13 +18,14 @@ export const MESSAGE_ROLES: Message["role"][] = [
   "tool",
 ];
 
-export const ALL_MODELS = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] as const;
-
 export const AVAILABLE_DATASOURCES = [
+  "documents",
   "redhat",
   "watchos",
   "basic_law_germany",
 ] as const;
+
+export const ALL_MODELS = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] as const;
 
 export type ModelType = (typeof ALL_MODELS)[number];
 
@@ -52,7 +53,7 @@ export type Bot = {
   modelConfig: LLMConfig;
   readOnly: boolean;
   botHello: string | null;
-  datasource?: string;
+  datasource: string;
   share?: Share;
   createdAt?: number;
   session: ChatSession;

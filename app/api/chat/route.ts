@@ -1,4 +1,4 @@
-import { Message, StreamData, StreamingTextResponse } from "ai";
+import { JSONValue, Message, StreamData, StreamingTextResponse } from "ai";
 import {
   ChatMessage,
   OpenAI,
@@ -9,14 +9,15 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
+import { LlamaIndexStream } from "@/cl/app/api/chat/llamaindex/streaming/stream";
 import {
-  LlamaIndexStream,
   convertMessageContent,
-} from "@/cl/app/api/chat/llamaindex-stream";
+  retrieveDocumentIds,
+} from "@/cl/app/api/chat/llamaindex/streaming/annotations";
 import {
   createCallbackManager,
   createStreamTimeout,
-} from "@/cl/app/api/chat/stream-helper";
+} from "@/cl/app/api/chat/llamaindex/streaming/events";
 import { LLMConfig } from "@/app/store/bot";
 
 initSettings();
@@ -41,21 +42,20 @@ export async function POST(request: NextRequest) {
     const { messages, context, modelConfig, datasource } =
       body as ChatRequestBody;
     const userMessage = messages.pop();
-    if (!messages || !userMessage || userMessage.role !== "user") {
+    if (
+      !messages ||
+      !userMessage ||
+      userMessage.role !== "user" ||
+      !datasource
+    ) {
       return NextResponse.json(
         {
           error:
-            "messages are required in the request body and the last message must be from the user",
+            "datasource and messages are required in the request body and the last message must be from the user",
         },
         { status: 400 },
       );
     }
-
-    // Create chat engine instance with llm config from request
-    const llm = new OpenAI(modelConfig);
-    const chatEngine = await Settings.withLLM(llm, async () => {
-      return await createChatEngine({ datasource });
-    });
 
     let annotations = userMessage.annotations;
     if (!annotations) {
@@ -69,6 +69,21 @@ export async function POST(request: NextRequest) {
           (message) => message.role === "user" && message.annotations,
         )?.annotations;
     }
+
+    // retrieve document Ids from the annotations of all messages (if any) and create chat engine with index
+    const allAnnotations: JSONValue[] = [...messages, userMessage].flatMap(
+      (message) => {
+        return message.annotations ?? [];
+      },
+    );
+
+    const ids = retrieveDocumentIds(allAnnotations);
+
+    // Create chat engine instance with llm config from request
+    const llm = new OpenAI(modelConfig);
+    const chatEngine = await Settings.withLLM(llm, async () => {
+      return await createChatEngine({ datasource, documentIds: ids });
+    });
 
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
     const userMessageContent = convertMessageContent(
@@ -95,7 +110,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Transform LlamaIndex stream to Vercel/AI format
-    const stream = LlamaIndexStream(response, vercelStreamData);
+    const stream = LlamaIndexStream(response, vercelStreamData, chatMessages);
 
     // Return a StreamingTextResponse, which can be consumed by the Vercel/AI client
     return new StreamingTextResponse(stream, {}, vercelStreamData);

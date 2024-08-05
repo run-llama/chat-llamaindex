@@ -1,30 +1,29 @@
-import { ContextChatEngine, Settings, SimpleChatEngine } from "llamaindex";
+import { ContextChatEngine, Settings } from "llamaindex";
 import { getDataSource } from "./index";
-import { STORAGE_CACHE_DIR } from "./shared";
+import { generateFilters } from "@/cl/app/api/chat/engine/chat";
 
 interface ChatEngineOptions {
-  datasource?: string;
+  datasource: string;
+  documentIds?: string[];
 }
 
-export async function createChatEngine({ datasource }: ChatEngineOptions) {
-  if (datasource) {
-    const index = await getDataSource(datasource);
-    if (!index) {
-      throw new Error(
-        `No datasources found in storage cache folder: ${STORAGE_CACHE_DIR}/${datasource}. Run generate it first.`,
-      );
-    }
-    const retriever = index.asRetriever({
-      similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
-    });
-    return new ContextChatEngine({
-      chatModel: Settings.llm,
-      retriever,
-      systemPrompt: process.env.SYSTEM_PROMPT,
-    });
+export async function createChatEngine({
+  datasource,
+  documentIds,
+}: ChatEngineOptions) {
+  const index = await getDataSource(datasource);
+  if (!index) {
+    throw new Error(
+      `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
+    );
   }
-
-  return new SimpleChatEngine({
-    llm: Settings.llm,
+  const retriever = index.asRetriever({
+    similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
+    filters: generateFilters(documentIds || []),
+  });
+  return new ContextChatEngine({
+    chatModel: Settings.llm,
+    retriever,
+    systemPrompt: process.env.SYSTEM_PROMPT,
   });
 }

@@ -8,7 +8,7 @@ rm -rf app/api/files
 rm -rf cl
 
 # Run the node command with specified options
-npx -y create-llama@0.1.10 \
+npx -y create-llama@0.1.27 \
     --framework nextjs \
     --template streaming \
     --engine context \

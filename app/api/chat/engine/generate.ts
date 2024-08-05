@@ -1,11 +1,8 @@
-import { VectorStoreIndex } from "llamaindex";
-import { storageContextFromDefaults } from "llamaindex/storage/StorageContext";
-
 import * as dotenv from "dotenv";
-
 import { getDocuments } from "./loader";
 import { initSettings } from "./settings";
-import { STORAGE_CACHE_DIR } from "./shared";
+import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
+import { STORAGE_CACHE_DIR } from "@/cl/app/api/chat/engine/shared";
 
 // Load environment variables from local .env.development.local file
 dotenv.config({ path: ".env.development.local" });
@@ -30,7 +27,11 @@ async function generateDatasource() {
     const storageContext = await storageContextFromDefaults({
       persistDir: `${STORAGE_CACHE_DIR}/${datasource}`,
     });
-    const documents = await getDocuments();
+    const documents = await getDocuments(datasource);
+    //  Set private=false to mark the document as public (required for filtering)
+    documents.forEach((doc) => {
+      doc.metadata["private"] = "false";
+    });
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
     });
