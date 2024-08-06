@@ -20,7 +20,7 @@ npx -y create-llama@0.1.27 \
     --post-install-action none \
     --no-llama-parse \
     --example-file \
-    --vector-db none \
+    --vector-db milvus \
     --use-pnpm \
     -- cl >/dev/null
 
