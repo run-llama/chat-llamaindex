@@ -1,20 +1,29 @@
-import { SimpleDocumentStore, VectorStoreIndex } from "llamaindex";
-import { storageContextFromDefaults } from "llamaindex/storage/StorageContext";
-import { STORAGE_CACHE_DIR } from "@/cl/app/api/chat/engine/shared";
+import { VectorStoreIndex } from "llamaindex";
+import { MilvusVectorStore } from "llamaindex/storage/vectorStore/MilvusVectorStore";
+import {
+  checkRequiredEnvVars,
+  getMilvusClient,
+} from "@/cl/app/api/chat/engine/shared";
+
+const checkColllectionExist = async (collection: string) => {
+  const milvusClient = getMilvusClient();
+  const isCollectionExist = await milvusClient.hasCollection({
+    collection_name: collection,
+  });
+  return isCollectionExist.value;
+};
 
 export async function getDataSource(datasource: string) {
   console.log(`Using datasource: ${datasource}`);
-  const storageContext = await storageContextFromDefaults({
-    persistDir: `${STORAGE_CACHE_DIR}/${datasource}`,
-  });
+  checkRequiredEnvVars({ checkCollectionEnv: false }); // Do not check for collection env var
+  const milvusClient = getMilvusClient();
 
-  const numberOfDocs = Object.keys(
-    (storageContext.docStore as SimpleDocumentStore).toDict(),
-  ).length;
-  if (numberOfDocs === 0) {
-    return null;
+  // remove this code if you don't want to check collection existence before creating the index
+  // Milvus can automatically create the collection if it does not exist
+  if (!(await checkColllectionExist(datasource))) {
+    throw new Error(`Collection "${datasource}" does not exist`);
   }
-  return await VectorStoreIndex.init({
-    storageContext,
-  });
+
+  const store = new MilvusVectorStore({ milvusClient, collection: datasource });
+  return await VectorStoreIndex.fromVectorStore(store);
 }
