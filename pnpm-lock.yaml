@@ -77,6 +77,9 @@ importers:
       '@vercel/kv':
         specifier: ^0.2.4
         version: 0.2.4
+      '@zilliz/milvus2-sdk-node':
+        specifier: ^2.4.4
+        version: 2.4.4
       ai:
         specifier: ^3.0.21
         version: 3.1.35(openai@4.54.0(encoding@0.1.13))(react@18.2.0)(solid-js@1.8.17)(svelte@4.2.18)(vue@3.4.27(typescript@5.1.6))(zod@3.23.8)
@@ -7036,14 +7039,14 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       jest-mock: 29.7.0
 
   '@jest/fake-timers@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -7057,7 +7060,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
@@ -8323,7 +8326,7 @@ snapshots:
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       '@types/responselike': 1.0.3
 
   '@types/d3-scale-chromatic@3.0.3': {}
@@ -8362,7 +8365,7 @@ snapshots:
 
   '@types/jsdom@20.0.1':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       '@types/tough-cookie': 4.0.5
       parse5: 7.1.2
 
@@ -8374,7 +8377,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -8440,7 +8443,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
 
   '@types/stack-utils@2.0.3': {}
 
@@ -10738,13 +10741,13 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       jest-util: 29.7.0
 
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.12.7
+      '@types/node': 20.14.13
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
