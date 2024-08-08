@@ -3,6 +3,8 @@ import { getDocuments } from "./loader";
 import { initSettings } from "./settings";
 import { LlamaCloudIndex } from "llamaindex";
 
+const DEFAULT_LLAMACLOUD_PROJECT = "Default";
+
 // Load environment variables from local .env.development.local file
 dotenv.config({ path: ".env.development.local" });
 
@@ -33,8 +35,8 @@ async function generateDatasource() {
     }
     await LlamaCloudIndex.fromDocuments({
       documents,
-      name: process.env.LLAMA_CLOUD_INDEX_NAME!,
-      projectName: process.env.LLAMA_CLOUD_PROJECT_NAME!,
+      name: datasource,
+      projectName: DEFAULT_LLAMACLOUD_PROJECT,
       apiKey: process.env.LLAMA_CLOUD_API_KEY,
       baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     });
