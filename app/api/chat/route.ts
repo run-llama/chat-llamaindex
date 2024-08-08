@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     ) {
       return NextResponse.json(
         {
-          error:
+          detail:
             "datasource and messages are required in the request body and the last message must be from the user",
         },
         { status: 400 },
