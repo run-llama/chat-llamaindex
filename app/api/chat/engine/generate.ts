@@ -1,8 +1,7 @@
 import * as dotenv from "dotenv";
 import { getDocuments } from "./loader";
 import { initSettings } from "./settings";
-import { storageContextFromDefaults, VectorStoreIndex } from "llamaindex";
-import { STORAGE_CACHE_DIR } from "@/cl/app/api/chat/engine/shared";
+import { LlamaCloudIndex } from "llamaindex";
 
 // Load environment variables from local .env.development.local file
 dotenv.config({ path: ".env.development.local" });
@@ -24,17 +23,22 @@ async function generateDatasource() {
   console.log(`Generating storage context for datasource '${datasource}'...`);
   // Split documents, create embeddings and store them in the storage context
   const ms = await getRuntime(async () => {
-    const storageContext = await storageContextFromDefaults({
-      persistDir: `${STORAGE_CACHE_DIR}/${datasource}`,
-    });
     const documents = await getDocuments(datasource);
-    //  Set private=false to mark the document as public (required for filtering)
-    documents.forEach((doc) => {
-      doc.metadata["private"] = "false";
+    // Set private=false to mark the document as public (required for filtering)
+    for (const document of documents) {
+      document.metadata = {
+        ...document.metadata,
+        private: "false",
+      };
+    }
+    await LlamaCloudIndex.fromDocuments({
+      documents,
+      name: process.env.LLAMA_CLOUD_INDEX_NAME!,
+      projectName: process.env.LLAMA_CLOUD_PROJECT_NAME!,
+      apiKey: process.env.LLAMA_CLOUD_API_KEY,
+      baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     });
-    await VectorStoreIndex.fromDocuments(documents, {
-      storageContext,
-    });
+    console.log(`Successfully created embeddings!`);
   });
   console.log(`Storage context successfully generated in ${ms / 1000}s.`);
 }
