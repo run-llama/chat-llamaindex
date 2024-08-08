@@ -48,7 +48,7 @@ dev
 .sentryclirc
 
 # create-llama copies
-app/api/chat/config/
+app/api/chat/config/route.ts
 app/api/files/
 cl/
 
