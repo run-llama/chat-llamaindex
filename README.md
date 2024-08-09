@@ -115,7 +115,7 @@ Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex
 ### Generate Data Sources
 
 To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g., PDFs).
-Then, create the `VectorStoreIndex`` for the data source by running the following command:
+Then, run the following command to create <datasource-name> as an index in the `Default` project on LlamaCloud
 
 ```bash
 pnpm run generate <datasource-name>
