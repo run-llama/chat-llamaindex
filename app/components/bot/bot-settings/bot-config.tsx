@@ -1,16 +1,9 @@
 import { useBot } from "@/app/components/bot/use-bot";
+import { LlamaCloudSelector } from "@/cl/app/components/ui/chat/widgets/LlamaCloudSelector";
 import Locale from "../../../locales";
 import { Card, CardContent } from "../../ui/card";
 import { Input } from "../../ui/input";
 import ConfigItem from "./config-item";
-import { AVAILABLE_DATASOURCES } from "@/app/store/bot";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/app/components/ui/select";
 
 export default function BotConfig() {
   const { bot, updateBot } = useBot();
@@ -31,25 +24,19 @@ export default function BotConfig() {
             />
           </ConfigItem>
           <ConfigItem title={Locale.Bot.Config.Datasource}>
-            <Select
-              value={bot.datasource}
-              onValueChange={(value) => {
-                updateBot((bot) => {
-                  bot.datasource = value;
-                });
+            <LlamaCloudSelector
+              defaultPipeline={
+                bot.datasource ? JSON.parse(bot.datasource) : undefined
+              }
+              shouldCheckValid={false}
+              onSelect={(pipeline) => {
+                if (pipeline) {
+                  updateBot((bot) => {
+                    bot.datasource = JSON.stringify(pipeline); // stringify configs as datasource
+                  });
+                }
               }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select data source" />
-              </SelectTrigger>
-              <SelectContent>
-                {AVAILABLE_DATASOURCES.map((datasource) => (
-                  <SelectItem value={datasource} key={datasource}>
-                    {datasource}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            />
           </ConfigItem>
         </CardContent>
       </Card>
