@@ -117,7 +117,6 @@ export const createEmptyBot = (): Bot => ({
   createdAt: Date.now(),
   botHello: Locale.Store.BotHello,
   session: createEmptySession(),
-  datasource: "",
 });
 
 export function createEmptySession(): ChatSession {

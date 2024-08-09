@@ -53,7 +53,7 @@ export type Bot = {
   modelConfig: LLMConfig;
   readOnly: boolean;
   botHello: string | null;
-  datasource: string;
+  datasource?: string;
   share?: Share;
   createdAt?: number;
   session: ChatSession;
