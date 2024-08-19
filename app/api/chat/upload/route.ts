@@ -11,7 +11,11 @@ export const dynamic = "force-dynamic";
 // Custom upload API to use datasource from request body
 export async function POST(request: NextRequest) {
   try {
-    const { base64, datasource }: { base64: string; datasource: string } =
+    const {
+      filename,
+      base64,
+      datasource,
+    }: { filename: string; base64: string; datasource: string } =
       await request.json();
     if (!base64 || !datasource) {
       return NextResponse.json(
@@ -25,7 +29,7 @@ export async function POST(request: NextRequest) {
         `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
       );
     }
-    return NextResponse.json(await uploadDocument(index, base64));
+    return NextResponse.json(await uploadDocument(index, filename, base64));
   } catch (error) {
     console.error("[Upload API]", error);
     return NextResponse.json(
