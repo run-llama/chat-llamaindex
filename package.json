@@ -41,7 +41,7 @@
     "dotenv": "^16.4.5",
     "emoji-picker-react": "^4.9.2",
     "encoding": "^0.1.13",
-    "llamaindex": "0.5.12",
+    "llamaindex": "0.5.19",
     "lucide-react": "^0.277.0",
     "mermaid": "^10.9.0",
     "nanoid": "^5.0.7",
