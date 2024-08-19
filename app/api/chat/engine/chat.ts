@@ -19,7 +19,7 @@ export async function createChatEngine({
   }
   const retriever = index.asRetriever({
     similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
-    filters: generateFilters(documentIds || []) as any, // TODO: Fix type in LITS
+    filters: generateFilters(documentIds || []) as any,
   });
   return new ContextChatEngine({
     chatModel: Settings.llm,
