@@ -17,7 +17,7 @@ import {
 import {
   createCallbackManager,
   createStreamTimeout,
-} from "@/cl/app/api/chat/llamaindex/streaming/events";
+} from "./llamaindex/streaming/events";
 import { LLMConfig } from "@/app/store/bot";
 
 initSettings();
