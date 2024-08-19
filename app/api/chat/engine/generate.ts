@@ -1,7 +1,10 @@
 import * as dotenv from "dotenv";
-import { getDocuments } from "./loader";
+import * as fs from "fs/promises";
+import { LLamaCloudFileService } from "llamaindex";
+import * as path from "path";
+import { getDataSource } from ".";
+import { DATA_DIR } from "./loader";
 import { initSettings } from "./settings";
-import { LlamaCloudIndex } from "llamaindex";
 
 const DEFAULT_LLAMACLOUD_PROJECT = "Default";
 
@@ -15,6 +18,20 @@ async function getRuntime(func: any) {
   return end - start;
 }
 
+async function* walk(dir: string): AsyncGenerator<string> {
+  const directory = await fs.opendir(dir);
+
+  for await (const dirent of directory) {
+    const entryPath = path.join(dir, dirent.name);
+
+    if (dirent.isDirectory()) {
+      yield* walk(entryPath); // Recursively walk through directories
+    } else if (dirent.isFile()) {
+      yield entryPath; // Yield file paths
+    }
+  }
+}
+
 async function generateDatasource() {
   const datasource = process.argv[2];
   if (!datasource) {
@@ -23,26 +40,34 @@ async function generateDatasource() {
   }
 
   console.log(`Generating storage context for datasource '${datasource}'...`);
-  // Split documents, create embeddings and store them in the storage context
   const ms = await getRuntime(async () => {
-    const documents = await getDocuments(datasource);
-    // Set private=false to mark the document as public (required for filtering)
-    for (const document of documents) {
-      document.metadata = {
-        ...document.metadata,
-        private: "false",
-      };
-    }
-    await LlamaCloudIndex.fromDocuments({
-      documents,
-      name: datasource,
-      projectName: DEFAULT_LLAMACLOUD_PROJECT,
-      apiKey: process.env.LLAMA_CLOUD_API_KEY,
-      baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
+    const params = JSON.stringify({
+      project:
+        process.env.LLAMA_CLOUD_PROJECT_NAME ?? DEFAULT_LLAMACLOUD_PROJECT,
+      pipeline: datasource,
     });
-    console.log(`Successfully created embeddings!`);
+    const index = await getDataSource(params);
+    const projectId = await index.getProjectId();
+    const pipelineId = await index.getPipelineId();
+
+    // walk through the data directory and upload each file to LlamaCloud
+    for await (const filePath of walk(path.join(DATA_DIR, datasource))) {
+      const buffer = await fs.readFile(filePath);
+      const filename = path.basename(filePath);
+      const file = new File([buffer], filename);
+      await LLamaCloudFileService.addFileToPipeline(
+        projectId,
+        pipelineId,
+        file,
+        {
+          private: "false",
+        },
+      );
+    }
   });
-  console.log(`Storage context successfully generated in ${ms / 1000}s.`);
+  console.log(
+    `Successfully uploaded documents to LlamaCloud in ${ms / 1000}s.`,
+  );
 }
 
 (async () => {

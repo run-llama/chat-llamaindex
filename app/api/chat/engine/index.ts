@@ -25,6 +25,7 @@ export async function getDataSource(datasource: string) {
     );
   }
   const index = new LlamaCloudIndex({
+    organizationId: process.env.LLAMA_CLOUD_ORGANIZATION_ID,
     name: pipelineName,
     projectName,
     apiKey,
