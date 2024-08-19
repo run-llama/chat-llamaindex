@@ -31,3 +31,6 @@ cp -r cl/app/api/chat/config app/api/chat/config
 
 # copy example .env file
 cp cl/.env .env.development.local
+
+# copy output folder
+cp -r cl/output output
