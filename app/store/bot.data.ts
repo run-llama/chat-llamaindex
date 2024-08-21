@@ -18,7 +18,7 @@ export const DEMO_BOTS: DemoBot[] = [
     botHello: "Hello! How can I assist you today?",
     context: [],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.5,
       maxTokens: 4096,
       sendMemory: false,
@@ -39,7 +39,7 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
@@ -60,7 +60,7 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
@@ -81,7 +81,7 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
@@ -107,7 +107,7 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     temperature: 0.5,
     maxTokens: 4096,
     sendMemory: false,
