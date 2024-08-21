@@ -27,11 +27,7 @@ npx -y create-llama@0.1.39 \
 
 # copy routes from create-llama to app
 # Note: if changes on these routes are needed, copy them to the project's app folder
-cp -r cl/app/api/files app/api/files
 cp -r cl/app/api/chat/config app/api/chat/config
 
 # copy example .env file
 cp cl/.env .env.development.local
-
-# copy output folder
-cp -r cl/output output

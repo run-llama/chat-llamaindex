@@ -24,6 +24,5 @@ export async function createChatEngine({
   return new ContextChatEngine({
     chatModel: Settings.llm,
     retriever,
-    systemPrompt: process.env.SYSTEM_PROMPT,
   });
 }
