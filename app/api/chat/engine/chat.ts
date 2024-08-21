@@ -1,9 +1,9 @@
 import { ContextChatEngine, Settings } from "llamaindex";
-import { getDataSource } from "./index";
-import { generateFilters } from "@/cl/app/api/chat/engine/chat";
+import { getDataSource, LlamaCloudDataSourceParams } from "./index";
+import { generateFilters } from "@/cl/app/api/chat/engine/queryFilter";
 
 interface ChatEngineOptions {
-  datasource: string;
+  datasource: LlamaCloudDataSourceParams;
   documentIds?: string[];
 }
 
@@ -19,11 +19,10 @@ export async function createChatEngine({
   }
   const retriever = index.asRetriever({
     similarityTopK: process.env.TOP_K ? parseInt(process.env.TOP_K) : 3,
-    filters: generateFilters(documentIds || []),
+    filters: generateFilters(documentIds || []) as any,
   });
   return new ContextChatEngine({
     chatModel: Settings.llm,
     retriever,
-    systemPrompt: process.env.SYSTEM_PROMPT,
   });
 }

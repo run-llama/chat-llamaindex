@@ -8,7 +8,6 @@ import {
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
-import { initSettings } from "./engine/settings";
 import { LlamaIndexStream } from "@/cl/app/api/chat/llamaindex/streaming/stream";
 import {
   convertMessageContent,
@@ -17,10 +16,9 @@ import {
 import {
   createCallbackManager,
   createStreamTimeout,
-} from "@/cl/app/api/chat/llamaindex/streaming/events";
+} from "./llamaindex/streaming/events";
 import { LLMConfig } from "@/app/store/bot";
-
-initSettings();
+import { parseDataSource } from "./engine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,7 +48,7 @@ export async function POST(request: NextRequest) {
     ) {
       return NextResponse.json(
         {
-          error:
+          detail:
             "datasource and messages are required in the request body and the last message must be from the user",
         },
         { status: 400 },
@@ -82,7 +80,10 @@ export async function POST(request: NextRequest) {
     // Create chat engine instance with llm config from request
     const llm = new OpenAI(modelConfig);
     const chatEngine = await Settings.withLLM(llm, async () => {
-      return await createChatEngine({ datasource, documentIds: ids });
+      return await createChatEngine({
+        datasource: parseDataSource(datasource),
+        documentIds: ids,
+      });
     });
 
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format

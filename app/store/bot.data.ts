@@ -2,6 +2,9 @@ import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 
+const toLlamaCloudDataSource = (pipeline: string) =>
+  JSON.stringify({ pipeline });
+
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;
 
@@ -15,13 +18,13 @@ export const DEMO_BOTS: DemoBot[] = [
     botHello: "Hello! How can I assist you today?",
     context: [],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.5,
       maxTokens: 4096,
       sendMemory: false,
     },
     readOnly: true,
-    datasource: "documents",
+    datasource: toLlamaCloudDataSource("documents"),
   },
   {
     id: "3",
@@ -36,13 +39,13 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
     },
     readOnly: true,
-    datasource: "redhat",
+    datasource: toLlamaCloudDataSource("redhat"),
   },
   {
     id: "4",
@@ -57,13 +60,13 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
     },
     readOnly: true,
-    datasource: "watchos",
+    datasource: toLlamaCloudDataSource("watchos"),
   },
   {
     id: "5",
@@ -78,13 +81,13 @@ export const DEMO_BOTS: DemoBot[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       maxTokens: 4096,
       sendMemory: false,
     },
     readOnly: true,
-    datasource: "basic_law_germany",
+    datasource: toLlamaCloudDataSource("basic_law_germany"),
   },
 ];
 
@@ -104,7 +107,7 @@ export const createEmptyBot = (): Bot => ({
   name: Locale.Store.DefaultBotName,
   context: [],
   modelConfig: {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     temperature: 0.5,
     maxTokens: 4096,
     sendMemory: false,
@@ -113,7 +116,6 @@ export const createEmptyBot = (): Bot => ({
   createdAt: Date.now(),
   botHello: Locale.Store.BotHello,
   session: createEmptySession(),
-  datasource: "documents",
 });
 
 export function createEmptySession(): ChatSession {

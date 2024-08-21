@@ -25,7 +25,7 @@ export const AVAILABLE_DATASOURCES = [
   "basic_law_germany",
 ] as const;
 
-export const ALL_MODELS = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] as const;
+export const ALL_MODELS = ["gpt-4o-mini", "gpt-4-turbo", "gpt-4o"] as const;
 
 export type ModelType = (typeof ALL_MODELS)[number];
 
@@ -53,7 +53,7 @@ export type Bot = {
   modelConfig: LLMConfig;
   readOnly: boolean;
   botHello: string | null;
-  datasource: string;
+  datasource?: string;
   share?: Share;
   createdAt?: number;
   session: ChatSession;

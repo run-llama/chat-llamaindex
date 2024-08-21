@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initSettings } from "../engine/settings";
 import { uploadDocument } from "@/cl/app/api/chat/llamaindex/documents/upload";
-import { getDataSource } from "../engine";
-
-initSettings();
+import { getDataSource, parseDataSource } from "../engine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,7 +8,11 @@ export const dynamic = "force-dynamic";
 // Custom upload API to use datasource from request body
 export async function POST(request: NextRequest) {
   try {
-    const { base64, datasource }: { base64: string; datasource: string } =
+    const {
+      filename,
+      base64,
+      datasource,
+    }: { filename: string; base64: string; datasource: string } =
       await request.json();
     if (!base64 || !datasource) {
       return NextResponse.json(
@@ -19,13 +20,13 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const index = await getDataSource(datasource);
+    const index = await getDataSource(parseDataSource(datasource));
     if (!index) {
       throw new Error(
         `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
       );
     }
-    return NextResponse.json(await uploadDocument(index, base64));
+    return NextResponse.json(await uploadDocument(index, filename, base64));
   } catch (error) {
     console.error("[Upload API]", error);
     return NextResponse.json(
