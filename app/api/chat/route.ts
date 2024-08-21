@@ -8,7 +8,6 @@ import {
 } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
-import { initSettings } from "./engine/settings";
 import { LlamaIndexStream } from "@/cl/app/api/chat/llamaindex/streaming/stream";
 import {
   convertMessageContent,
@@ -20,8 +19,6 @@ import {
 } from "./llamaindex/streaming/events";
 import { LLMConfig } from "@/app/store/bot";
 import { parseDataSource } from "./engine";
-
-initSettings();
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

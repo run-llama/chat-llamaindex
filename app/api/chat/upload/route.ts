@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initSettings } from "../engine/settings";
 import { uploadDocument } from "@/cl/app/api/chat/llamaindex/documents/upload";
 import { getDataSource, parseDataSource } from "../engine";
-
-initSettings();
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
