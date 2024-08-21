@@ -1,12 +1,15 @@
 import { LlamaCloudIndex } from "llamaindex/cloud/LlamaCloudIndex";
+import type { CloudConstructorParams } from "llamaindex/cloud/constants";
 
-type LlamaCloudDataSourceParams = {
+export type LlamaCloudDataSourceParams = {
   project?: string;
   pipeline?: string;
+  ensureIndex?: boolean;
 };
 
-// Parse datasource from string to params object
-function tryParseDataSource(datasource: string): LlamaCloudDataSourceParams {
+export function parseDataSource(
+  datasource: string,
+): LlamaCloudDataSourceParams {
   try {
     return JSON.parse(datasource) as LlamaCloudDataSourceParams;
   } catch (e) {
@@ -14,22 +17,51 @@ function tryParseDataSource(datasource: string): LlamaCloudDataSourceParams {
   }
 }
 
-export async function getDataSource(datasource: string) {
-  const configs = tryParseDataSource(datasource);
-  const projectName = configs.project;
-  const pipelineName = configs.pipeline;
-  const apiKey = process.env.LLAMA_CLOUD_API_KEY;
-  if (!projectName || !pipelineName || !apiKey) {
+export async function getDataSource(params: LlamaCloudDataSourceParams) {
+  checkEnvVars();
+  if (params.ensureIndex) {
+    // ensure that the index exists
+    try {
+      await LlamaCloudIndex.fromDocuments({
+        ...createParams(params),
+        documents: [],
+      });
+    } catch (e) {
+      if ((e as any).status === 400) {
+        // ignore 400 error, it's caused by calling fromDocuments with empty documents
+        // TODO: fix in LLamaIndexTS
+      } else {
+        throw e;
+      }
+    }
+  }
+  return new LlamaCloudIndex(createParams(params));
+}
+
+function createParams({
+  project,
+  pipeline,
+}: LlamaCloudDataSourceParams): CloudConstructorParams {
+  if (!pipeline) {
+    throw new Error("Set pipeline in the params.");
+  }
+  const params = {
+    organizationId: process.env.LLAMA_CLOUD_ORGANIZATION_ID,
+    name: pipeline,
+    projectName: project ?? process.env.LLAMA_CLOUD_PROJECT_NAME!,
+    apiKey: process.env.LLAMA_CLOUD_API_KEY,
+    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
+  };
+  return params;
+}
+
+function checkEnvVars() {
+  if (
+    !process.env.LLAMA_CLOUD_PROJECT_NAME ||
+    !process.env.LLAMA_CLOUD_API_KEY
+  ) {
     throw new Error(
-      "Set project, pipeline, and api key in the params or as environment variables.",
+      "LLAMA_CLOUD_PROJECT_NAME and LLAMA_CLOUD_API_KEY environment variables must be set.",
     );
   }
-  const index = new LlamaCloudIndex({
-    organizationId: process.env.LLAMA_CLOUD_ORGANIZATION_ID,
-    name: pipelineName,
-    projectName,
-    apiKey,
-    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
-  });
-  return index;
 }

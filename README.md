@@ -21,11 +21,12 @@ Getting started with LlamaIndex Chat is a breeze. Visit https://chat.llamaindex.
 
 ## 🚀 Features
 
-LlamaIndex Chat is an example chatbot application for [LlamaIndexTS](https://github.com/run-llama/LlamaIndexTS).
+LlamaIndex Chat is an example chatbot application for [LlamaIndexTS](https://github.com/run-llama/LlamaIndexTS) featuring [LlamaCloud](https://cloud.llamaindex.ai/).
+
 You can:
 
 - Create bots using prompt engineering and share them with other users.
-- Modify the demo bots by using the UI or directly editing the [./app/bots/bot.data.ts](./app/bots/bot.data.ts) file.
+- Modify the demo bots by using the UI or directly editing the [./app/bots/bot.data.ts](./app/store/bot.data.ts) file.
 - Integrate your data by uploading documents or generating new [data sources](#📀-data-sources).
 
 ## ⚡️ Quick start
@@ -52,7 +53,19 @@ pnpm run create-llama
 
 - Set the environment variables
 
-Edit environment variables in `.env.development.local`. Especially check your `OPENAI_API_KEY`.
+Edit environment variables in `.env.development.local`. Especially check your `OPENAI_API_KEY` and `LLAMA_CLOUD_API_KEY` and the LlamaCloud project to use (`LLAMA_CLOUD_PROJECT_NAME`).
+
+- Download the demo datasources
+
+```bash
+pnpm run get-demo
+```
+
+- Upload the demo datasources to your LlamaCloud account
+
+```bash
+pnpm run generate-demo
+```
 
 - Run the dev server
 
@@ -61,6 +74,8 @@ pnpm dev
 ```
 
 ### 🐳 Docker
+
+Note: This sections has not been used for a while and might be outdated.
 
 You can use Docker for development and deployment of LlamaIndex Chat.
 
@@ -105,16 +120,16 @@ LlamaIndex Chat supports the sharing of bots via URLs. Demo bots are read-only a
 
 ## 📀 Data Sources
 
-The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/chat_engine) for each bot with a [`VectorStoreIndex`](https://ts.llamaindex.ai/examples/vector_index) attached.
-The `cache` folder in the root directory is used as [Storage](https://ts.llamaindex.ai/modules/storage) for each `VectorStoreIndex`.
+The app is using a [`ChatEngine`](https://ts.llamaindex.ai/modules/chat_engine) for each bot with a [`LlamaCloudIndex`](https://ts.llamaindex.ai/modules/llamacloud) attached.
 
-Each subfolder in the `cache` folder contains the data for one `VectorStoreIndex`. To set which `VectorStoreIndex` is used for a bot, use the subfolder's name as `datasource` attribute in the [bot's data](./app/bots/bot.data.ts).
+To set which `LlamaCloudIndex` is used for a bot, change the `datasource` attribute in the [bot's data](./app/store/bot.data.ts).
 
 > **Note**: To use the changed bots, you have to clear your local storage. Otherwise, the old bots are still used. You can clear your local storage by opening the developer tools and running `localStorage.clear()` in the console and reloading the page.
 
 ### Generate Data Sources
 
 To generate a new data source, create a new subfolder in the `datasources` directory and add the data files (e.g., PDFs).
+
 Then, run the following command to create <datasource-name> as an index in the `Default` project on LlamaCloud
 
 ```bash

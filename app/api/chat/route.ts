@@ -19,6 +19,7 @@ import {
   createStreamTimeout,
 } from "./llamaindex/streaming/events";
 import { LLMConfig } from "@/app/store/bot";
+import { parseDataSource } from "./engine";
 
 initSettings();
 
@@ -82,7 +83,10 @@ export async function POST(request: NextRequest) {
     // Create chat engine instance with llm config from request
     const llm = new OpenAI(modelConfig);
     const chatEngine = await Settings.withLLM(llm, async () => {
-      return await createChatEngine({ datasource, documentIds: ids });
+      return await createChatEngine({
+        datasource: parseDataSource(datasource),
+        documentIds: ids,
+      });
     });
 
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format

@@ -8,8 +8,6 @@ import {
   ToolCall,
   ToolOutput,
 } from "llamaindex";
-import path from "node:path";
-import { DATA_DIR } from "../../engine/loader";
 
 export async function appendSourceData(
   data: StreamData,
@@ -80,7 +78,7 @@ export function createStreamTimeout(stream: StreamData) {
 export function createCallbackManager(stream: StreamData) {
   const callbackManager = new CallbackManager();
 
-  callbackManager.on("retrieve-end", (data) => {
+  callbackManager.on("retrieve-end", (data: any) => {
     const { nodes, query } = data.detail;
     appendSourceData(stream, nodes);
     appendEventData(stream, `Retrieving context for query: '${query}'`);
@@ -90,7 +88,7 @@ export function createCallbackManager(stream: StreamData) {
     );
   });
 
-  callbackManager.on("llm-tool-call", (event) => {
+  callbackManager.on("llm-tool-call", (event: any) => {
     const { name, input } = event.detail.toolCall;
     const inputString = Object.entries(input)
       .map(([key, value]) => `${key}: ${value}`)
@@ -101,7 +99,7 @@ export function createCallbackManager(stream: StreamData) {
     );
   });
 
-  callbackManager.on("llm-tool-result", (event) => {
+  callbackManager.on("llm-tool-result", (event: any) => {
     const { toolCall, toolResult } = event.detail;
     appendToolData(stream, toolCall, toolResult);
   });
@@ -110,37 +108,26 @@ export function createCallbackManager(stream: StreamData) {
 }
 
 async function getNodeUrl(metadata: Metadata) {
-  if (!process.env.FILESERVER_URL_PREFIX) {
-    console.warn(
-      "FILESERVER_URL_PREFIX is not set. File URLs will not be generated.",
-    );
-  }
-  const fileName = metadata["file_name"];
-  if (fileName && process.env.FILESERVER_URL_PREFIX) {
-    // file_name exists and file server is configured
+  try {
+    const fileName = metadata["file_name"];
     const pipelineId = metadata["pipeline_id"];
-    if (pipelineId) {
+    if (fileName && pipelineId) {
+      // file has been uploaded to LlamaCloud, so we can get the URL from there
       const downloadUrl = await LLamaCloudFileService.getFileUrl(
         pipelineId,
         fileName,
       );
-      console.log({ downloadUrl });
       if (downloadUrl) {
+        console.log(`Retrieved documents URL from LlamaCloud: ${downloadUrl}`);
         return downloadUrl;
       }
     }
-    const isPrivate = metadata["private"] === "true";
-    if (isPrivate) {
-      return `${process.env.FILESERVER_URL_PREFIX}/output/uploaded/${fileName}`;
-    }
-    const filePath = metadata["file_path"];
-    const dataDir = path.resolve(DATA_DIR);
-
-    if (filePath && dataDir) {
-      const relativePath = path.relative(dataDir, filePath);
-      return `${process.env.FILESERVER_URL_PREFIX}/data/${relativePath}`;
-    }
+  } catch (error) {
+    console.error("Error retrieving document URL:", error);
   }
-  // fallback to URL in metadata (e.g. for websites)
-  return metadata["URL"];
+  console.warn(
+    "Couldn't retrieve document URL from LlamaCloud for node with metadata",
+    metadata,
+  );
+  return null;
 }

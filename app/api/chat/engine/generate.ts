@@ -1,12 +1,11 @@
 import * as dotenv from "dotenv";
 import * as fs from "fs/promises";
-import { LLamaCloudFileService } from "llamaindex";
 import * as path from "path";
 import { getDataSource } from ".";
-import { DATA_DIR } from "./loader";
-import { initSettings } from "./settings";
+import { FilesService, PipelinesService } from "@llamaindex/cloud/api";
+import { initService } from "llamaindex/cloud/utils";
 
-const DEFAULT_LLAMACLOUD_PROJECT = "Default";
+const DATA_DIR = "./datasources";
 
 // Load environment variables from local .env.development.local file
 dotenv.config({ path: ".env.development.local" });
@@ -32,6 +31,31 @@ async function* walk(dir: string): AsyncGenerator<string> {
   }
 }
 
+// TODO: should be moved to LlamaCloudFileService of LlamaIndexTS
+async function addFileToPipeline(
+  projectId: string,
+  pipelineId: string,
+  uploadFile: File | Blob,
+  customMetadata: Record<string, any> = {},
+) {
+  const file = await FilesService.uploadFileApiV1FilesPost({
+    projectId,
+    formData: {
+      upload_file: uploadFile,
+    },
+  });
+  const files = [
+    {
+      file_id: file.id,
+      custom_metadata: { file_id: file.id, ...customMetadata },
+    },
+  ];
+  await PipelinesService.addFilesToPipelineApiV1PipelinesPipelineIdFilesPut({
+    pipelineId,
+    requestBody: files,
+  });
+}
+
 async function generateDatasource() {
   const datasource = process.argv[2];
   if (!datasource) {
@@ -40,13 +64,12 @@ async function generateDatasource() {
   }
 
   console.log(`Generating storage context for datasource '${datasource}'...`);
+
   const ms = await getRuntime(async () => {
-    const params = JSON.stringify({
-      project:
-        process.env.LLAMA_CLOUD_PROJECT_NAME ?? DEFAULT_LLAMACLOUD_PROJECT,
+    const index = await getDataSource({
       pipeline: datasource,
+      ensureIndex: true,
     });
-    const index = await getDataSource(params);
     const projectId = await index.getProjectId();
     const pipelineId = await index.getPipelineId();
 
@@ -55,14 +78,9 @@ async function generateDatasource() {
       const buffer = await fs.readFile(filePath);
       const filename = path.basename(filePath);
       const file = new File([buffer], filename);
-      await LLamaCloudFileService.addFileToPipeline(
-        projectId,
-        pipelineId,
-        file,
-        {
-          private: "false",
-        },
-      );
+      await addFileToPipeline(projectId, pipelineId, file, {
+        private: "false",
+      });
     }
   });
   console.log(
@@ -71,7 +89,7 @@ async function generateDatasource() {
 }
 
 (async () => {
-  initSettings();
+  initService();
   await generateDatasource();
   console.log("Finished generating storage.");
 })();

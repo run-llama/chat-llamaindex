@@ -1,9 +1,9 @@
 import { ContextChatEngine, Settings } from "llamaindex";
-import { getDataSource } from "./index";
+import { getDataSource, LlamaCloudDataSourceParams } from "./index";
 import { generateFilters } from "@/cl/app/api/chat/engine/queryFilter";
 
 interface ChatEngineOptions {
-  datasource: string;
+  datasource: LlamaCloudDataSourceParams;
   documentIds?: string[];
 }
 

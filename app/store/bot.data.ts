@@ -2,9 +2,8 @@ import { Bot, ChatSession } from "@/app/store/bot";
 import { nanoid } from "nanoid";
 import Locale from "../locales";
 
-const DEFAULT_LLAMACLOUD_PROJECT = "Default";
 const toLlamaCloudDataSource = (pipeline: string) =>
-  JSON.stringify({ project: DEFAULT_LLAMACLOUD_PROJECT, pipeline });
+  JSON.stringify({ pipeline });
 
 const TEMPLATE = (PERSONA: string) =>
   `I want you to act as a ${PERSONA}. I will provide you with the context needed to solve my problem. Use intelligent, simple, and understandable language. Be concise. It is helpful to explain your thoughts step by step and with bullet points.`;

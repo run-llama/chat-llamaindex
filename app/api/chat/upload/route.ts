@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initSettings } from "../engine/settings";
 import { uploadDocument } from "@/cl/app/api/chat/llamaindex/documents/upload";
-import { getDataSource } from "../engine";
+import { getDataSource, parseDataSource } from "../engine";
 
 initSettings();
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const index = await getDataSource(datasource);
+    const index = await getDataSource(parseDataSource(datasource));
     if (!index) {
       throw new Error(
         `StorageContext is empty - call 'pnpm run generate ${datasource}' to generate the storage first`,
